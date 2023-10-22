@@ -17,6 +17,8 @@ public:
 
 private:
     Ui::employeeWindow *ui;
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // EMPLOYEEWINDOW_H

@@ -18,6 +18,9 @@ public:
 
 private:
     Ui::ManagerWindow *ui;
+
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MANAGERWINDOW_H
