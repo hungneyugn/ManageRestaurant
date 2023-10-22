@@ -3,6 +3,7 @@
 #include "managerwindow.h"
 #include "QScreen"
 #include "employeewindow.h"
+#include "manager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
