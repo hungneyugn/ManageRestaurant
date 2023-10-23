@@ -8,10 +8,10 @@ class Manager
 {
 public:
     Manager();
-protected:
+    std::vector<Item>listItems;
+private:
     int numberOfTable;
     int choiceOption;
-    std::vector<Item>listItems;
 };
 
 #endif // MANAGER_H
