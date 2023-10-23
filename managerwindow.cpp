@@ -3,11 +3,19 @@
 #include "QScreen"
 #include <QCloseEvent>
 #include "mainwindow.h"
+#include "manager.h"
+#include "QString"
+#include "string"
+#include "iostream"
+#include "fstream"
+#include "sstream"
+#include "QTextEdit"
+#include <string>
+
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
 {
-
     ui->setupUi(this);
 }
 
@@ -27,3 +35,7 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
     mainwindow->show();
     this->hide();
 }
+
+
+
+
