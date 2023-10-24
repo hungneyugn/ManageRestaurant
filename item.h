@@ -1,21 +1,22 @@
 #ifndef ITEM_H
 #define ITEM_H
-#include<string>
+#include <string>
+#include <QString>
 
 
 class Item
 {
 public:
-    Item(std::string name,std::string price);
-    void setName(std::string name);
-    std::string getName();
+    Item(QString name,QString price);
+    void setName(QString name);
+    QString getName();
     int getId();
-    void setPrice(std::string price);
-    std::string getPrice();
+    void setPrice(QString price);
+    QString getPrice();
 protected:
-    std::string name;
+    QString name;
     int id;
-    std::string price;
+    QString price;
 };
 
 #endif // ITEM_H

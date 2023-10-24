@@ -1,6 +1,6 @@
 #include "item.h"
 
-Item::Item(std::string name,std::string price)
+Item::Item(QString name,QString price)
 {
     this->name = name;
     this->price = price;
@@ -8,18 +8,18 @@ Item::Item(std::string name,std::string price)
     this->id = id;
     id ++;
 }
-void Item::setName(std::string name){
+void Item::setName(QString name){
     this->name = name;
 }
-std::string Item::getName(){
+QString Item::getName(){
     return this->name;
 }
 int Item::getId(){
     return this->id;
 }
-void Item::setPrice(std::string price){
+void Item::setPrice(QString price){
     this->price = price;
 }
-std::string Item ::getPrice(){
+QString Item ::getPrice(){
     return this->price;
 }

@@ -17,6 +17,20 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui(new Ui::ManagerWindow)
 {
     ui->setupUi(this);
+    QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
+    tableItem -> setRowCount(manager->listItems.size());
+    tableItem -> setColumnCount(2);
+    tableItem -> setGeometry(0,0,800,800);
+    tableItem -> setHorizontalHeaderLabels(QStringList() << "Name" << "Price");
+    for (int i = 0; i < manager->listItems.size() ; i++)
+    {
+        QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
+        QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
+        nameTableWidget -> setTextAlignment(Qt::AlignCenter);
+        priceTableWidget -> setTextAlignment(Qt::AlignCenter);
+        tableItem -> setItem(i,0,nameTableWidget);
+        tableItem -> setItem(i,1,priceTableWidget);
+    }
 }
 
 ManagerWindow::~ManagerWindow()

@@ -5,7 +5,7 @@
 class BoughtItem : public Item
 {
 public:
-    BoughtItem(std::string name,int id,std::string price,int quantity);
+    BoughtItem(QString name,int id,QString price,int quantity);
     void setQuantity(int quantity);
     int getQuantity();
 private:
