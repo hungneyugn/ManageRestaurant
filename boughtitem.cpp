@@ -1,6 +1,7 @@
 #include "boughtitem.h"
+#include "QString"
 
-BoughtItem::BoughtItem(std::string name,int id,std::string price,int quantity): Item(name,price)
+BoughtItem::BoughtItem(QString name,int id,QString price,int quantity): Item(name,price)
 {
     this->name = name;
     this->id = id;
