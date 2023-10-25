@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "manager.h"
+#include <QTableWidget>
 
 namespace Ui {
 class ManagerWindow;
@@ -20,10 +21,13 @@ public:
 private:
     Ui::ManagerWindow *ui;
     Manager *manager = new Manager;
-
+    QTableWidget *tableItem;
 protected:
     void closeEvent(QCloseEvent *event);
+
 private slots:
+    void on_btnAdd_clicked();
+    void on_btnSave_clicked();
 };
 
 #endif // MANAGERWINDOW_H

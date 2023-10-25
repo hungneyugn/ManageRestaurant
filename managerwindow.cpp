@@ -17,20 +17,22 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui(new Ui::ManagerWindow)
 {
     ui->setupUi(this);
-    QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
+    std::fstream file("listItem.txt");
+    tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
-    tableItem -> setColumnCount(2);
-    tableItem -> setGeometry(0,0,800,800);
-    tableItem -> setHorizontalHeaderLabels(QStringList() << "Name" << "Price");
+    tableItem -> setColumnCount(3);
+    tableItem -> setGeometry(0,0,400,400);
+    tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
-        tableItem -> setItem(i,0,nameTableWidget);
-        tableItem -> setItem(i,1,priceTableWidget);
+        tableItem -> setItem(i,1,nameTableWidget);
+        tableItem -> setItem(i,2,priceTableWidget);
     }
+
 }
 
 ManagerWindow::~ManagerWindow()
@@ -52,4 +54,31 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
 
 
 
+void ManagerWindow::on_btnAdd_clicked()
+{
+
+   tableItem->insertRow(tableItem->rowCount());
+
+
+}
+
+void ManagerWindow::on_btnSave_clicked()
+{
+   int rowCount = tableItem->rowCount() - 1;
+   QString name = tableItem->item(rowCount, 1)->text();
+   QString price = tableItem->item(rowCount, 2)->text();
+   Item newItem(name,price);
+   this ->manager->listItems.push_back(newItem);
+   std::fstream file;
+   file.open("listItem.txt", std::ios::app);
+
+   if(file.is_open() && file.eof()){
+        file.seekg(0, std::ios::beg);
+        file << name.toStdString() << "-"<< price.toStdString() << std::endl;
+   }
+   else{
+        file << std::endl << name.toStdString() << "-"<< price.toStdString();
+   }
+   file.close();
+}
 
