@@ -7,12 +7,13 @@ class Staff
 {
 public:
     Staff();
+    std::vector<Table> listTables;
 private:
     int numberOfTable;
     /*variable save numbers of table which was chosen*/
     int currentTable;
     /*list of tables was generated with the number of table*/
-    std::vector<Table> listTables;
+
     std::vector<Item> listItems;
     int choiceMenu;
 };

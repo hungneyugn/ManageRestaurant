@@ -2,7 +2,7 @@
 #define EMPLOYEEWINDOW_H
 
 #include <QMainWindow>
-
+#include "staff.h"
 namespace Ui {
 class employeeWindow;
 }
@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::employeeWindow *ui;
+    Staff* staff = new Staff;
 protected:
     void closeEvent(QCloseEvent *event);
 };
