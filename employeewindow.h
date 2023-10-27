@@ -10,7 +10,6 @@ class employeeWindow;
 class employeeWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit employeeWindow(QWidget *parent = nullptr);
     ~employeeWindow();

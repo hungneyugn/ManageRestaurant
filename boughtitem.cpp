@@ -16,3 +16,4 @@ void BoughtItem::setQuantity(int quantity){
 int BoughtItem::getQuantity(){
     return this->quantity;
 }
+

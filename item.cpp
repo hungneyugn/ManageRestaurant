@@ -4,6 +4,8 @@ Item::Item(QString name,QString price)
 {
     this->name = name;
     this->price = price;
+}
+void Item::setId(){
     static int id = 100;
     this->id = id;
     id ++;
