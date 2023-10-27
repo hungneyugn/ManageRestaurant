@@ -19,17 +19,20 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->setupUi(this);
     QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
-    tableItem -> setColumnCount(2);
+    tableItem -> setColumnCount(3);
     tableItem -> setGeometry(0,0,800,800);
-    tableItem -> setHorizontalHeaderLabels(QStringList() << "Name" << "Price");
+    tableItem -> setHorizontalHeaderLabels(QStringList() << "Name" << "Price" << "Image");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
+        QTableWidgetItem *imageTableWidget = new QTableWidgetItem(manager->listItems[i].getImage());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
+        imageTableWidget -> setTextAlignment(Qt::AlignCenter);
         tableItem -> setItem(i,0,nameTableWidget);
         tableItem -> setItem(i,1,priceTableWidget);
+        tableItem -> setItem(i,2,imageTableWidget);
     }
 }
 
@@ -49,7 +52,3 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
     mainwindow->show();
     this->hide();
 }
-
-
-
-

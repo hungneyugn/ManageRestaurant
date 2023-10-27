@@ -7,16 +7,19 @@
 class Item
 {
 public:
-    Item(QString name,QString price);
+    Item(QString name,QString price, QString image);
     void setName(QString name);
     QString getName();
     int getId();
     void setPrice(QString price);
     QString getPrice();
+    void setImage(QString image);
+    QString getImage();
 protected:
     QString name;
     int id;
     QString price;
+    QString image;
 };
 
 #endif // ITEM_H
