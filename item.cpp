@@ -1,9 +1,10 @@
 #include "item.h"
 
-Item::Item(QString name,QString price)
+Item::Item(QString name,QString price, QString image)
 {
     this->name = name;
     this->price = price;
+    this->image = image;
 }
 void Item::setId(){
     static int id = 100;
@@ -24,4 +25,10 @@ void Item::setPrice(QString price){
 }
 QString Item ::getPrice(){
     return this->price;
+}
+void Item::setImage(QString image){
+    this->image = image;
+}
+QString Item::getImage(){
+    return this->image;
 }

@@ -12,14 +12,15 @@ Manager::Manager()
     std::fstream file("listItem.txt", std::ios::in);
     if (file.is_open()) {
         std::string line;
-        QString name_1;
-        QString price_1;
+        QString name;
+        QString price;
+        QString image;
         while (!file.eof()) {
             std::getline(file, line, '\n');
             std::size_t pos = line.find('-');
-            name_1 = QString::fromStdString(line.substr(0, pos));
-            price_1 = QString::fromStdString(line.substr(pos + 1));
-            Item newItem(name_1, price_1);
+            name = QString::fromStdString(line.substr(0, pos));
+            price = QString::fromStdString(line.substr(pos + 1));
+            Item newItem(name, price,image);
             listItems.push_back(newItem);
         }
         file.close();
