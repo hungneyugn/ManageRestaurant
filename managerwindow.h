@@ -19,7 +19,7 @@ public:
     explicit ManagerWindow(QWidget *parent = nullptr);
     ~ManagerWindow();
     void closeEvent();
-
+    void openFolder();
 
 signals:
     void buttonClicked();

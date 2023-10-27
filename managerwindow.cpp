@@ -13,7 +13,7 @@
 #include <string>
 #include <QFileDialog>
 #include <QDir>
-
+#include "mytablewidget.h"
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,7 +26,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem -> setColumnCount(3);
     tableItem -> setGeometry(0,0,400,400);
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
-
 
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
@@ -62,8 +61,15 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
 void ManagerWindow::on_btnAdd_clicked()
 {
 
-   tableItem->insertRow(tableItem->rowCount());
+    QTableWidgetItem *item = new QTableWidgetItem;
 
+    tableItem->insertRow(tableItem->rowCount());
+    int row = tableItem->rowCount();
+
+    QPushButton *newButton = new QPushButton("newButton");
+    tableItem->setCellWidget(row-1, 0, newButton);
+    tableItem->setItem(row-1, 0, item);
+    connect(newButton, &QPushButton::clicked, this, &ManagerWindow::openFolder);
 
 }
 
@@ -91,20 +97,21 @@ void ManagerWindow::on_btnSave_clicked()
 
 void ManagerWindow::on_btnUpload_clicked()
 {
-   QString folderPath = QFileDialog::getExistingDirectory(nullptr, "Chọn thư mục ảnh", QDir::homePath());
-      if (!folderPath.isEmpty()) {
-          qDebug() << "Thư mục được chọn: " << folderPath;
 
-          QDir directory(folderPath);
-
-        // Liệt kê các tệp và thư mục trong thư mục đã chọn
-        QStringList filesAndFolders = directory.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-        for (const QString &item : filesAndFolders) {
-            qDebug() << "Item: " << item;
-        }
-      }
 }
 
+void ManagerWindow::openFolder(){
+   QString folderPath = QFileDialog::getExistingDirectory(nullptr, "Chọn thư mục ảnh", QDir::homePath());
+       if (!folderPath.isEmpty()) {
+           qDebug() << "Thư mục được chọn: " << folderPath;
 
+                       QDir directory(folderPath);
+
+           QStringList filesAndFolders = directory.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+           for (const QString &item : filesAndFolders) {
+               qDebug() << "Item: " << item;
+           }
+       }
+}
 
 
