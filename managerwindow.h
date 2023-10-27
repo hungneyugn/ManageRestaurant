@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "manager.h"
 #include <QTableWidget>
+#include "QtWidgets"
+
 
 namespace Ui {
 class ManagerWindow;
@@ -18,6 +20,10 @@ public:
     ~ManagerWindow();
     void closeEvent();
 
+
+signals:
+    void buttonClicked();
+
 private:
     Ui::ManagerWindow *ui;
     Manager *manager = new Manager;
@@ -28,6 +34,11 @@ protected:
 private slots:
     void on_btnAdd_clicked();
     void on_btnSave_clicked();
+    void on_btnUpload_clicked();
+
 };
+
+
+
 
 #endif // MANAGERWINDOW_H

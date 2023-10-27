@@ -11,6 +11,9 @@
 #include "sstream"
 #include "QTextEdit"
 #include <string>
+#include <QFileDialog>
+#include <QDir>
+
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +26,8 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem -> setColumnCount(3);
     tableItem -> setGeometry(0,0,400,400);
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
+
+
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
@@ -31,14 +36,14 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
-    }
-
+    };
 }
 
 ManagerWindow::~ManagerWindow()
 {
     delete ui;
 }
+
 void ManagerWindow::closeEvent(QCloseEvent *event){
     event->ignore();
     MainWindow *mainwindow = new MainWindow();
@@ -74,11 +79,32 @@ void ManagerWindow::on_btnSave_clicked()
 
    if(file.is_open() && file.eof()){
         file.seekg(0, std::ios::beg);
-        file << name.toStdString() << "-"<< price.toStdString() << std::endl;
+        file << name.toStdString() << "-" << price.toStdString() << std::endl;
    }
    else{
         file << std::endl << name.toStdString() << "-"<< price.toStdString();
    }
    file.close();
+
 }
+
+
+void ManagerWindow::on_btnUpload_clicked()
+{
+   QString folderPath = QFileDialog::getExistingDirectory(nullptr, "Chọn thư mục ảnh", QDir::homePath());
+      if (!folderPath.isEmpty()) {
+          qDebug() << "Thư mục được chọn: " << folderPath;
+
+          QDir directory(folderPath);
+
+        // Liệt kê các tệp và thư mục trong thư mục đã chọn
+        QStringList filesAndFolders = directory.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString &item : filesAndFolders) {
+            qDebug() << "Item: " << item;
+        }
+      }
+}
+
+
+
 

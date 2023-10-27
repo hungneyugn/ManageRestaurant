@@ -33,11 +33,24 @@
       <x>440</x>
       <y>280</y>
       <width>91</width>
-      <height>51</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
      <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnUpload">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>80</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
