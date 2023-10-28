@@ -12,6 +12,8 @@
 #include "item.h"
 #include <QHeaderView>
 #include <vector>
+#include "staff.h"
+
 
 menuorder::menuorder(QWidget *parent) :
     QMainWindow(parent),
@@ -139,27 +141,20 @@ menuorder::menuorder(QWidget *parent) :
 
 
         QObject::connect(pushButton2, QPushButton::clicked, [=]() {
-            numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
             lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
-            if(listboughtitem.size() == 0)
-            {
-                BoughtItem newboughtitem = BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(),numberlbl->text().toInt());
-                listboughtitem.push_back(newboughtitem);
-            }
-            else
-            {
-                BoughtItem abc = BoughtItem("a", 5, "b",7);
-                //BoughtItem abc = BoughtItem(a[i].getName(), a[i].getId(), a[i].getPrice(),numberlbl->text().toInt());
-                for(int j = 0; j < listboughtitem.size();j++)
-                {
-                    if(listitem[i].getId() == listboughtitem[j].getId()) listboughtitem[j].setQuantity(numberlbl->text().toInt());
-                    else
-                    {
-                        listboughtitem.push_back(abc);
-                        break;
-                    }
+            numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+            BoughtItem* boughtItem = nullptr;
+            for (int j = 0; j < listboughtitem.size(); j++) {
+                if (listitem[i].getId() == listboughtitem[j].getId()) {
+                    boughtItem = &listboughtitem[j];
+                    break;
                 }
             }
+            if (boughtItem == nullptr) {
+                boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
+                listboughtitem.push_back(*boughtItem);
+            }
+            boughtItem->setQuantity(boughtItem->getQuantity() + 1);
         });
 
         QObject::connect(pushButton1, &QPushButton::clicked, [=]() {
@@ -224,5 +219,6 @@ void menuorder::closeEvent(QCloseEvent *event)
         }
     }
     file.close();
-    this->close();
+
+    this->hide();
 }

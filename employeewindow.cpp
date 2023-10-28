@@ -52,20 +52,22 @@ employeeWindow::employeeWindow(QWidget *parent) :
     }
 
     int num = staff->listTables.size();
-    int row = 5;
+    int row = num/2 + 1;
     int column = num/5 +1 ;
     for (int j = 0; j < column;j++)
     {
         if (j < column/2){
             for (int i = 0+row*j; i < row*(j+1) && i<num; i++)
             {
-
                 QPushButton* button = new QPushButton(ui->centralwidget);
                 button->setGeometry(w/2-((column/2-j)*205),100+ i * 100 - 100*(row*j),200,100);
                 button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                if(staff->listTables[i].getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                else button->setStyleSheet("QPushButton { background-color: red }");
                 connect(button,&QPushButton::clicked,[this]()
                         {
                             //                        this->hide();
+                    //Staff.listTables[i].listBookedItem
                             menuorder *Menuorder = new menuorder();
                             Menuorder->setAttribute(Qt::WA_DeleteOnClose);
                             Menuorder->show();
@@ -79,9 +81,10 @@ employeeWindow::employeeWindow(QWidget *parent) :
                 QPushButton* button = new QPushButton(ui->centralwidget);
                 button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
                 button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                if(staff->listTables[i].getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                else button->setStyleSheet("QPushButton { background-color: red }");
                 connect(button,&QPushButton::clicked,[this]()
                         {
-                            //                        this->hide();
                             menuorder *Menuorder = new menuorder();
                             Menuorder->setAttribute(Qt::WA_DeleteOnClose);
                             Menuorder->show();

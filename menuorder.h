@@ -6,6 +6,8 @@
 #include "item.h"
 #include <vector>
 #include <QCloseEvent>
+#include "table.h"
+#include "employeewindow.h"
 
 namespace Ui {
 class menuorder;
