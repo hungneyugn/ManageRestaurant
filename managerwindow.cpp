@@ -11,22 +11,20 @@
 #include "sstream"
 #include "QTextEdit"
 #include <string>
+#include <QFileDialog>
+#include <QDir>
+
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
 {
     ui->setupUi(this);
-    QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
+    tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
-    tableItem -> setGeometry(0,0,800,800);
-    tableItem -> setHorizontalHeaderLabels(QStringList() << "Image" << "Name" << "Price");
-
-    float size =800/3;
-    tableItem->setColumnWidth(0, size);
-    tableItem->setColumnWidth(1, size);
-    tableItem->setColumnWidth(2, size);
+    tableItem -> setGeometry(0,0,400,400);
+    tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
 
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
@@ -36,14 +34,37 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
-        tableItem->setRowHeight(i, 50);
-    }
+    };
+
+//    //Write file
+//    std::fstream file("listItem.txt", std::ios::in);
+//    if (file.is_open()) {
+//        std::string line;
+//        QString name;
+//        QString price;
+//        QString image;
+//        while (!file.eof()) {
+//            std::getline(file, line, '\n');
+//            std::size_t pos1 = line.find(',');
+//            std::size_t pos2 = line.find(',', pos1 + 1);
+//            image = QString::fromStdString(line.substr(0, pos1));
+//            name = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
+//            price = QString::fromStdString(line.substr(pos2 + 1));
+
+//            Item newItem(name, price, image);
+//            newItem.setId();
+//            manager->listItems.push_back(newItem);
+//        }
+//        file.close();
+//    }
+    //read file
 }
 
 ManagerWindow::~ManagerWindow()
 {
     delete ui;
 }
+
 void ManagerWindow::closeEvent(QCloseEvent *event){
     event->ignore();
     MainWindow *mainwindow = new MainWindow();
@@ -58,5 +79,70 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
 }
 
 
+void ManagerWindow::uploadImage()
+{
+    QString destinationFolderName = "image"; // Tên thư mục đích
+    QString imagePath = QFileDialog::getOpenFileName(this, "Chọn hình ảnh", QDir::homePath(), "Ảnh (*.png *.jpg *.jpeg)");
 
+    QFile sourceImage(imagePath);
+    QString fileName = QFileInfo(imagePath).fileName(); // Lấy tên tệp của hình ảnh
+
+    // Lấy đường dẫn thư mục hiện tại của ứng dụng
+    QString currentPath = QDir::currentPath();
+
+    // Tạo đường dẫn đầy đủ đến thư mục đích
+    QString destinationPath = currentPath + "/" + destinationFolderName;
+    QString destinationFilePath = destinationPath + "/" + fileName; // Đường dẫn đầy đủ đến tệp mới
+    this->image_add = destinationFilePath;
+    if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath)) {
+        // Thực hiện sao chép tệp
+        if (QFile::copy(imagePath, destinationFilePath)) {
+            qDebug() << "Sao chép thành công";
+            qDebug() << destinationFilePath;
+        } else {
+            qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
+        }
+    } else {
+        qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
+    }
+}
+
+
+
+void ManagerWindow::on_btn_add_clicked()
+{
+    QTableWidgetItem *item = new QTableWidgetItem;
+
+    tableItem->insertRow(tableItem->rowCount());
+    int row = tableItem->rowCount();
+
+    QPushButton *newButton = new QPushButton("upload...");
+    tableItem->setCellWidget(row-1, 0, newButton);
+    tableItem->setItem(row-1, 0, item);
+    newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
+
+    connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
+
+}
+
+
+void ManagerWindow::on_btn_save_clicked()
+{
+    int rowCount = tableItem->rowCount() - 1;
+    QString name = tableItem->item(rowCount, 1)->text();
+    QString price = tableItem->item(rowCount, 2)->text();
+    QString image = image_add;
+    Item newItem(name,price, image);
+    this ->manager->listItems.push_back(newItem);
+    std::fstream file;
+    file.open("listItem.txt", std::ios::app);
+    if(file.is_open() && file.eof()){
+        file.seekp(0, std::ios::beg);
+        file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+    }
+//    else{
+//        file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+//    }
+    file.close();
+}
 
