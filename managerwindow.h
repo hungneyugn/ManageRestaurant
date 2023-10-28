@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "manager.h"
+#include <QTableWidget>
 
 namespace Ui {
 class ManagerWindow;
@@ -16,6 +17,7 @@ public:
     explicit ManagerWindow(QWidget *parent = nullptr);
     ~ManagerWindow();
     void closeEvent();
+    QTableWidget *tableItem;
 
 private:
     Ui::ManagerWindow *ui;

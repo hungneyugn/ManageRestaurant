@@ -19,17 +19,24 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->setupUi(this);
     QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
-    tableItem -> setColumnCount(2);
+    tableItem -> setColumnCount(3);
     tableItem -> setGeometry(0,0,800,800);
-    tableItem -> setHorizontalHeaderLabels(QStringList() << "Name" << "Price");
+    tableItem -> setHorizontalHeaderLabels(QStringList() << "Image" << "Name" << "Price");
+
+    float size =800/3;
+    tableItem->setColumnWidth(0, size);
+    tableItem->setColumnWidth(1, size);
+    tableItem->setColumnWidth(2, size);
+
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
-        tableItem -> setItem(i,0,nameTableWidget);
-        tableItem -> setItem(i,1,priceTableWidget);
+        tableItem -> setItem(i,1,nameTableWidget);
+        tableItem -> setItem(i,2,priceTableWidget);
+        tableItem->setRowHeight(i, 50);
     }
 }
 
