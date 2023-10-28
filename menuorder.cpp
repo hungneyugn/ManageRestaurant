@@ -205,6 +205,7 @@ void menuorder::closeEvent(QCloseEvent *event)
     }
     else
     {
+        file.seekp(0);
         for(int i = 0;i < listboughtitem.size();i++){
             file << std::endl
                  << listboughtitem[i].getName().toStdString()
