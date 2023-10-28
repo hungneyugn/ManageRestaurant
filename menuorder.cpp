@@ -188,7 +188,7 @@ void menuorder::closeEvent(QCloseEvent *event)
     event->ignore();
 
     std::fstream file;
-    file.open("listBoughtItem.txt", std::ios::in |std::ios::out);
+    file.open("listBoughtItem.txt", std::ios::trunc |std::ios::out);
     if(file.is_open() && !file.eof()){
         file.seekp(0);
         for(int i = 0;i < listboughtitem.size();i++){
