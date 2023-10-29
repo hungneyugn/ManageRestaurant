@@ -20,7 +20,6 @@ Manager::Manager()
         {
             file.seekg(0, std::ios::beg);
             while (!file.eof()) {
-
                 std::getline(file, line, '\n');
                 std::size_t pos1 = line.find(',');
                 std::size_t pos2 = line.find(',', pos1 + 1);
@@ -33,6 +32,5 @@ Manager::Manager()
             }
         }
         file.close();
-
     }
 }
