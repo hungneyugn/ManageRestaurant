@@ -8,6 +8,7 @@
 #include <QCloseEvent>
 #include "table.h"
 #include "employeewindow.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class menuorder;
@@ -18,10 +19,11 @@ class menuorder : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit menuorder(QWidget *parent = nullptr);
+    explicit menuorder(QWidget *parent = nullptr,Table *table = nullptr);
     ~menuorder();
 
 private:
+    Table *table;
     Ui::menuorder *ui;
     std::vector <Item> listitem;
     std::vector <BoughtItem> listboughtitem;

@@ -11,7 +11,7 @@ class employeeWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit employeeWindow(QWidget *parent = nullptr);
+    explicit employeeWindow(QWidget *parent = nullptr, Table *table = nullptr);
     ~employeeWindow();
 
 private:

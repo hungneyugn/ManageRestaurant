@@ -1,5 +1,7 @@
 #include "menuorder.h"
 #include "ui_menuorder.h"
+#include "billwindow.h"
+#include "ui_billwindow.h"
 #include "string"
 #include "iostream"
 #include "fstream"
@@ -13,20 +15,38 @@
 #include <QHeaderView>
 #include <vector>
 #include "staff.h"
+#include "mainwindow.h"
 
-
-menuorder::menuorder(QWidget *parent) :
+menuorder::menuorder(QWidget *parent, Table *table) :
     QMainWindow(parent),
     ui(new Ui::menuorder)
 {
+    qDebug () << table;
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
     int h = geometry.height();
+    this->table = table;
     ui->setupUi(this);
-    this->setGeometry(0,0,w,h);
-    this->move(0,0);
 
+    // Them nut thanh toan
+    QPushButton *payment = new QPushButton(this);
+    payment->setText("Payment");
+    payment->move(0.9*w, 0.875*h);
+
+    connect(payment ,&QPushButton::clicked,[=](){
+    billwindow *billwindow1 = new billwindow(this, this->table);
+    billwindow1->setAttribute(Qt::WA_DeleteOnClose);
+
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
+    billwindow1->setGeometry(0,0,w,h);
+    billwindow1->move(0,0);
+    billwindow1->show();
+    this->hide();
+    });
 
     std::fstream file("listItem.txt", std::ios::in);
     if (file.is_open()) {
@@ -57,7 +77,7 @@ menuorder::menuorder(QWidget *parent) :
     newtable->setColumnWidth(1,0.28*w);
     newtable->setColumnWidth(2,0.28*w);
     newtable->setColumnWidth(3,0.125*w);
-    newtable->setGeometry(0,0,w,0.8*h);
+    newtable->setGeometry(0,0,w,0.7*h);
 
     newtable->setHorizontalHeaderLabels(QStringList()<<"Image"<< "Name"<<"Price"<<"Number");
 
@@ -76,7 +96,9 @@ menuorder::menuorder(QWidget *parent) :
     QList <QString> pricearr;
     QList <QTableWidgetItem *> nameWidget;
     QList <QTableWidgetItem *> priceWidget;
-
+//    int a = table->listBookedItem.size();
+//    qDebug() << a;
+//    qDebug () << table->listBookedItem.size();
     for(int i = 0;i <listitem.size();i++)
     {
         QLabel *qlabel = new QLabel();
@@ -116,7 +138,19 @@ menuorder::menuorder(QWidget *parent) :
         pushButton1->setIcon(icon);
         pushButton1->setAutoRepeat(false);
         QLabel *numberlbl = new QLabel(numberLayoutWidget);
-        numberlbl->setText("0");
+        if(table->listBookedItem.size() != 0)
+        {
+            for(int j = 0;j < table->listBookedItem.size();j++)
+            {
+                //int i = *(table->listBookedItem[j]->getId());
+                if(listitem[i].getId() == (table->listBookedItem[j]->getId())) numberlbl->setText(QString::number(table->listBookedItem[i]->getQuantity()));
+                else numberlbl->setText("0");
+            }
+        }
+        else
+        {
+            numberlbl->setText("0");
+        }
         QPushButton *pushButton2 = new QPushButton(numberLayoutWidget);
 
         pushButton2->setStyleSheet(QString::fromUtf8("QPushButton{\n"
@@ -144,17 +178,18 @@ menuorder::menuorder(QWidget *parent) :
             lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
             BoughtItem* boughtItem = nullptr;
-            for (int j = 0; j < listboughtitem.size(); j++) {
-                if (listitem[i].getId() == listboughtitem[j].getId()) {
-                    boughtItem = &listboughtitem[j];
+            for (int j = 0; j < table->listBookedItem.size(); j++) {
+                if (listitem[i].getId() == table->listBookedItem[j]->getId()) {
+                    boughtItem = table->listBookedItem[j];
                     break;
                 }
             }
             if (boughtItem == nullptr) {
                 boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
-                listboughtitem.push_back(*boughtItem);
+                table->listBookedItem.push_back(boughtItem);
             }
-            boughtItem->setQuantity(boughtItem->getQuantity() + 1);
+//            qDebug()<<table;
+            boughtItem->setQuantity(boughtItem->getQuantity());
         });
 
         QObject::connect(pushButton1, &QPushButton::clicked, [=]() {
@@ -162,16 +197,16 @@ menuorder::menuorder(QWidget *parent) :
             if(numberlbl->text().toInt() > 0) lbl_cost->setText(QString::number(lbl_cost->text().toInt() - listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() == 0 ? 0 :numberlbl->text().toInt() - 1));
 
-            for(int j = 0; j < listboughtitem.size();j++)
+            for(int j = 0; j < table->listBookedItem.size();j++)
             {
-                if(listitem[i].getId() == listboughtitem[j].getId())
-                    if(listboughtitem[j].getQuantity() == 1)
+                if(listitem[i].getId() == table->listBookedItem[j]->getId())
+                    if(table->listBookedItem[j]->getQuantity() == 1)
                     {
-                        listboughtitem.erase(listboughtitem.begin() + j);
+                        table->listBookedItem.erase(table->listBookedItem.begin() + j);
                     }
                     else
                     {
-                        listboughtitem[j].setQuantity(numberlbl->text().toInt());
+                        table->listBookedItem[j]->setQuantity(numberlbl->text().toInt());
                     }
             }
         });
@@ -186,19 +221,20 @@ menuorder::~menuorder()
 void menuorder::closeEvent(QCloseEvent *event)
 {
     event->ignore();
-
+    std::fstream list_table;
     std::fstream file;
+    // ghi file listBoughtItem
     file.open("listBoughtItem.txt", std::ios::trunc |std::ios::out);
     if(file.is_open() && !file.eof()){
         file.seekp(0);
-        for(int i = 0;i < listboughtitem.size();i++){
-            file << listboughtitem[i].getName().toStdString()
+        for(int i = 0;i < table->listBookedItem.size();i++){
+            file << table->listBookedItem[i]->getName().toStdString()
                  << "-"
-                 << QString::number(listboughtitem[i].getId()).toStdString()
+                 << QString::number(table->listBookedItem[i]->getId()).toStdString()
                  << "-"
-                 << listboughtitem[i].getPrice().toStdString()
+                 << table->listBookedItem[i]->getPrice().toStdString()
                  << "-"
-                 << QString::number(listboughtitem[i].getQuantity()).toStdString()
+                 << QString::number(table->listBookedItem[i]->getQuantity()).toStdString()
                  << std::endl;
         }
 
@@ -206,20 +242,77 @@ void menuorder::closeEvent(QCloseEvent *event)
     else
     {
         file.seekp(0);
-        for(int i = 0;i < listboughtitem.size();i++){
+        for(int i = 0;i < table->listBookedItem.size();i++){
             file << std::endl
-                 << listboughtitem[i].getName().toStdString()
+                 << table->listBookedItem[i]->getName().toStdString()
                  << "-"
-                 << QString::number(listboughtitem[i].getId()).toStdString()
+                 << QString::number(table->listBookedItem[i]->getId()).toStdString()
                  << "-"
-                 << listboughtitem[i].getPrice().toStdString()
+                 << table->listBookedItem[i]->getPrice().toStdString()
                  << "-"
-                 << QString::number(listboughtitem[i].getQuantity()).toStdString();
+                 << QString::number(table->listBookedItem[i]->getQuantity()).toStdString();
 
 
         }
     }
-    file.close();
 
+    // load lai listtable tu file
+        std::vector <Table *> updateListTable;
+        std::fstream r_file("listTable.txt", std::ios::in);
+        std::string line_r;
+        if (r_file.is_open()) {
+            while (std::getline(r_file, line_r)) {
+                size_t dashPos = line_r.find("-");
+                std::string ordinal_char = line_r.substr(0, dashPos);
+                int ordinal = stoi(ordinal_char);
+
+                std::string status_char = line_r.substr(dashPos + 1);
+                bool status = stoi(status_char);
+                Table *newtable = new Table(ordinal,status);
+                updateListTable.push_back(newtable);
+            }
+        }
+
+    // cap nhat lai listTable moi
+        if(table->listBookedItem.size() != 0)
+        {
+            for(auto _table : updateListTable)
+            {
+                if(_table->getOrdinal() == table->getOrdinal()) _table->setStatus(0);
+            }
+        }
+
+    // Luu lai listTable moi vao file text
+    list_table.open("listTable.txt", std::ios::trunc |std::ios::out);
+    if(list_table.is_open() && !list_table.eof()){
+        list_table.seekp(0);
+        for(int i = 0;i < updateListTable.size();i++){
+                list_table << updateListTable[i]->getOrdinal()
+                 << "-"
+                 << updateListTable[i]->getStatus()
+                 << std::endl;
+        }
+
+    }
+
+    else
+    {
+        for(int i = 0;i < updateListTable.size();i++){
+        list_table << std::endl
+             << QString::number(updateListTable[i]->getOrdinal()).toStdString()
+             << "-"
+        << updateListTable[i]->getStatus();
+        }
+    }
+    employeeWindow* employeeWindow1 = new employeeWindow(this);
+    employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
+    employeeWindow1->setGeometry(0,0,w,h);
+    employeeWindow1->move(0,0);
+    employeeWindow1->show();
+    file.close();
     this->hide();
 }

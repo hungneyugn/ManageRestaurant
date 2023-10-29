@@ -7,7 +7,7 @@ class Staff
 {
 public:
     Staff();
-    std::vector<Table> listTables;
+    std::vector<Table *> listTables;
 private:
     int numberOfTable;
     /*variable save numbers of table which was chosen*/

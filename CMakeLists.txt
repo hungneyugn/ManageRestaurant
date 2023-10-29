@@ -33,6 +33,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         manager.h manager.cpp
         staff.h staff.cpp
         menuorder.h menuorder.cpp menuorder.ui
+        billwindow.h billwindow.cpp billwindow.ui
 
 
     )
