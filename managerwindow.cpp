@@ -36,30 +36,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
     };
 
-//    //Write file
-//    std::fstream file("listItem.txt", std::ios::in);
-//    if (file.is_open()) {
-//        std::string line;
-//        QString name;
-//        QString price;
-//        QString image;
-//        while (!file.eof()) {
-//            std::getline(file, line, '\n');
-//            std::size_t pos1 = line.find(',');
-//            std::size_t pos2 = line.find(',', pos1 + 1);
-//            image = QString::fromStdString(line.substr(0, pos1));
-//            name = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
-//            price = QString::fromStdString(line.substr(pos2 + 1));
-
-//            Item newItem(name, price, image);
-//            newItem.setId();
-//            manager->listItems.push_back(newItem);
-//        }
-//        file.close();
-//    }
-    //read file
-}
-
 ManagerWindow::~ManagerWindow()
 {
     delete ui;
@@ -136,13 +112,19 @@ void ManagerWindow::on_btn_save_clicked()
     this ->manager->listItems.push_back(newItem);
     std::fstream file;
     file.open("listItem.txt", std::ios::app);
-    if(file.is_open() && file.eof()){
-        file.seekp(0, std::ios::beg);
-        file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+    file.seekp(0, std::ios::end);
+
+    if(file.is_open()){
+        file.seekp(0, std::ios::end);
+        if (file.tellp() == 0) {
+            // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
+            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+        } else {
+            // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
+            file << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+        }
     }
-//    else{
-//        file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
-//    }
+
     file.close();
 }
 
