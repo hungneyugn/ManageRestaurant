@@ -11,6 +11,10 @@
 #include "sstream"
 #include "QTextEdit"
 #include <string>
+#include <QFileDialog>
+#include <QDir>
+#include "QIcon"
+
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,11 +37,11 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
     };
 }
-
 ManagerWindow::~ManagerWindow()
 {
     delete ui;
 }
+
 void ManagerWindow::closeEvent(QCloseEvent *event){
     MainWindow *mainwindow = new MainWindow();
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -51,5 +55,78 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
 }
 
 
+void ManagerWindow::uploadImage()
+{
+    QString destinationFolderName = "image"; // Tên thư mục đích
+    QString imagePath = QFileDialog::getOpenFileName(this, "Chọn hình ảnh", QDir::homePath(), "Ảnh (*.png *.jpg *.jpeg)");
 
+    QFile sourceImage(imagePath);
+    QString fileName = QFileInfo(imagePath).fileName(); // Lấy tên tệp của hình ảnh
+
+    // Lấy đường dẫn thư mục hiện tại của ứng dụng
+    QString currentPath = QDir::currentPath();
+
+    // Tạo đường dẫn đầy đủ đến thư mục đích
+    QString destinationPath = currentPath + "/" + destinationFolderName;
+    QString destinationFilePath = destinationPath + "/" + fileName; // Đường dẫn đầy đủ đến tệp mới
+    this->image_add = destinationFilePath;
+    if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath)) {
+        // Thực hiện sao chép tệp
+        if (QFile::copy(imagePath, destinationFilePath)) {
+            qDebug() << "Sao chép thành công";
+            qDebug() << destinationFilePath;
+        } else {
+            qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
+        }
+    } else {
+        qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
+    }
+}
+
+
+
+void ManagerWindow::on_btn_add_clicked()
+{
+    QTableWidgetItem *item = new QTableWidgetItem;
+
+    tableItem->insertRow(tableItem->rowCount());
+    int row = tableItem->rowCount();
+
+    newButton = new QPushButton("upload...");
+    tableItem->setCellWidget(row-1, 0, newButton);
+    tableItem->setItem(row-1, 0, item);
+    newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
+
+    connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
+
+}
+
+
+void ManagerWindow::on_btn_save_clicked()
+{
+    int rowCount = tableItem->rowCount() - 1;
+    QString name = tableItem->item(rowCount, 1)->text();
+    QString price = tableItem->item(rowCount, 2)->text();
+    QString image = image_add;
+    Item newItem(name,price, image);
+    this ->manager->listItems.push_back(newItem);
+    std::fstream file;
+    file.open("listItem.txt", std::ios::app);
+    if(file.is_open()){
+        file.seekp(0, std::ios::end);
+        if (file.tellp() == 0) {
+            // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
+            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+
+        } else {
+            // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
+            file << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+        }
+    }
+    file.close();
+    QIcon icon(image_add);
+    newButton->setIcon(icon);
+    newButton->setText("");
+
+}
 
