@@ -40,6 +40,19 @@
      <string>Save</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_delete">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>83</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
