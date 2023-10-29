@@ -17,16 +17,11 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui(new Ui::ManagerWindow)
 {
     ui->setupUi(this);
-    QTableWidget *tableItem = new QTableWidget(ui->centralwidget);
+    tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
-    tableItem -> setGeometry(0,0,800,800);
-    tableItem -> setHorizontalHeaderLabels(QStringList() << "Image" << "Name" << "Price");
-
-    float size =800/3;
-    tableItem->setColumnWidth(0, size);
-    tableItem->setColumnWidth(1, size);
-    tableItem->setColumnWidth(2, size);
+    tableItem -> setGeometry(0,0,400,400);
+    tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
 
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
@@ -36,8 +31,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
-        tableItem->setRowHeight(i, 50);
-    }
+    };
 }
 
 ManagerWindow::~ManagerWindow()
@@ -45,7 +39,6 @@ ManagerWindow::~ManagerWindow()
     delete ui;
 }
 void ManagerWindow::closeEvent(QCloseEvent *event){
-    event->ignore();
     MainWindow *mainwindow = new MainWindow();
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
