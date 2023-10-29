@@ -14,6 +14,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include "QIcon"
+#include "QLabel"
+#include "QPixmap"
 #include <cmath>
 #include "QScreen"
 
@@ -45,9 +47,17 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
+
+        QLabel *newLabel = new QLabel();
+        newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
+        newLabel->setAlignment(Qt::AlignCenter);
+
+        tableItem->setCellWidget(i, 0 , newLabel);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
+        tableItem->setRowHeight(i, h/5);
     };
+
 }
 ManagerWindow::~ManagerWindow()
 {
@@ -101,13 +111,19 @@ void ManagerWindow::on_btn_add_clicked()
 {
     QTableWidgetItem *item = new QTableWidgetItem;
 
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
     tableItem->insertRow(tableItem->rowCount());
     int row = tableItem->rowCount();
+
 
     newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
     tableItem->setItem(row-1, 0, item);
     newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
+    tableItem->setRowHeight(row-1,h/5);
 
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
 
@@ -121,6 +137,10 @@ void ManagerWindow::on_btn_save_clicked()
     QString price = tableItem->item(rowCount, 2)->text();
     QString image = image_add;
     Item newItem(name,price, image);
+    QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
+    QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
+    itemName->setTextAlignment(Qt::AlignCenter);
+    itemPrice->setTextAlignment(Qt::AlignCenter);
     this ->manager->listItems.push_back(newItem);
     std::fstream file;
     file.open("listItem.txt", std::ios::app);
@@ -128,17 +148,19 @@ void ManagerWindow::on_btn_save_clicked()
         file.seekp(0, std::ios::end);
         if (file.tellp() == 0) {
             // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
-            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
 
         } else {
             // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-            file << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+            file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
         }
     }
     file.close();
     QIcon icon(image_add);
     newButton->setIcon(icon);
-    newButton->setText("");
+    newButton->setText("");   
+    newButton->setIconSize(newButton->size());
+
 }
 
 
