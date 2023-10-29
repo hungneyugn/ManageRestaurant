@@ -16,6 +16,8 @@
 #include "QIcon"
 #include "QLabel"
 #include "QPixmap"
+#include <cmath>
+#include "QScreen"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -26,25 +28,34 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
-    tableItem -> setGeometry(0,0,400,400);
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
+    tableItem -> setGeometry(0,0,7*w/9,h);
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
+    tableItem->setColumnWidth(0, 7*w/27);
+    tableItem->setColumnWidth(1, 7*w/27);
+    tableItem->setColumnWidth(2, 7*w/27);
+
+    ui->btn_add->move(5*w/6,h/2);
+    ui->btn_save->move(5*w/6,7*h/12);
+    ui->btn_delete->move(5*w/6,2*h/3);
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
-//        QTableWidgetItem *imageTableWidget = new QTableWidgetItem(manager->listItems[i].getImage());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
 
-
-//        qDebug() << imageTableWidget;
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
-        newLabel->setScaledContents(true);
+        newLabel->setAlignment(Qt::AlignCenter);
 
         tableItem->setCellWidget(i, 0 , newLabel);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
+        tableItem->setRowHeight(i, h/5);
     };
 
 }
@@ -54,7 +65,6 @@ ManagerWindow::~ManagerWindow()
 }
 
 void ManagerWindow::closeEvent(QCloseEvent *event){
-    event->ignore();
     MainWindow *mainwindow = new MainWindow();
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
@@ -101,13 +111,19 @@ void ManagerWindow::on_btn_add_clicked()
 {
     QTableWidgetItem *item = new QTableWidgetItem;
 
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
     tableItem->insertRow(tableItem->rowCount());
     int row = tableItem->rowCount();
+
 
     newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
     tableItem->setItem(row-1, 0, item);
     newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
+    tableItem->setRowHeight(row-1,h/5);
 
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
 
@@ -121,6 +137,10 @@ void ManagerWindow::on_btn_save_clicked()
     QString price = tableItem->item(rowCount, 2)->text();
     QString image = image_add;
     Item newItem(name,price, image);
+    QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
+    QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
+    itemName->setTextAlignment(Qt::AlignCenter);
+    itemPrice->setTextAlignment(Qt::AlignCenter);
     this ->manager->listItems.push_back(newItem);
     std::fstream file;
     file.open("listItem.txt", std::ios::app);
@@ -138,8 +158,31 @@ void ManagerWindow::on_btn_save_clicked()
     file.close();
     QIcon icon(image_add);
     newButton->setIcon(icon);
-    newButton->setText("");
+    newButton->setText("");   
     newButton->setIconSize(newButton->size());
 
+}
+
+
+void ManagerWindow::on_btn_delete_clicked()
+{
+    int row = this->tableItem->currentRow();
+    if (row > 0) {
+        this->tableItem->removeRow(row);
+        manager->listItems.erase(manager->listItems.begin() + row);
+        std::fstream file;
+        file.open("listItem.txt", std::ios::trunc |std::ios::out);
+        if(file.is_open() && !file.eof()){
+            file.seekp(0);
+            for(int i = 0;i < manager->listItems.size(); i ++){
+                file << manager->listItems[i].getImage().toStdString()
+                     << ","
+                     << manager->listItems[i].getName().toStdString()
+                     << ","
+                     << manager->listItems[i].getPrice().toStdString()
+                     << std::endl;
+            }
+        }
+    }
 }
 
