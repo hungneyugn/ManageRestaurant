@@ -15,6 +15,7 @@
 #include <QDir>
 #include "QIcon"
 #include <cmath>
+#include "QScreen"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -25,9 +26,19 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
-    tableItem -> setGeometry(0,0,400,400);
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect geometry = screen->geometry();
+    int w = geometry.width();
+    int h = geometry.height();
+    tableItem -> setGeometry(0,0,7*w/9,h);
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
+    tableItem->setColumnWidth(0, 7*w/27);
+    tableItem->setColumnWidth(1, 7*w/27);
+    tableItem->setColumnWidth(2, 7*w/27);
 
+    ui->btn_add->move(5*w/6,h/2);
+    ui->btn_save->move(5*w/6,7*h/12);
+    ui->btn_delete->move(5*w/6,2*h/3);
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
