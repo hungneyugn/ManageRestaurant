@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include "QIcon"
+#include <cmath>
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -127,6 +128,28 @@ void ManagerWindow::on_btn_save_clicked()
     QIcon icon(image_add);
     newButton->setIcon(icon);
     newButton->setText("");
+}
 
+
+void ManagerWindow::on_btn_delete_clicked()
+{
+    int row = this->tableItem->currentRow();
+    if (row > 0) {
+        this->tableItem->removeRow(row);
+        manager->listItems.erase(manager->listItems.begin() + row);
+        std::fstream file;
+        file.open("listItem.txt", std::ios::trunc |std::ios::out);
+        if(file.is_open() && !file.eof()){
+            file.seekp(0);
+            for(int i = 0;i < manager->listItems.size(); i ++){
+                file << manager->listItems[i].getImage().toStdString()
+                     << ","
+                     << manager->listItems[i].getName().toStdString()
+                     << ","
+                     << manager->listItems[i].getPrice().toStdString()
+                     << std::endl;
+            }
+        }
+    }
 }
 

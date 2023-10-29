@@ -18,6 +18,7 @@ Manager::Manager()
         file.seekg(0, std::ios::end);
         if (file.tellp() != 0)
         {
+            file.seekg(0, std::ios::beg);
             while (!file.eof()) {
                 std::getline(file, line, '\n');
                 std::size_t pos1 = line.find(',');
@@ -31,5 +32,5 @@ Manager::Manager()
             }
         }
         file.close();
-}
+    }
 }
