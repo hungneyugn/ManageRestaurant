@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "manager.h"
 #include <QTableWidget>
+#include "QPushButton"
 
 namespace Ui {
 class ManagerWindow;
@@ -23,6 +24,7 @@ private:
     Ui::ManagerWindow *ui;
     Manager *manager = new Manager;
     QString image_add;
+    QPushButton *newButton;
 
 protected:
     void closeEvent(QCloseEvent *event);

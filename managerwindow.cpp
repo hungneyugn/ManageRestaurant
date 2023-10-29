@@ -13,6 +13,7 @@
 #include <string>
 #include <QFileDialog>
 #include <QDir>
+#include "QIcon"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -35,7 +36,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
     };
-
+}
 ManagerWindow::~ManagerWindow()
 {
     delete ui;
@@ -92,7 +93,7 @@ void ManagerWindow::on_btn_add_clicked()
     tableItem->insertRow(tableItem->rowCount());
     int row = tableItem->rowCount();
 
-    QPushButton *newButton = new QPushButton("upload...");
+    newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
     tableItem->setItem(row-1, 0, item);
     newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
@@ -112,19 +113,21 @@ void ManagerWindow::on_btn_save_clicked()
     this ->manager->listItems.push_back(newItem);
     std::fstream file;
     file.open("listItem.txt", std::ios::app);
-    file.seekp(0, std::ios::end);
-
     if(file.is_open()){
         file.seekp(0, std::ios::end);
         if (file.tellp() == 0) {
             // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
             file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString() << std::endl;
+
         } else {
             // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
             file << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
         }
     }
-
     file.close();
+    QIcon icon(image_add);
+    newButton->setIcon(icon);
+    newButton->setText("");
+
 }
 

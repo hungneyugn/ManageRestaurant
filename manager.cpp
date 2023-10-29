@@ -30,7 +30,6 @@ Manager::Manager()
                 listItems.push_back(newItem);
             }
         }
-
         file.close();
 }
 }
