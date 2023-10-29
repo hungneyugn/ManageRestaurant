@@ -175,7 +175,7 @@ void ManagerWindow::on_btn_delete_clicked()
         file.open("listItem.txt", std::ios::trunc |std::ios::out);
         if(file.is_open() && !file.eof()){
             file.seekp(0);
-            for(int i = 0;i < manager->listItems.size(); i ++){
+            for(int i = 0;i < manager->listItems.size(); i++){
                 file << manager->listItems[i].getImage().toStdString()
                      << ","
                      << manager->listItems[i].getName().toStdString()
@@ -205,7 +205,7 @@ void ManagerWindow::on_btn_update_clicked()
         file.open("listItem.txt", std::ios::trunc |std::ios::out);
         if(file.is_open() && !file.eof()){
             file.seekp(0);
-            for(int i = 0;i < manager->listItems.size(); i ++){
+            for(int i = 0;i < manager->listItems.size(); i++){
                 file << manager->listItems[i].getImage().toStdString()
                      << ","
                      << manager->listItems[i].getName().toStdString()
