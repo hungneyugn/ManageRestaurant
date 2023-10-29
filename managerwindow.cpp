@@ -41,6 +41,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->btn_add->move(5*w/6,h/2);
     ui->btn_save->move(5*w/6,7*h/12);
     ui->btn_delete->move(5*w/6,2*h/3);
+    ui->btn_update->move(5*w/6,3*h/4);
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
@@ -174,7 +175,7 @@ void ManagerWindow::on_btn_delete_clicked()
         file.open("listItem.txt", std::ios::trunc |std::ios::out);
         if(file.is_open() && !file.eof()){
             file.seekp(0);
-            for(int i = 0;i < manager->listItems.size(); i ++){
+            for(int i = 0;i < manager->listItems.size(); i++){
                 file << manager->listItems[i].getImage().toStdString()
                      << ","
                      << manager->listItems[i].getName().toStdString()
@@ -184,5 +185,36 @@ void ManagerWindow::on_btn_delete_clicked()
             }
         }
     }
+}
+
+
+void ManagerWindow::on_btn_update_clicked()
+{
+    int row = this->tableItem->currentRow();
+    if (row > 0) {
+
+        QString name = tableItem->item(row, 1)->text();
+        QString price = tableItem->item(row, 2)->text();
+        QString image = image_add;
+
+        manager->listItems[row].setName(name);
+        manager->listItems[row].setPrice(price);
+        manager->listItems[row].setImage(image);
+
+        std::fstream file;
+        file.open("listItem.txt", std::ios::trunc |std::ios::out);
+        if(file.is_open() && !file.eof()){
+            file.seekp(0);
+            for(int i = 0;i < manager->listItems.size(); i++){
+                file << manager->listItems[i].getImage().toStdString()
+                     << ","
+                     << manager->listItems[i].getName().toStdString()
+                     << ","
+                     << manager->listItems[i].getPrice().toStdString()
+                     << std::endl;
+            }
+        }
+    }
+
 }
 
