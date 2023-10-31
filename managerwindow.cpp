@@ -150,17 +150,20 @@ void ManagerWindow::on_btn_delete_clicked()
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
         file.open("listItem.txt", std::ios::trunc |std::ios::out);
-        if(file.is_open() && !file.eof()){
-            file.seekp(0);
-            for(int i = 0;i < manager->listItems.size(); i ++){
-                file << manager->listItems[i].getImage().toStdString()
-                     << ","
-                     << manager->listItems[i].getName().toStdString()
-                     << ","
-                     << manager->listItems[i].getPrice().toStdString()
-                     << std::endl;
+        if(file.is_open()){
+            file.seekp(0, std::ios::end);
+            for(int i = 0;i < manager->listItems.size(); i++){
+                if (file.tellp() == 0) {
+                    // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
+                    file <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
+
+                } else {
+                    // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
+                    file << std::endl << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
+                }
             }
         }
+        file.close();
     }
 }
 
