@@ -145,7 +145,7 @@ void ManagerWindow::on_btn_save_clicked()
 void ManagerWindow::on_btn_delete_clicked()
 {
     int row = this->tableItem->currentRow();
-    if (row > 0) {
+    if (row >= 0) {
         this->tableItem->removeRow(row);
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
