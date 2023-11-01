@@ -2,6 +2,7 @@
 #define BILLWINDOW_H
 
 #include <QMainWindow>
+#include "employeewindow.h"
 #include "table.h"
 #include "vector"
 
@@ -14,13 +15,14 @@ class billwindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit billwindow(QWidget *parent = nullptr, Table *table = nullptr);
+    explicit billwindow(employeeWindow *parent = nullptr, Table *table = nullptr);
     ~billwindow();
 
 private:
     Ui::billwindow *ui;
-    Table *table = new Table();
 protected:
+    Table *table = new Table();
+    Staff *staff = new Staff();
     void closeEvent(QCloseEvent *event);
 };
 

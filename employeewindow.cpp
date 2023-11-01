@@ -12,30 +12,16 @@
 #include "menuorder.h"
 #include <QPushButton>
 
-employeeWindow::employeeWindow(QWidget *parent,Table *table ) :
+employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::employeeWindow)
 {
-//    qDebug() << table->listBookedItem.size();
+    if(newStaff->listTables.size()!= 0) staff = newStaff;
     ui->setupUi(this);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
-    //    QTableWidget *c = new QTableWidget(ui->centralwidget);
-    //    c->setRowCount(staff->listTables.size());
-    //    c->setColumnCount(2);
-    //    c->setGeometry(0, 0, w, h);
-    //    c->setHorizontalHeaderLabels(QStringList() << "Ordinal" << "Status");
-    //    for(int i=0; i<staff->listTables.size();i++)
-    //    {
-    //        QTableWidgetItem *a = new QTableWidgetItem(QString::number(staff->listTables[i].getOrdinal()));
-    //        QTableWidgetItem *b = new QTableWidgetItem((staff->listTables[i].getStatus() == true ? "1" : "0" ));
 
-    //        a->setTextAlignment(Qt::AlignCenter);
-    //        b->setTextAlignment(Qt::AlignCenter);
-    //        c->setItem(i, 0, a);
-    //        c->setItem(i, 1, b);
-    //    }
     std::fstream r_file("listTable.txt", std::ios::in);
     if(staff->listTables.size() == 0)
     {
@@ -53,15 +39,11 @@ employeeWindow::employeeWindow(QWidget *parent,Table *table ) :
             }
         }
     }
-    else
-    {
-        for (auto list : staff->listTables)
-        {
-            if(list->getOrdinal() == table->getOrdinal()) list->setStatus(table->getStatus());
-        }
-    }
 
-
+//    for(int i = 0;i < staff->listTables.size();i++)
+//    {
+//        if(staff->listTables[i]->listBookedItem.size() != 0) qDebug() << staff->listTables[i]->listBookedItem.size() << "alo";
+//    }
     int num = staff->listTables.size();
     int row = num/2 + 1;
     int column = num/5 +1 ;
@@ -75,20 +57,22 @@ employeeWindow::employeeWindow(QWidget *parent,Table *table ) :
                 button->setText(QString("Table %1").arg(QString::number(i + 1)));
                 if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
                 else button->setStyleSheet("QPushButton { background-color: red }");
-                connect(button,&QPushButton::clicked,[this]()
+                connect(button,&QPushButton::clicked,[=]()
                         {
-//                    QScreen *screen = QGuiApplication::primaryScreen();
-//                    QRect geometry = screen->geometry();
-//                    int w = geometry.width();
-//                    int h = geometry.height();
-//                    ui->setupUi(this);
-//                    this->setGeometry(0,0,w,h);
-//                    this->move(0,0);
+                            qDebug()<< staff->listTables[i];
+                            menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                            Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
-//                    menuorder *Menuorder = new menuorder();
-//                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
-//                    Menuorder->show();
-                        } );
+                            QScreen *screen = QGuiApplication::primaryScreen();
+                            QRect geometry = screen->geometry();
+                            int w = geometry.width();
+                            int h = geometry.height();
+                            Menuorder->setGeometry(0,0,w,h);
+                            Menuorder->move(0,0);
+
+                            Menuorder->show();
+                            this->hide();
+                        });
             }
         }
         else
@@ -102,13 +86,6 @@ employeeWindow::employeeWindow(QWidget *parent,Table *table ) :
                 else button->setStyleSheet("QPushButton { background-color: red }");
                 connect(button,&QPushButton::clicked,[=]()
                         {
-//                    QScreen *screen = QGuiApplication::primaryScreen();
-//                    QRect geometry = screen->geometry();
-//                    int w = geometry.width();
-//                    int h = geometry.height();
-//                    ui->setupUi(this);
-//                    this->setGeometry(0,0,w,h);
-//                    this->move(0,0);
                      qDebug()<< staff->listTables[i];
                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
@@ -122,7 +99,7 @@ employeeWindow::employeeWindow(QWidget *parent,Table *table ) :
 
                     Menuorder->show();
                     this->hide();
-                        } );
+                    });
             }
         }
     }

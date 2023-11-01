@@ -16,12 +16,13 @@
 #include <vector>
 #include "staff.h"
 #include "mainwindow.h"
+#include "employeewindow.h"
 
-menuorder::menuorder(QWidget *parent, Table *table) :
+menuorder::menuorder(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
     ui(new Ui::menuorder)
 {
-    qDebug () << table;
+    this->parent_copy = parent;
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
@@ -35,7 +36,7 @@ menuorder::menuorder(QWidget *parent, Table *table) :
     payment->move(0.9*w, 0.875*h);
 
     connect(payment ,&QPushButton::clicked,[=](){
-    billwindow *billwindow1 = new billwindow(this, this->table);
+    billwindow *billwindow1 = new billwindow(parent, this->table);
     billwindow1->setAttribute(Qt::WA_DeleteOnClose);
 
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -48,24 +49,11 @@ menuorder::menuorder(QWidget *parent, Table *table) :
     this->hide();
     });
 
-    std::fstream file("listItem.txt", std::ios::in);
-    if (file.is_open()) {
-        std::string line;
-        QString name;
-        QString price;
-        QString image;
-        while (!file.eof()) {
-            std::getline(file, line, '\n');
-            std::size_t pos1 = line.find('-');
-            std::size_t pos2 = line.find('-', pos1 + 1);
-            name = QString::fromStdString(line.substr(0, pos1));
-            price = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
-            image = QString::fromStdString(line.substr(pos2 + 1));
-            Item newItem(name, price,image);
-            newItem.setId();
-            listitem.push_back(newItem);
-        }
-        file.close();
+    for(int i = 0;i < 5;i++)
+    {
+        Item newItem("name", "1000", ":/image/cake.jpg");
+        newItem.setId(100+i);
+        listitem.push_back(newItem);
     }
 
     QTableWidget *newtable = new QTableWidget(ui->centralwidget);
@@ -96,9 +84,7 @@ menuorder::menuorder(QWidget *parent, Table *table) :
     QList <QString> pricearr;
     QList <QTableWidgetItem *> nameWidget;
     QList <QTableWidgetItem *> priceWidget;
-//    int a = table->listBookedItem.size();
-//    qDebug() << a;
-//    qDebug () << table->listBookedItem.size();
+
     for(int i = 0;i <listitem.size();i++)
     {
         QLabel *qlabel = new QLabel();
@@ -138,14 +124,20 @@ menuorder::menuorder(QWidget *parent, Table *table) :
         pushButton1->setIcon(icon);
         pushButton1->setAutoRepeat(false);
         QLabel *numberlbl = new QLabel(numberLayoutWidget);
+        qDebug()<< "ID menu" << listitem[i].getId();
         if(table->listBookedItem.size() != 0)
         {
+            int temp = 0;
             for(int j = 0;j < table->listBookedItem.size();j++)
             {
-                //int i = *(table->listBookedItem[j]->getId());
-                if(listitem[i].getId() == (table->listBookedItem[j]->getId())) numberlbl->setText(QString::number(table->listBookedItem[i]->getQuantity()));
-                else numberlbl->setText("0");
+                if(listitem[i].getId() == (table->listBookedItem[j]->getId()))
+                {
+                    numberlbl->setText(QString::number(table->listBookedItem[j]->getQuantity()));
+                    temp = 1;
+                    break;
+                }
             }
+            if(temp == 0) numberlbl->setText("0");
         }
         else
         {
@@ -173,24 +165,36 @@ menuorder::menuorder(QWidget *parent, Table *table) :
         horizontalLayoutWidget->addWidget(pushButton2);
         newtable->setCellWidget(i,3,numberLayoutWidget);
 
-
-        QObject::connect(pushButton2, QPushButton::clicked, [=]() {
-            lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
-            numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
-            BoughtItem* boughtItem = nullptr;
+    QObject::connect(pushButton2, QPushButton::clicked, [=]() {
+        lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
+        numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+        if(table->listBookedItem.size() == 0)
+            {
+            BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
+            table->listBookedItem.push_back(boughtItem);
+        }
+        else
+            {
+            int temp = 0;
             for (int j = 0; j < table->listBookedItem.size(); j++) {
-                if (listitem[i].getId() == table->listBookedItem[j]->getId()) {
-                    boughtItem = table->listBookedItem[j];
+                if (listitem[i].getId() == table->listBookedItem[j]->getId())
+                {
+                    temp = 1;
+                    table->listBookedItem[j]->setQuantity(numberlbl->text().toInt());
                     break;
                 }
             }
-            if (boughtItem == nullptr) {
-                boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
+
+            if(temp != 1)
+            {
+                BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
                 table->listBookedItem.push_back(boughtItem);
             }
-//            qDebug()<<table;
-            boughtItem->setQuantity(boughtItem->getQuantity());
-        });
+        }
+
+    });
+
+
 
         QObject::connect(pushButton1, &QPushButton::clicked, [=]() {
 
@@ -276,20 +280,25 @@ void menuorder::closeEvent(QCloseEvent *event)
     // cap nhat lai listTable moi
         if(table->listBookedItem.size() != 0)
         {
-            for(auto _table : updateListTable)
+            //table->setStatus(0);
+            for(int i = 0;i < parent_copy->staff->listTables.size();i++)
             {
-                if(_table->getOrdinal() == table->getOrdinal()) _table->setStatus(0);
+                if(parent_copy->staff->listTables[i]->getOrdinal() == table->getOrdinal())
+                {
+                parent_copy->staff->listTables[i]->setStatus(0);
+                }
             }
+            //parent_copy->staff->listTables = updateListTable;
         }
 
     // Luu lai listTable moi vao file text
     list_table.open("listTable.txt", std::ios::trunc |std::ios::out);
     if(list_table.is_open() && !list_table.eof()){
         list_table.seekp(0);
-        for(int i = 0;i < updateListTable.size();i++){
-                list_table << updateListTable[i]->getOrdinal()
+        for(int i = 0;i < parent_copy->staff->listTables.size();i++){
+                list_table << parent_copy->staff->listTables[i]->getOrdinal()
                  << "-"
-                 << updateListTable[i]->getStatus()
+                 << parent_copy->staff->listTables[i]->getStatus()
                  << std::endl;
         }
 
@@ -297,14 +306,15 @@ void menuorder::closeEvent(QCloseEvent *event)
 
     else
     {
-        for(int i = 0;i < updateListTable.size();i++){
+        for(int i = 0;i < parent_copy->staff->listTables.size();i++){
         list_table << std::endl
-             << QString::number(updateListTable[i]->getOrdinal()).toStdString()
+             << QString::number(parent_copy->staff->listTables[i]->getOrdinal()).toStdString()
              << "-"
-        << updateListTable[i]->getStatus();
+        << parent_copy->staff->listTables[i]->getStatus();
         }
     }
-    employeeWindow* employeeWindow1 = new employeeWindow(this);
+
+    employeeWindow* employeeWindow1 = new employeeWindow(parent_copy->staff,this);
     employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
@@ -312,7 +322,7 @@ void menuorder::closeEvent(QCloseEvent *event)
     int h = geometry.height();
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
-    employeeWindow1->show();
+        employeeWindow1->show();
     file.close();
     this->hide();
 }

@@ -44,7 +44,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_employeeButton_clicked()
 {
-    employeeWindow* employeeWindow1 = new employeeWindow(this);
+    employeeWindow* employeeWindow1 = new employeeWindow(new Staff, this);
     employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();

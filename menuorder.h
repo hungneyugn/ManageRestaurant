@@ -19,10 +19,11 @@ class menuorder : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit menuorder(QWidget *parent = nullptr,Table *table = nullptr);
+    explicit menuorder(employeeWindow *parent = nullptr,Table *table = nullptr);
     ~menuorder();
 
 private:
+    employeeWindow *parent_copy;
     Table *table;
     Ui::menuorder *ui;
     std::vector <Item> listitem;

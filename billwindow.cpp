@@ -14,14 +14,12 @@
 #include "string"
 #include "boughtitem.h"
 #include "QScreen"
-billwindow::billwindow(QWidget *parent, Table *table) :
+billwindow::billwindow(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
     ui(new Ui::billwindow)
 {
-    //int a = table->listBookedItem.size();
-    //qDebug() << a;
+    this->staff = parent->staff;
     this->table = table;
-    //QWidget *widget = new QWidget(ui->centralwidg);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
@@ -31,11 +29,15 @@ billwindow::billwindow(QWidget *parent, Table *table) :
     int cost = 200000;
 
     QLabel *logo = new QLabel();
+    QLabel *thankyou = new QLabel();
     logo->setText("Group 5 's Restaurant");
+    thankyou->setText("Thank you so much!!!");
     QFont font;
     font.setFamily("vivaldi");
     font.setPointSize(20);
+    thankyou->setFont(font);
     logo->setFont(font);
+    thankyou->setAlignment(Qt::AlignCenter);
     logo->setAlignment(Qt::AlignCenter);
 
 
@@ -43,20 +45,21 @@ billwindow::billwindow(QWidget *parent, Table *table) :
   QTableWidget *newtable = new QTableWidget(ui->centralwidget);
   newtable->setRowCount(table->listBookedItem.size());
   newtable->setColumnCount(5);
+  newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   newtable->verticalHeader()->setVisible(false);
   newtable->setColumnWidth(0,0.01*w);
-  newtable->setColumnWidth(1,0.17*w);
-  newtable->setColumnWidth(2,0.17*w);
-  newtable->setColumnWidth(3,0.05*w);
-  newtable->setColumnWidth(4,0.17*w);
+  newtable->setColumnWidth(1,0.15*w);
+  newtable->setColumnWidth(2,0.15*w);
+  newtable->setColumnWidth(3,0.04*w);
+  newtable->setColumnWidth(4,0.15*w);
   //newtable->setGeometry(0,0,w,0.7*h);
 
   newtable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
 
 
         // Du lieu in vao bang
-  QList <QString> sttarr;
+    QList <QString> sttarr;
     QList <QString> namearr;
     QList <QString> pricearr;
     QList <QString> quantityarr;
@@ -69,12 +72,15 @@ billwindow::billwindow(QWidget *parent, Table *table) :
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    newtable->setFixedSize(w/2, table->listBookedItem.size()*80);
+    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 40);
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
     horizontalLayoutWidget->addWidget(logo,0,Qt::AlignCenter);
     horizontalLayoutWidget->addWidget(newtable,0,Qt::AlignCenter);
+    horizontalLayoutWidget->addWidget(thankyou,0,Qt::AlignCenter);
+    horizontalLayoutWidget->setSpacing(20);
+    horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
     //layoutWidget->setLayout(horizontalLayoutWidget);
     //widget->setLayout(horizontalLayoutWidget);
     //widget->setFixedSize(w/2, listBookedItem.size()*50 + 50);
@@ -87,11 +93,18 @@ billwindow::billwindow(QWidget *parent, Table *table) :
         quantityarr.append(QString::number(table->listBookedItem[i]->getQuantity()));
         costarr.append(QString::number(table->listBookedItem[i]->getPrice().toInt() * table->listBookedItem[i]->getQuantity()));
 
+
         QTableWidgetItem *sttarr_element = new QTableWidgetItem(sttarr[i]);
         QTableWidgetItem *namearr_element = new QTableWidgetItem(namearr[i]);
         QTableWidgetItem *pricearr_element = new QTableWidgetItem(pricearr[i]);
         QTableWidgetItem *quantityarr_element = new QTableWidgetItem(quantityarr[i]);
         QTableWidgetItem *costarr_element = new QTableWidgetItem(costarr[i]);
+
+        sttarr_element->setTextAlignment(Qt::AlignCenter);
+        namearr_element->setTextAlignment(Qt::AlignCenter);
+        pricearr_element->setTextAlignment(Qt::AlignCenter);
+        quantityarr_element->setTextAlignment(Qt::AlignCenter);
+        costarr_element->setTextAlignment(Qt::AlignCenter);
 
         sttWidget.append(sttarr_element);
         nameWidget.append(namearr_element);
@@ -116,59 +129,41 @@ billwindow::~billwindow()
 void billwindow::closeEvent(QCloseEvent *event){
     event->ignore();
 
-    std::fstream list_table;
-    // load lai listtable tu file
-    std::vector <Table *> updateListTable;
-    std::fstream r_file("listTable.txt", std::ios::in);
-    std::string line_r;
-    if (r_file.is_open()) {
-        while (std::getline(r_file, line_r)) {
-            size_t dashPos = line_r.find("-");
-            std::string ordinal_char = line_r.substr(0, dashPos);
-            int ordinal = stoi(ordinal_char);
-
-            std::string status_char = line_r.substr(dashPos + 1);
-            bool status = stoi(status_char);
-            Table *newtable = new Table(ordinal,status);
-            updateListTable.push_back(newtable);
-        }
-    }
-
-    r_file.close();
-
-    // cap nhat lai listTable moi
-    if(table->listBookedItem.size() != 0)
-    {
-        for(auto _table : updateListTable)
+    // Trả lại tình trạng bàn trống cho bàn hiện tại cho vector
+    for(int i = 0;i < staff->listTables.size();i++){
+        if(table->getOrdinal() == staff->listTables[i]->getOrdinal())
         {
-            if(_table->getOrdinal() == table->getOrdinal()) _table->setStatus(1);
+            staff->listTables[i]->setStatus(1);
+            staff->listTables[i]->listBookedItem.clear();
+            break;
         }
     }
 
-    // Luu lai listTable moi vao file text
+    // cập nhật vào file text
+    std::fstream list_table;
     list_table.open("listTable.txt", std::ios::trunc |std::ios::out);
     if(list_table.is_open() && !list_table.eof()){
         list_table.seekp(0);
-        for(int i = 0;i < updateListTable.size();i++){
-            list_table << updateListTable[i]->getOrdinal()
+        for(int i = 0;i < staff->listTables.size();i++){
+            list_table << staff->listTables[i]->getOrdinal()
                        << "-"
-                       << updateListTable[i]->getStatus()
+                       << staff->listTables[i]->getStatus()
                        << std::endl;
         }
-
     }
-
     else
     {
-        for(int i = 0;i < updateListTable.size();i++){
+        for(int i = 0;i < staff->listTables.size();i++){
             list_table << std::endl
-                       << QString::number(updateListTable[i]->getOrdinal()).toStdString()
+                       << QString::number(staff->listTables[i]->getOrdinal()).toStdString()
                        << "-"
-                       << updateListTable[i]->getStatus();
+                       << staff->listTables[i]->getStatus();
         }
     }
+    list_table.close();
 
-    employeeWindow* employeeWindow1 = new employeeWindow(this);
+    // mở window employee và cập nhật tình trạng bàn mới
+    employeeWindow* employeeWindow1 = new employeeWindow(staff,this);
     employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
@@ -177,6 +172,5 @@ void billwindow::closeEvent(QCloseEvent *event){
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
     employeeWindow1->show();
-    list_table.close();
     this->hide();
 }
