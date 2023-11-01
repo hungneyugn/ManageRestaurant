@@ -226,56 +226,6 @@ void menuorder::closeEvent(QCloseEvent *event)
 {
     event->ignore();
     std::fstream list_table;
-    std::fstream file;
-    // ghi file listBoughtItem
-    file.open("listBoughtItem.txt", std::ios::trunc |std::ios::out);
-    if(file.is_open() && !file.eof()){
-        file.seekp(0);
-        for(int i = 0;i < table->listBookedItem.size();i++){
-            file << table->listBookedItem[i]->getName().toStdString()
-                 << "-"
-                 << QString::number(table->listBookedItem[i]->getId()).toStdString()
-                 << "-"
-                 << table->listBookedItem[i]->getPrice().toStdString()
-                 << "-"
-                 << QString::number(table->listBookedItem[i]->getQuantity()).toStdString()
-                 << std::endl;
-        }
-
-    }
-    else
-    {
-        file.seekp(0);
-        for(int i = 0;i < table->listBookedItem.size();i++){
-            file << std::endl
-                 << table->listBookedItem[i]->getName().toStdString()
-                 << "-"
-                 << QString::number(table->listBookedItem[i]->getId()).toStdString()
-                 << "-"
-                 << table->listBookedItem[i]->getPrice().toStdString()
-                 << "-"
-                 << QString::number(table->listBookedItem[i]->getQuantity()).toStdString();
-
-
-        }
-    }
-
-    // load lai listtable tu file
-        std::vector <Table *> updateListTable;
-        std::fstream r_file("listTable.txt", std::ios::in);
-        std::string line_r;
-        if (r_file.is_open()) {
-            while (std::getline(r_file, line_r)) {
-                size_t dashPos = line_r.find("-");
-                std::string ordinal_char = line_r.substr(0, dashPos);
-                int ordinal = stoi(ordinal_char);
-
-                std::string status_char = line_r.substr(dashPos + 1);
-                bool status = stoi(status_char);
-                Table *newtable = new Table(ordinal,status);
-                updateListTable.push_back(newtable);
-            }
-        }
 
     // cap nhat lai listTable moi
         if(table->listBookedItem.size() != 0)
@@ -288,7 +238,6 @@ void menuorder::closeEvent(QCloseEvent *event)
                 parent_copy->staff->listTables[i]->setStatus(0);
                 }
             }
-            //parent_copy->staff->listTables = updateListTable;
         }
 
     // Luu lai listTable moi vao file text
@@ -323,6 +272,6 @@ void menuorder::closeEvent(QCloseEvent *event)
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
         employeeWindow1->show();
-    file.close();
+    list_table.close();
     this->hide();
 }
