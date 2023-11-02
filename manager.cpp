@@ -31,7 +31,6 @@ Manager::Manager()
                 newItem.setId();
                 listItems.push_back(newItem);
             }
-            qDebug() << image;
         }
         file.close();
 
