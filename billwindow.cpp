@@ -28,6 +28,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     ui->setupUi(this);
     int cost = 200000;
 
+    // Tạo tên của hàng và lời cảm ơn
     QLabel *logo = new QLabel();
     QLabel *thankyou = new QLabel();
     logo->setText("Group 5 's Restaurant");
@@ -41,7 +42,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     logo->setAlignment(Qt::AlignCenter);
 
 
-  // tao bang
+  // Tạo bảng
   QTableWidget *newtable = new QTableWidget(ui->centralwidget);
   newtable->setRowCount(table->listBookedItem.size());
   newtable->setColumnCount(5);
