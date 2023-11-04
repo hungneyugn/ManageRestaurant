@@ -1,5 +1,13 @@
 <RCC>
     <qresource prefix="/">
+        <file>image/bread.jpg</file>
+        <file>image/cake.jpg</file>
+        <file>image/cong.jpg</file>
+        <file>image/fish.jpg</file>
+        <file>image/friedmeat.jpg</file>
+        <file>image/noodles.jpg</file>
+        <file>image/rice.jpg</file>
+        <file>image/tru.jpg</file>
         <file>mainImage.jpeg</file>
     </qresource>
 </RCC>

@@ -11,6 +11,10 @@ void Item::setId(){
     this->id = id;
     id ++;
 }
+void Item::setId(int id){
+    this->id = id;
+}
+
 void Item::setName(QString name){
     this->name = name;
 }
