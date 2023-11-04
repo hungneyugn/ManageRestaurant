@@ -195,7 +195,6 @@ void ManagerWindow::on_btn_delete_clicked()
 void ManagerWindow::on_btn_update_clicked()
 {
     int row = this->tableItem->currentRow();
-    qDebug()<<row;
     if (row >= 0 && row < manager->listItems.size()) {
             QString name = tableItem->item(row, 1)->text();
             QString price = tableItem->item(row, 2)->text();
