@@ -37,6 +37,7 @@ Manager::Manager()
                 listItems.push_back(newItem);
             }
         }
+        this->listItems[listItems.size()-1].setId(listItems[listItems.size()-1].getId(),1);
         file.close();
 
     }
