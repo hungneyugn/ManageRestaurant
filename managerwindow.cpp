@@ -20,6 +20,7 @@
 #include "QScreen"
 #include "QMessageBox"
 
+
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
