@@ -1,6 +1,7 @@
 #ifndef BOUGHTITEM_H
 #define BOUGHTITEM_H
 #include "item.h"
+#include <QCloseEvent>
 
 class BoughtItem : public Item
 {
