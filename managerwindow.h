@@ -36,6 +36,7 @@ private slots:
     void on_btn_add_clicked();
     void on_btn_save_clicked();
     void on_btn_delete_clicked();
+    void on_btn_update_clicked();
 };
 
 #endif // MANAGERWINDOW_H

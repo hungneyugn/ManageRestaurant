@@ -34,5 +34,5 @@ Manager::Manager()
         }
         file.close();
 
-}
+    }
 }
