@@ -16,6 +16,7 @@
 #include "QIcon"
 #include <cmath>
 #include "QScreen"
+#include "QMessageBox"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -145,7 +146,12 @@ void ManagerWindow::on_btn_save_clicked()
 void ManagerWindow::on_btn_delete_clicked()
 {
     int row = this->tableItem->currentRow();
-    if (row >= 0) {
+    QItemSelectionModel *selectionModel = tableItem->selectionModel();
+    QModelIndexList selection = selectionModel->selection().indexes();
+    if (selection.size() > 3) {
+        QMessageBox::information(this, "Thông báo lỗi", "Bạn đã chọn nhiều hơn một hàng, vui lòng chọn lại bạn nhé !!!");
+    }
+    else if (row >= 0 ) {
         this->tableItem->removeRow(row);
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
@@ -164,6 +170,9 @@ void ManagerWindow::on_btn_delete_clicked()
             }
         }
         file.close();
+    }
+    else{
+        QMessageBox::information(this, "Thông báo lỗi", "Bạn phải chọn hàng trước khi xóa!");
     }
 }
 
