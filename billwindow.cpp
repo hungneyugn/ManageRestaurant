@@ -26,7 +26,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     int h = geometry.height();
 
     ui->setupUi(this);
-    int cost = 200000;
+    //int cost = 200000;
 
     // Tạo tên của hàng và lời cảm ơn
     QLabel *logo = new QLabel();
@@ -41,20 +41,45 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     thankyou->setAlignment(Qt::AlignCenter);
     logo->setAlignment(Qt::AlignCenter);
 
+    // Tạo hàng tính tổng số tiền
 
-  // Tạo bảng
-  QTableWidget *newtable = new QTableWidget(ui->centralwidget);
-  newtable->setRowCount(table->listBookedItem.size());
-  newtable->setColumnCount(5);
-  newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  newtable->verticalHeader()->setVisible(false);
-  newtable->setColumnWidth(0,0.01*w);
-  newtable->setColumnWidth(1,0.15*w);
-  newtable->setColumnWidth(2,0.15*w);
-  newtable->setColumnWidth(3,0.04*w);
-  newtable->setColumnWidth(4,0.15*w);
-  //newtable->setGeometry(0,0,w,0.7*h);
+    // Tạo layout chứa hàng tổng tiền
+    QWidget *totalLayoutWidget = new QWidget();
+    totalLayoutWidget->setFixedSize(w/2, 50);
+    QHBoxLayout *totalLayout = new QHBoxLayout(totalLayoutWidget);
+
+    // Tạo label chữ total và label tổng tiền
+    QLabel *lbl_cost = new QLabel(totalLayoutWidget);
+    QLabel *lbl_cost_value = new QLabel(totalLayoutWidget);
+    lbl_cost->setText("Total");
+
+    // Từ các món ăn đã mua mà tính tổng tiền
+    double total_cost = 0;
+    for(int i = 0; i<table->listBookedItem.size();i++)
+    {
+        total_cost += table->listBookedItem[i]->getPrice().toInt()*table->listBookedItem[i]->getQuantity();
+    }
+    lbl_cost_value->setText(QString::number(total_cost));
+
+    // Gán 2 label vào QHBoxLayout
+    totalLayout->addWidget(lbl_cost);
+    totalLayout->addWidget(lbl_cost_value);
+    totalLayout->setAlignment(lbl_cost, Qt::AlignLeft);
+    totalLayout->setAlignment(lbl_cost_value, Qt::AlignRight);
+
+      // Tạo bảng
+      QTableWidget *newtable = new QTableWidget(ui->centralwidget);
+      newtable->setRowCount(table->listBookedItem.size());
+      newtable->setColumnCount(5);
+      newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      newtable->verticalHeader()->setVisible(false);
+      newtable->setColumnWidth(0,0.01*w);
+      newtable->setColumnWidth(1,0.15*w);
+      newtable->setColumnWidth(2,0.15*w);
+      newtable->setColumnWidth(3,0.04*w);
+      newtable->setColumnWidth(4,0.15*w);
+      //newtable->setGeometry(0,0,w,0.7*h);
 
   newtable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
 
@@ -77,8 +102,17 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
+
+    // Hàng logo
     horizontalLayoutWidget->addWidget(logo,0,Qt::AlignCenter);
+
+    // Hàng bảng tính tiền
     horizontalLayoutWidget->addWidget(newtable,0,Qt::AlignCenter);
+
+    // Hàng tính tổng cộng tiền
+    horizontalLayoutWidget->addWidget(totalLayoutWidget,0,Qt::AlignCenter);
+
+    // Hàng dòng cảm ơn
     horizontalLayoutWidget->addWidget(thankyou,0,Qt::AlignCenter);
     horizontalLayoutWidget->setSpacing(20);
     horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
