@@ -194,13 +194,14 @@ void ManagerWindow::on_btn_save_clicked()
 
 void ManagerWindow::on_btn_delete_clicked()
 {
+    bool isItemSelected = tableItem->selectionModel()->hasSelection();
     int row = this->tableItem->currentRow();
     QItemSelectionModel *selectionModel = tableItem->selectionModel();
-    QModelIndexList selection = selectionModel->selection().indexes();
-    if (selection.size() > 3) {
+    QModelIndexList selectedRows = selectionModel->selectedRows();
+    if (selectedRows.size() > 1) {
         QMessageBox::information(this, "Thông báo lỗi", "Bạn đã chọn nhiều hơn một hàng, vui lòng chọn lại bạn nhé !!!");
     }
-    else if (row >= 0 ) {
+    else if (row >= 0 && isItemSelected == true) {
         this->tableItem->removeRow(row);
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
@@ -220,9 +221,12 @@ void ManagerWindow::on_btn_delete_clicked()
         }
         file.close();
     }
-    else{
+    else
+    {
+        if (!isItemSelected) {
         QMessageBox::information(this, "Thông báo lỗi", "Bạn phải chọn hàng trước khi xóa!");
     }
+}
 }
 
 
@@ -240,7 +244,7 @@ void ManagerWindow::on_btn_update_clicked()
         manager->listItems[row].setImage(image);
 
         std::fstream file;
-        file.open("listItem.txt", std::ios::trunc |std::ios::out);            
+        file.open("listItem.txt", std::ios::trunc |std::ios::out);
         if(file.is_open()){
             file.seekp(0, std::ios::end);
             for(int i = 0;i < manager->listItems.size(); i++){
