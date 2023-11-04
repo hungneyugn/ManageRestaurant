@@ -125,7 +125,7 @@ void ManagerWindow::on_btn_add_clicked()
     tableItem->setCellWidget(row-1, 0, newButton);
     newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
     tableItem->setRowHeight(row-1,h/5);
-
+    image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
 
 }
@@ -147,8 +147,7 @@ void ManagerWindow::on_btn_save_clicked()
         QString image = image_add;
 
         if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
-
-        else if ((manager->listItems.size() != 0) && (name != manager->listItems[rowCount].getName()) && (image != manager->listItems[rowCount].getImage()))
+        else if ((manager->listItems.size() != 0))
         {
             Item newItem(name, price, image);
 
@@ -161,9 +160,7 @@ void ManagerWindow::on_btn_save_clicked()
             std::fstream file;
             file.open("listItem.txt", std::ios::app);
             if(file.is_open()){
-                // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
                 file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
-
             }
             file.close();
 
