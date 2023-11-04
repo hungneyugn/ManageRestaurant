@@ -18,6 +18,7 @@
 #include "QPixmap"
 #include <cmath>
 #include "QScreen"
+#include "QMessageBox"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -58,7 +59,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
         tableItem->setRowHeight(i, h/5);
     };
-
 }
 ManagerWindow::~ManagerWindow()
 {
@@ -107,25 +107,25 @@ void ManagerWindow::uploadImage()
 }
 
 
-
 void ManagerWindow::on_btn_add_clicked()
 {
-    QTableWidgetItem *item = new QTableWidgetItem;
+    QString str = "";
+    QTableWidgetItem *item1 = new QTableWidgetItem(str);
+    QTableWidgetItem *item2 = new QTableWidgetItem(str);
 
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
-    int w = geometry.width();
     int h = geometry.height();
     tableItem->insertRow(tableItem->rowCount());
     int row = tableItem->rowCount();
-
+    tableItem->setItem(row - 1, 1, item1);
+    tableItem->setItem(row - 1, 2, item2);
 
     newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
-    tableItem->setItem(row-1, 0, item);
     newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
     tableItem->setRowHeight(row-1,h/5);
-
+    image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
 
 }
@@ -134,34 +134,61 @@ void ManagerWindow::on_btn_add_clicked()
 void ManagerWindow::on_btn_save_clicked()
 {
     int rowCount = tableItem->rowCount() - 1;
-    QString name = tableItem->item(rowCount, 1)->text();
-    QString price = tableItem->item(rowCount, 2)->text();
-    QString image = image_add;
-    Item newItem(name,price, image);
-    QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
-    QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
-    itemName->setTextAlignment(Qt::AlignCenter);
-    itemPrice->setTextAlignment(Qt::AlignCenter);
-    this ->manager->listItems.push_back(newItem);
-    std::fstream file;
-    file.open("listItem.txt", std::ios::app);
-    if(file.is_open()){
-        file.seekp(0, std::ios::end);
-        if (file.tellp() == 0) {
-            // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
-            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
 
-        } else {
-            // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-            file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+    if (tableItem->rowCount() == 0)
+    {
+        QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
+    }
+    else
+    {
+        QString name = tableItem->item(rowCount, 1)->text();
+        QString price = tableItem->item(rowCount, 2)->text();
+        QString image = image_add;
+
+        if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
+        else if ((manager->listItems.size() != 0) && name != manager->listItems[rowCount].getName())
+        {
+            Item newItem(name, price, image);
+
+            QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
+            QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
+            itemName->setTextAlignment(Qt::AlignCenter);
+            itemPrice->setTextAlignment(Qt::AlignCenter);
+            this ->manager->listItems.push_back(newItem);
+
+            std::fstream file;
+            file.open("listItem.txt", std::ios::app);
+            if(file.is_open()){
+                file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+            }
+            file.close();
+
+            QIcon icon(image_add);
+            newButton->setIcon(icon);
+            newButton->setText("");
+            newButton->setIconSize(newButton->size());
+        }
+        else if (manager->listItems.size() == 0)
+        {
+            Item newItem(name, price, image);
+
+            QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
+            QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
+            itemName->setTextAlignment(Qt::AlignCenter);
+            itemPrice->setTextAlignment(Qt::AlignCenter);
+            this ->manager->listItems.push_back(newItem);
+
+            std::fstream file;
+            file.open("listItem.txt", std::ios::app);
+            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
+            file.close();
+
+            QIcon icon(image_add);
+            newButton->setIcon(icon);
+            newButton->setText("");
+            newButton->setIconSize(newButton->size());
         }
     }
-    file.close();
-    QIcon icon(image_add);
-    newButton->setIcon(icon);
-    newButton->setText("");   
-    newButton->setIconSize(newButton->size());
-
 }
 
 
