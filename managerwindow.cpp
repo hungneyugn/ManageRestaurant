@@ -59,7 +59,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
         tableItem->setRowHeight(i, h/5);
     };
-    qDebug() << tableItem->rowCount();
 }
 ManagerWindow::~ManagerWindow()
 {
@@ -138,7 +137,6 @@ void ManagerWindow::on_btn_save_clicked()
 
     if (tableItem->rowCount() == 0)
     {
-        // Hiển thị thông báo lỗi
         QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
     }
     else
