@@ -17,6 +17,7 @@
 #include "staff.h"
 #include "mainwindow.h"
 #include "employeewindow.h"
+#include "QMessageBox"
 
 menuorder::menuorder(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
@@ -36,17 +37,24 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     payment->move(0.9*w, 0.875*h);
 
     connect(payment ,&QPushButton::clicked,[=](){
-    billwindow *billwindow1 = new billwindow(parent, this->table);
-    billwindow1->setAttribute(Qt::WA_DeleteOnClose);
+        if(table->listBookedItem.size() == 0)
+            {
+                QMessageBox::warning(this, "Warning", "You don't buy anything");
+            }
+        else
+            {
+            billwindow *billwindow1 = new billwindow(parent, this->table);
+            billwindow1->setAttribute(Qt::WA_DeleteOnClose);
 
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QRect geometry = screen->geometry();
-    int w = geometry.width();
-    int h = geometry.height();
-    billwindow1->setGeometry(0,0,w,h);
-    billwindow1->move(0,0);
-    billwindow1->show();
-    this->hide();
+            QScreen *screen = QGuiApplication::primaryScreen();
+            QRect geometry = screen->geometry();
+            int w = geometry.width();
+            int h = geometry.height();
+            billwindow1->setGeometry(0,0,w,h);
+            billwindow1->move(0,0);
+            billwindow1->show();
+            this->hide();
+        }
     });
 
     for(int i = 0;i < 10;i++)
@@ -65,7 +73,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     newtable->setColumnWidth(1,0.28*w);
     newtable->setColumnWidth(2,0.28*w);
     newtable->setColumnWidth(3,0.125*w);
-    newtable->setGeometry(0,0,w,0.7*h);
+    newtable->setGeometry(0,0,w,0.8*h);
 
     newtable->setHorizontalHeaderLabels(QStringList()<<"Image"<< "Name"<<"Price"<<"Number");
 
@@ -165,7 +173,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         horizontalLayoutWidget->addWidget(pushButton2);
         newtable->setCellWidget(i,3,numberLayoutWidget);
 
-    QObject::connect(pushButton2, QPushButton::clicked, [=]() {
+    QObject::connect(pushButton2, &QPushButton::clicked, [=]() {
         lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
         numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
         if(table->listBookedItem.size() == 0)
