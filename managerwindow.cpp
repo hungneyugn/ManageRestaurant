@@ -148,7 +148,7 @@ void ManagerWindow::on_btn_save_clicked()
         QString image = image_add;
 
         if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
-        else if ((manager->listItems.size() != 0))
+        else if ((manager->listItems.size() != 0) && name != manager->listItems[rowCount].getName())
         {
             Item newItem(name, price, image);
 
