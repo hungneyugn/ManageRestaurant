@@ -49,9 +49,9 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     this->hide();
     });
 
-    for(int i = 0;i < 5;i++)
+    for(int i = 0;i < 10;i++)
     {
-        Item newItem("name", "1000", ":/image/cake.jpg");
+        Item newItem("Cơm tấm", "25000", ":/image/cake.jpg");
         newItem.setId(100+i);
         listitem.push_back(newItem);
     }
@@ -271,7 +271,7 @@ void menuorder::closeEvent(QCloseEvent *event)
     int h = geometry.height();
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
-        employeeWindow1->show();
+    employeeWindow1->show();
     list_table.close();
     this->hide();
 }
