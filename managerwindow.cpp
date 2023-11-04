@@ -149,7 +149,8 @@ void ManagerWindow::on_btn_save_clicked()
         else if ((manager->listItems.size() != 0) && name != manager->listItems[rowCount].getName())
         {
             Item newItem(name, price, image);
-
+            newItem.setId();
+            QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
             itemName->setTextAlignment(Qt::AlignCenter);
@@ -159,7 +160,7 @@ void ManagerWindow::on_btn_save_clicked()
             std::fstream file;
             file.open("listItem.txt", std::ios::app);
             if(file.is_open()){
-                file << std::endl << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+                file << std::endl << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
             }
             file.close();
 
@@ -171,7 +172,8 @@ void ManagerWindow::on_btn_save_clicked()
         else if (manager->listItems.size() == 0)
         {
             Item newItem(name, price, image);
-
+            newItem.setId();
+            QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
             itemName->setTextAlignment(Qt::AlignCenter);
@@ -180,7 +182,7 @@ void ManagerWindow::on_btn_save_clicked()
 
             std::fstream file;
             file.open("listItem.txt", std::ios::app);
-            file << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
+            file << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
             file.close();
 
             QIcon icon(image_add);
@@ -205,11 +207,11 @@ void ManagerWindow::on_btn_delete_clicked()
             for(int i = 0;i < manager->listItems.size(); i++){
                 if (file.tellp() == 0) {
                     // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
-                    file <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
+                    file << manager->listItems[i].getId() << "," <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
 
                 } else {
                     // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-                    file << std::endl << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
+                    file << std::endl << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
                 }
             }
         }
@@ -246,11 +248,11 @@ void ManagerWindow::on_btn_update_clicked()
                     for(int i = 0;i < manager->listItems.size(); i++){
                         if (file.tellp() == 0) {
                             // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
-                            file <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
+                            file << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
 
                         } else {
                             // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-                            file << std::endl << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
+                            file << std::endl <<  manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
                         }
                     }
                 }
