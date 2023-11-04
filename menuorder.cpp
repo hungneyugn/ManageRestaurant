@@ -84,7 +84,20 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     lbl_total->setGeometry(0.595*w, 0.8*h, 0.28*w, 0.1*h);
     lbl_cost->setAlignment(Qt::AlignCenter);
     lbl_total->setAlignment(Qt::AlignCenter);
-    lbl_cost->setText("0");
+
+    double temp_cost = 0;
+    if(table->listBookedItem.size() != 0)
+    {
+        for(int i = 0; i < table->listBookedItem.size();i++)
+        {
+            temp_cost += table->listBookedItem[i]->getPrice().toInt()*table->listBookedItem[i]->getQuantity();
+        }
+        lbl_cost->setText(QString::number(temp_cost));
+    }
+    else
+    {
+        lbl_cost->setText("0");
+    }
     lbl_total->setText("Total");
 
     QList <QLabel *> imagearr;
@@ -132,7 +145,6 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         pushButton1->setIcon(icon);
         pushButton1->setAutoRepeat(false);
         QLabel *numberlbl = new QLabel(numberLayoutWidget);
-        qDebug()<< "ID menu" << listitem[i].getId();
         if(table->listBookedItem.size() != 0)
         {
             int temp = 0;
