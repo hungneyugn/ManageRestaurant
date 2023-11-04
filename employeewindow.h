@@ -11,11 +11,12 @@ class employeeWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit employeeWindow(QWidget *parent = nullptr);
+    explicit employeeWindow(Staff *newStaff, QWidget *parent = nullptr);
     ~employeeWindow();
 
 private:
     Ui::employeeWindow *ui;
+public:
     Staff* staff = new Staff;
 protected:
     void closeEvent(QCloseEvent *event);

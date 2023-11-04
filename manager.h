@@ -12,6 +12,7 @@ public:
 private:
     int numberOfTable;
     int choiceOption;
+
 };
 
 #endif // MANAGER_H

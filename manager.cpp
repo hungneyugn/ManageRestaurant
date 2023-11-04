@@ -20,17 +20,19 @@ Manager::Manager()
         {
             file.seekg(0, std::ios::beg);
             while (!file.eof()) {
+
                 std::getline(file, line, '\n');
                 std::size_t pos1 = line.find(',');
                 std::size_t pos2 = line.find(',', pos1 + 1);
                 name = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
                 price = QString::fromStdString(line.substr(pos2 + 1));
                 image = QString::fromStdString(line.substr(0, pos1));
-                Item newItem(name, price,image);
+                Item newItem(name, price, image);
                 newItem.setId();
                 listItems.push_back(newItem);
             }
         }
         file.close();
+
     }
 }
