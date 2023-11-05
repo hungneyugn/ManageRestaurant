@@ -27,7 +27,7 @@ Manager::Manager()
                 std::size_t pos2 = line.find(',', pos1 + 1);
                 std::size_t pos3 = line.find(',', pos2 + 1);
 
-                id = QString::fromStdString(line.substr(0, pos1 - 1));
+                id = QString::fromStdString(line.substr(0, pos1));
                 image = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
                 name = QString::fromStdString(line.substr(pos2 + 1, pos3 - pos2 - 1));
                 price = QString::fromStdString(line.substr(pos3 + 1));
@@ -37,7 +37,6 @@ Manager::Manager()
                 listItems.push_back(newItem);
             }
         }
-        this->listItems[listItems.size()-1].setId(listItems[listItems.size()-1].getId(),1);
         file.close();
 
     }

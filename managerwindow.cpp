@@ -148,8 +148,11 @@ void ManagerWindow::on_btn_save_clicked()
         if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
         else if ((manager->listItems.size() != 0) && name != manager->listItems[rowCount].getName())
         {
+            qDebug() << "davo";
             Item newItem(name, price, image);
-            newItem.setId();
+            int Id = this->manager->listItems[manager->listItems.size() - 1].getId();
+
+            newItem.setId(Id, 1);
             QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
@@ -172,7 +175,7 @@ void ManagerWindow::on_btn_save_clicked()
         else if (manager->listItems.size() == 0)
         {
             Item newItem(name, price, image);
-            newItem.setId();
+            newItem.setId(99,1);
             QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
@@ -189,6 +192,10 @@ void ManagerWindow::on_btn_save_clicked()
             newButton->setIcon(icon);
             newButton->setText("");
             newButton->setIconSize(newButton->size());
+        }
+        else if(name == manager->listItems[rowCount].getName())
+        {
+             QMessageBox::critical(this, "Lỗi", "Tên món ăn đã tồn tại");
         }
     }
 }
