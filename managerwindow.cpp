@@ -196,8 +196,14 @@ void ManagerWindow::on_btn_save_clicked()
 
 void ManagerWindow::on_btn_delete_clicked()
 {
+    bool isItemSelected = tableItem->selectionModel()->hasSelection();
     int row = this->tableItem->currentRow();
-    if (row >= 0) {
+    QItemSelectionModel *selectionModel = tableItem->selectionModel();
+    QModelIndexList selectedRows = selectionModel->selectedRows();
+    if (selectedRows.size() > 1) {
+        QMessageBox::information(this, "Thông báo lỗi", "Bạn đã chọn nhiều hơn một hàng, vui lòng chọn lại bạn nhé !!!");
+    }
+    else if (row >= 0 && isItemSelected == true) {
         this->tableItem->removeRow(row);
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
@@ -217,6 +223,12 @@ void ManagerWindow::on_btn_delete_clicked()
         }
         file.close();
     }
+    else
+    {
+        if (!isItemSelected) {
+        QMessageBox::information(this, "Thông báo lỗi", "Bạn phải chọn hàng trước khi xóa!");
+    }
+}
 }
 
 
@@ -230,17 +242,18 @@ void ManagerWindow::on_btn_update_clicked()
 
             QString nameOld = manager->listItems[row].getName();
             QString priceOld = manager->listItems[row].getPrice();
+        manager->listItems[row].setName(name);
+        manager->listItems[row].setPrice(price);
+        manager->listItems[row].setImage(image);
 
-            if (nameOld == name && priceOld == price) {
-            QMessageBox::information(this, "There's nothing to update", "You have not edited the data. Please correct data before updating.");
-            return;
-            }
-            else{
-
-                manager->listItems[row].setName(name);
-                manager->listItems[row].setPrice(price);
-                manager->listItems[row].setImage(image);
-
+        std::fstream file;
+        file.open("listItem.txt", std::ios::trunc |std::ios::out);
+        if(file.is_open()){
+            file.seekp(0, std::ios::end);
+            for(int i = 0;i < manager->listItems.size(); i++){
+                if (file.tellp() == 0) {
+                    // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
+                    file <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
                 std::fstream file;
                 file.open("listItem.txt", std::ios::trunc |std::ios::out);
                 if(file.is_open()){
@@ -250,18 +263,16 @@ void ManagerWindow::on_btn_update_clicked()
                             // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
                             file << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
 
-                        } else {
-                            // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-                            file << std::endl <<  manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
-                        }
-                    }
+                } else {
+                    // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
+                    file << std::endl << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
                 }
-                file.close();
             }
+        }
+        file.close();
+        }
     }
-    else {
-            QMessageBox::information(this, "Update error", "Please enter and save data before updating.");
-
+    }
     }
 }
 
