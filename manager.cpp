@@ -41,3 +41,10 @@ Manager::Manager()
 
     }
 }
+
+bool Manager::checkExistNameItem(QString name){
+    for(auto x : listItems){
+        if(x.getName() == name)return 1;
+    }
+    return 0;
+}
