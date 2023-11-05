@@ -127,14 +127,11 @@ void ManagerWindow::on_btn_add_clicked()
     tableItem->setRowHeight(row-1,h/5);
     image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
-
 }
-
 
 void ManagerWindow::on_btn_save_clicked()
 {
     int rowCount = tableItem->rowCount() -1;
-    qDebug() << tableItem->rowCount() <<"\n";
     if (tableItem->rowCount() == 0)
     {
         QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
@@ -145,14 +142,9 @@ void ManagerWindow::on_btn_save_clicked()
         QString price = tableItem->item(rowCount, 2)->text();
         QString image = image_add;
 
-        qDebug() << "New name: "<<name<<"\n";
-//        qDebug()<< "preName: " <<manager->listItems[manager->listItems.size() - 1].getName();
-
-
         if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
         else if ((manager->listItems.size() != 0) && (manager->checkExistNameItem(name) == 0))
         {
-            qDebug() << "davo";
             Item newItem(name, price, image);
             int Id = this->manager->listItems[manager->listItems.size() - 1].getId();
 
