@@ -6,9 +6,9 @@
 #include "manager.h"
 #include "QString"
 #include "string"
-#include "iostream"
-#include "fstream"
-#include "sstream"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "QTextEdit"
 #include <string>
 #include <QFileDialog>
@@ -19,12 +19,15 @@
 #include <cmath>
 #include "QScreen"
 #include "QMessageBox"
+#include "staff.h"
 
 
-ManagerWindow::ManagerWindow(QWidget *parent) :
+ManagerWindow::ManagerWindow(Staff *newStaff,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
+
 {
+    if(newStaff->listTables.size()!= 0) staff = newStaff;
     ui->setupUi(this);
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
@@ -59,7 +62,58 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
         tableItem->setRowHeight(i, h/5);
     };
+
+    QTextEdit *numtable = new QTextEdit(this);
+    numtable->setGeometry(5*w/6,h/4,100,31);
+    QLabel *status = new QLabel(this);
+    status->setGeometry(5*w/6+100,h/4,40,31);
+    QPushButton *createtablebutton = new QPushButton(this);
+    createtablebutton->setGeometry(5*w/6,h/3,171,41);
+    createtablebutton->setText("Set Number Of Table");
+    int number= 0;
+    std::fstream r_file("listTable.txt", std::ios::in);
+    std::string line_r;
+    if (r_file.is_open()) {
+        while (std::getline(r_file, line_r)) {
+            size_t dashPos = line_r.find("-");
+            std::string ordinal_char = line_r.substr(0, dashPos);
+            int ordinal = stoi(ordinal_char);
+
+            std::string status_char = line_r.substr(dashPos + 1);
+            bool status = stoi(status_char);
+            Table *newtable = new Table(ordinal,status);
+            staff->listTables.push_back(newtable);
+            number++;
+        }
+    }
+    r_file.close();
+    if(number != 0)
+    {
+        numtable->setText(QString::number(staff->listTables.size()));
+    }
+    // Tạo các button
+    connect(createtablebutton,&QPushButton::clicked,[=]()
+            {
+        if (numtable->toPlainText().isEmpty())
+            {
+            QMessageBox::warning(this,"Lỗi","Vui lòng nhập số bàn");
+            }
+        else
+                {
+               QMessageBox::information(this,"","Cập nhập số bàn thành công ");
+
+                int num = numtable->toPlainText().toInt() ;
+                std::ofstream file("listTable.txt", std::ios::trunc);
+                for (int i = 0; i<num;i++)
+                    {
+                        file <<i+1<<"-"<<"1"<<std::endl;
+                    }
+                     file.close();
+                }
+            });
+
 }
+
 ManagerWindow::~ManagerWindow()
 {
     delete ui;

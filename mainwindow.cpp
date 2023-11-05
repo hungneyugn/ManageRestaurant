@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ManagerWindow* managerWindow = new ManagerWindow();
+    ManagerWindow* managerWindow = new ManagerWindow(new Staff, this);
     managerWindow->setAttribute(Qt::WA_DeleteOnClose);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
