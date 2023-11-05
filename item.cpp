@@ -6,10 +6,8 @@ Item::Item(QString name,QString price, QString image)
     this->price = price;
     this->image = image;
 }
-void Item::setId(){
-    static int id = 100;
-    this->id = id;
-    id ++;
+void Item::setId(int preId,int priority){
+    this->id = preId + 1;
 }
 void Item::setId(int id){
     this->id = id;

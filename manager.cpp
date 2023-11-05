@@ -26,7 +26,7 @@ Manager::Manager()
                 std::size_t pos2 = line.find(',', pos1 + 1);
                 std::size_t pos3 = line.find(',', pos2 + 1);
 
-                id = QString::fromStdString(line.substr(0, pos1 - 1));
+                id = QString::fromStdString(line.substr(0, pos1));
                 image = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
                 name = QString::fromStdString(line.substr(pos2 + 1, pos3 - pos2 - 1));
                 price = QString::fromStdString(line.substr(pos3 + 1));
@@ -38,4 +38,11 @@ Manager::Manager()
         }
         file.close();
     }
+}
+
+bool Manager::checkExistNameItem(QString name){
+    for(auto x : listItems){
+        if(x.getName() == name)return 1;
+    }
+    return 0;
 }

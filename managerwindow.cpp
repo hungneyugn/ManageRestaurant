@@ -127,14 +127,11 @@ void ManagerWindow::on_btn_add_clicked()
     tableItem->setRowHeight(row-1,h/5);
     image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
-
 }
-
 
 void ManagerWindow::on_btn_save_clicked()
 {
-    int rowCount = tableItem->rowCount() - 1;
-
+    int rowCount = tableItem->rowCount() -1;
     if (tableItem->rowCount() == 0)
     {
         QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
@@ -146,10 +143,12 @@ void ManagerWindow::on_btn_save_clicked()
         QString image = image_add;
 
         if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
-        else if ((manager->listItems.size() != 0) && name != manager->listItems[rowCount].getName())
+        else if ((manager->listItems.size() != 0) && (manager->checkExistNameItem(name) == 0))
         {
             Item newItem(name, price, image);
-            newItem.setId();
+            int Id = this->manager->listItems[manager->listItems.size() - 1].getId();
+
+            newItem.setId(Id, 1);
             QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
@@ -172,7 +171,7 @@ void ManagerWindow::on_btn_save_clicked()
         else if (manager->listItems.size() == 0)
         {
             Item newItem(name, price, image);
-            newItem.setId();
+            newItem.setId(99,1);
             QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
             QTableWidgetItem *itemPrice = tableItem->item(rowCount, 2);
@@ -189,6 +188,10 @@ void ManagerWindow::on_btn_save_clicked()
             newButton->setIcon(icon);
             newButton->setText("");
             newButton->setIconSize(newButton->size());
+        }
+        else if(manager->checkExistNameItem(name) == 1)
+        {
+             QMessageBox::critical(this, "Lỗi", "Tên món ăn đã tồn tại");
         }
     }
 }
