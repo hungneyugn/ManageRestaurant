@@ -270,8 +270,9 @@ void ManagerWindow::on_btn_update_clicked()
             }
         }
         file.close();
+        }
     }
-
+    }
     }
 }
 
