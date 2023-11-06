@@ -9,6 +9,7 @@ class Manager
 public:
     Manager();
     std::vector<Item>listItems;
+    bool checkExistNameItem(QString name);
 private:
     int numberOfTable;
     int choiceOption;

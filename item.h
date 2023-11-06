@@ -10,7 +10,7 @@ public:
     Item(QString name,QString price, QString image);
     void setName(QString name);
     QString getName();
-    void setId();
+    void setId(int preId,int priority);
     void setId(int id);
     int getId();
     void setPrice(QString price);
