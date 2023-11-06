@@ -6,7 +6,6 @@
 #include <QTableWidget>
 #include "QPushButton"
 
-
 namespace Ui {
 class ManagerWindow;
 }
