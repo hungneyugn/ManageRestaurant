@@ -6,9 +6,9 @@
 #include "manager.h"
 #include "QString"
 #include "string"
-#include "iostream"
-#include "fstream"
-#include "sstream"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "QTextEdit"
 #include <string>
 #include <QFileDialog>
@@ -19,11 +19,13 @@
 #include <cmath>
 #include "QScreen"
 #include "QMessageBox"
+#include "staff.h"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
+
 {
     ui->setupUi(this);
     tableItem = new QTableWidget(ui->centralwidget);
@@ -59,7 +61,47 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,2,priceTableWidget);
         tableItem->setRowHeight(i, h/5);
     };
+
+    QTextEdit *numtable = new QTextEdit(this);
+    numtable->setGeometry(5*w/6,h/4,100,31);
+    QPushButton *createtablebutton = new QPushButton(this);
+    createtablebutton->setGeometry(5*w/6,h/3,171,41);
+    createtablebutton->setText("Set Number Of Table");
+    int number= 0;
+    std::fstream r_file("listTable.txt", std::ios::in);
+    std::string line_r;
+    if (r_file.is_open()) {
+        while (std::getline(r_file, line_r)) {
+            number++;
+        }
+    }
+    r_file.close();
+    if(number != 0)
+    {
+        numtable->setText(QString::number(number));
+    }
+    // Make connect button
+    connect(createtablebutton,&QPushButton::clicked,[=]()
+            {
+        if (numtable->toPlainText().isEmpty())
+            {
+            QMessageBox::warning(this,"Lỗi","Vui lòng nhập số bàn");
+            }
+        else
+                {
+               QMessageBox::information(this,"","Cập nhập số bàn thành công ");
+
+                int num = numtable->toPlainText().toInt() ;
+                std::ofstream file("listTable.txt", std::ios::trunc);
+                for (int i = 0; i<num;i++)
+                    {
+                        file <<i+1<<"-"<<"1"<<std::endl;
+                    }
+                     file.close();
+                }
+            });
 }
+
 ManagerWindow::~ManagerWindow()
 {
     delete ui;

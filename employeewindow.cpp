@@ -45,61 +45,187 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
 //        if(staff->listTables[i]->listBookedItem.size() != 0) qDebug() << staff->listTables[i]->listBookedItem.size() << "alo";
 //    }
     int num = staff->listTables.size();
-    int row = num/2 + 1;
-    int column = num/5 +1 ;
-    for (int j = 0; j < column;j++)
-    {
-        if (j < column/2){
-            for (int i = 0+row*j; i < row*(j+1) && i<num; i++)
+    if (0<num && num <=10){
+        if ((num - num/2*2) == 1){
+            int row = num/2+1;
+            int column = num/row +1 ;
+            for (int j = 0; j < column;j++)
             {
-                QPushButton* button = new QPushButton(ui->centralwidget);
-                button->setGeometry(w/2-((column/2-j)*205),100+ i * 100 - 100*(row*j),200,100);
-                button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                else button->setStyleSheet("QPushButton { background-color: red }");
-                connect(button,&QPushButton::clicked,[=]()
-                        {
-                            qDebug()<< staff->listTables[i];
-                            menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
-                            Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+                if (j < column/2){
+                    for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+                        QPushButton* button = new QPushButton(ui->centralwidget);
+                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        connect(button,&QPushButton::clicked,[=]()
+                                {
+                                    qDebug()<< staff->listTables[i];
+                                    menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
-                            QScreen *screen = QGuiApplication::primaryScreen();
-                            QRect geometry = screen->geometry();
-                            int w = geometry.width();
-                            int h = geometry.height();
-                            Menuorder->setGeometry(0,0,w,h);
-                            Menuorder->move(0,0);
+                                    QScreen *screen = QGuiApplication::primaryScreen();
+                                    QRect geometry = screen->geometry();
+                                    int w = geometry.width();
+                                    int h = geometry.height();
+                                    Menuorder->setGeometry(0,0,w,h);
+                                    Menuorder->move(0,0);
 
-                            Menuorder->show();
-                            this->hide();
-                        });
+                                    Menuorder->show();
+                                    this->hide();
+                                });
+                    }
+                }
+                else
+                {
+                    for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+
+                        QPushButton* button = new QPushButton(ui->centralwidget);
+                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        connect(button,&QPushButton::clicked,[=]()
+                                {
+                                    qDebug()<< staff->listTables[i];
+                                    menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                    QScreen *screen = QGuiApplication::primaryScreen();
+                                    QRect geometry = screen->geometry();
+                                    int w = geometry.width();
+                                    int h = geometry.height();
+                                    Menuorder->setGeometry(0,0,w,h);
+                                    Menuorder->move(0,0);
+
+                                    Menuorder->show();
+                                    this->hide();
+                                });
+
+                    }
+                }
             }
         }
         else
         {
-            for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+            int row = num/2;
+            int column = num/row +1 ;
+            for (int j = 0; j < column;j++)
+            {
+                if (j < column/2){
+                    for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+                        QPushButton* button = new QPushButton(ui->centralwidget);
+                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        connect(button,&QPushButton::clicked,[=]()
+                                {
+                                    qDebug()<< staff->listTables[i];
+                                    menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
-                QPushButton* button = new QPushButton(ui->centralwidget);
-                button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
-                button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                else button->setStyleSheet("QPushButton { background-color: red }");
-                connect(button,&QPushButton::clicked,[=]()
-                        {
-                     qDebug()<< staff->listTables[i];
-                    menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
-                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+                                    QScreen *screen = QGuiApplication::primaryScreen();
+                                    QRect geometry = screen->geometry();
+                                    int w = geometry.width();
+                                    int h = geometry.height();
+                                    Menuorder->setGeometry(0,0,w,h);
+                                    Menuorder->move(0,0);
 
-                    QScreen *screen = QGuiApplication::primaryScreen();
-                    QRect geometry = screen->geometry();
-                    int w = geometry.width();
-                    int h = geometry.height();
-                    Menuorder->setGeometry(0,0,w,h);
-                    Menuorder->move(0,0);
+                                    Menuorder->show();
+                                    this->hide();
+                                });
 
-                    Menuorder->show();
-                    this->hide();
-                    });
+                    }
+                }
+                else
+                {
+                    for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+
+                        QPushButton* button = new QPushButton(ui->centralwidget);
+                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        connect(button,&QPushButton::clicked,[=]()
+                                {
+                                    qDebug()<< staff->listTables[i];
+                                    menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                    Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                    QScreen *screen = QGuiApplication::primaryScreen();
+                                    QRect geometry = screen->geometry();
+                                    int w = geometry.width();
+                                    int h = geometry.height();
+                                    Menuorder->setGeometry(0,0,w,h);
+                                    Menuorder->move(0,0);
+
+                                    Menuorder->show();
+                                    this->hide();
+                                });
+
+                    }
+                }
+            }
+        }
+    }
+    else if (10 <num && num < 41)
+    {
+        int row = 5 ;
+        int column = num/row +1 ;
+        for (int j = 0; j < column;j++)
+        {
+            if (j < column/2){
+                for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+                    QPushButton* button = new QPushButton(ui->centralwidget);
+                    button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                    button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                    else button->setStyleSheet("QPushButton { background-color: red }");
+                    connect(button,&QPushButton::clicked,[=]()
+                            {
+                                qDebug()<< staff->listTables[i];
+                                menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                QScreen *screen = QGuiApplication::primaryScreen();
+                                QRect geometry = screen->geometry();
+                                int w = geometry.width();
+                                int h = geometry.height();
+                                Menuorder->setGeometry(0,0,w,h);
+                                Menuorder->move(0,0);
+
+                                Menuorder->show();
+                                this->hide();
+                            });
+                }
+            }
+            else
+            {
+                for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+
+                    QPushButton* button = new QPushButton(ui->centralwidget);
+                    button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                    button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
+                    else button->setStyleSheet("QPushButton { background-color: red }");
+                    connect(button,&QPushButton::clicked,[=]()
+                            {
+                                qDebug()<< staff->listTables[i];
+                                menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                QScreen *screen = QGuiApplication::primaryScreen();
+                                QRect geometry = screen->geometry();
+                                int w = geometry.width();
+                                int h = geometry.height();
+                                Menuorder->setGeometry(0,0,w,h);
+                                Menuorder->move(0,0);
+
+                                Menuorder->show();
+                                this->hide();
+                            });
+                }
             }
         }
     }
