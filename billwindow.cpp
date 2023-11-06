@@ -85,20 +85,20 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
 
         // Du lieu in vao bang
-    QList <QString> sttarr;
+    QList <QString> ordinalarr;
     QList <QString> namearr;
     QList <QString> pricearr;
     QList <QString> quantityarr;
     QList <QString> costarr;
 
-    QList <QTableWidgetItem *> sttWidget;
+    QList <QTableWidgetItem *> ordinalWidget;
     QList <QTableWidgetItem *> nameWidget;
     QList <QTableWidgetItem *> priceWidget;
     QList <QTableWidgetItem *> quantityWidget;
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 30);
+    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 20);
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
@@ -114,40 +114,38 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Hàng dòng cảm ơn
     horizontalLayoutWidget->addWidget(thankyou,0,Qt::AlignCenter);
-    horizontalLayoutWidget->setSpacing(20);
+    horizontalLayoutWidget->setSpacing(5);
     horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
-    //layoutWidget->setLayout(horizontalLayoutWidget);
-    //widget->setLayout(horizontalLayoutWidget);
-    //widget->setFixedSize(w/2, listBookedItem.size()*50 + 50);
+
     for(int i = 0;i<table->listBookedItem.size();i++)
     {
         newtable->setRowHeight(i,50);
-        sttarr.append(QString::number(i + 1));
+        ordinalarr.append(QString::number(i + 1));
         namearr.append(table->listBookedItem[i]->getName());
         pricearr.append(table->listBookedItem[i]->getPrice());
         quantityarr.append(QString::number(table->listBookedItem[i]->getQuantity()));
         costarr.append(QString::number(table->listBookedItem[i]->getPrice().toInt() * table->listBookedItem[i]->getQuantity()));
 
 
-        QTableWidgetItem *sttarr_element = new QTableWidgetItem(sttarr[i]);
+        QTableWidgetItem *ordinalarr_element = new QTableWidgetItem(ordinalarr[i]);
         QTableWidgetItem *namearr_element = new QTableWidgetItem(namearr[i]);
         QTableWidgetItem *pricearr_element = new QTableWidgetItem(pricearr[i]);
         QTableWidgetItem *quantityarr_element = new QTableWidgetItem(quantityarr[i]);
         QTableWidgetItem *costarr_element = new QTableWidgetItem(costarr[i]);
 
-        sttarr_element->setTextAlignment(Qt::AlignCenter);
+        ordinalarr_element->setTextAlignment(Qt::AlignCenter);
         namearr_element->setTextAlignment(Qt::AlignCenter);
         pricearr_element->setTextAlignment(Qt::AlignCenter);
         quantityarr_element->setTextAlignment(Qt::AlignCenter);
         costarr_element->setTextAlignment(Qt::AlignCenter);
 
-        sttWidget.append(sttarr_element);
+        ordinalWidget.append(ordinalarr_element);
         nameWidget.append(namearr_element);
         priceWidget.append(pricearr_element);
         quantityWidget.append(quantityarr_element);
         costWidget.append(costarr_element);
 
-        newtable->setItem(i,0,sttWidget[i]);
+        newtable->setItem(i,0,ordinalWidget[i]);
         newtable->setItem(i,1,nameWidget[i]);
         newtable->setItem(i,2,priceWidget[i]);
         newtable->setItem(i,3,quantityWidget[i]);
