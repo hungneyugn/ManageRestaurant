@@ -34,7 +34,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     // Them nut thanh toan
     QPushButton *payment = new QPushButton(this);
     payment->setText("Payment");
-    payment->move(0.9*w, 0.875*h);
+    payment->move(0.9*w, 0.87*h);
 
     connect(payment ,&QPushButton::clicked,[=](){
         if(table->listBookedItem.size() == 0)
@@ -52,6 +52,8 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
             int h = geometry.height();
             billwindow1->setGeometry(0,0,w,h);
             billwindow1->move(0,0);
+            QFont font("Arial", 13);
+            billwindow1->setFont(font);
             billwindow1->show();
             this->hide();
         }
@@ -128,6 +130,10 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     QList <QString> pricearr;
     QList <QTableWidgetItem *> nameWidget;
     QList <QTableWidgetItem *> priceWidget;
+
+    // Cài đặt Font chữ cho các chữ
+    QFont font;
+    font.setPointSize(13);
 
     for(int i = 0;i <listitem.size();i++)
     {
@@ -273,7 +279,6 @@ void menuorder::closeEvent(QCloseEvent *event)
     // cap nhat lai listTable moi
         if(table->listBookedItem.size() != 0)
         {
-            //table->setStatus(0);
             for(int i = 0;i < parent_copy->staff->listTables.size();i++)
             {
                 if(parent_copy->staff->listTables[i]->getOrdinal() == table->getOrdinal())
