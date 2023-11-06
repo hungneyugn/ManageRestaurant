@@ -23,10 +23,8 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
-    int h = geometry.height();
 
     ui->setupUi(this);
-    //int cost = 200000;
 
     // Tạo tên của hàng và lời cảm ơn
     QLabel *logo = new QLabel();
@@ -67,24 +65,24 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     totalLayout->setAlignment(lbl_cost, Qt::AlignLeft);
     totalLayout->setAlignment(lbl_cost_value, Qt::AlignRight);
 
-      // Tạo bảng
-      QTableWidget *newtable = new QTableWidget(ui->centralwidget);
-      newtable->setRowCount(table->listBookedItem.size());
-      newtable->setColumnCount(5);
-      newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-      newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-      newtable->verticalHeader()->setVisible(false);
-      newtable->setColumnWidth(0,0.01*w);
-      newtable->setColumnWidth(1,0.15*w);
-      newtable->setColumnWidth(2,0.15*w);
-      newtable->setColumnWidth(3,0.04*w);
-      newtable->setColumnWidth(4,0.15*w);
-      //newtable->setGeometry(0,0,w,0.7*h);
+    // Tạo bảng
+    QTableWidget *newtable = new QTableWidget(ui->centralwidget);
+    newtable->setRowCount(table->listBookedItem.size());
+    newtable->setColumnCount(5);
+    newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    newtable->verticalHeader()->setVisible(false);
+    newtable->setColumnWidth(0,0.01*w);
+    newtable->setColumnWidth(1,0.15*w);
+    newtable->setColumnWidth(2,0.15*w);
+    newtable->setColumnWidth(3,0.04*w);
+    newtable->setColumnWidth(4,0.15*w);
 
   newtable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
+  newtable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: white}");
 
 
-        // Du lieu in vao bang
+    // Du lieu in vao bang
     QList <QString> ordinalarr;
     QList <QString> namearr;
     QList <QString> pricearr;
