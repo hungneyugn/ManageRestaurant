@@ -40,10 +40,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
         }
     }
 
-//    for(int i = 0;i < staff->listTables.size();i++)
-//    {
-//        if(staff->listTables[i]->listBookedItem.size() != 0) qDebug() << staff->listTables[i]->listBookedItem.size() << "alo";
-//    }
     int num = staff->listTables.size();
     int row = num/2 + 1;
     int column = num/5 +1 ;
@@ -94,7 +90,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                     int h = geometry.height();
                     Menuorder->setGeometry(0,0,w,h);
                     Menuorder->move(0,0);
-
+                    QFont font("Arial", 13);
+                    Menuorder->setFont(font);
                     Menuorder->show();
                     this->hide();
                     });
