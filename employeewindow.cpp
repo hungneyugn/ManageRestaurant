@@ -56,7 +56,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                         else button->setStyleSheet("QPushButton { background-color: red }");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
-                                    qDebug()<< staff->listTables[i];
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
