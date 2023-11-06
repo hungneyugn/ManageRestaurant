@@ -98,7 +98,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 40);
+    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 30);
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
