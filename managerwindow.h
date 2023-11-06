@@ -5,7 +5,6 @@
 #include "manager.h"
 #include <QTableWidget>
 #include "QPushButton"
-#include "staff.h"
 
 namespace Ui {
 class ManagerWindow;
@@ -16,14 +15,10 @@ class ManagerWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ManagerWindow(Staff *newStaff,QWidget *parent = nullptr);
+    explicit ManagerWindow(QWidget *parent = nullptr);
     ~ManagerWindow();
     void closeEvent();
     QTableWidget *tableItem;
-
-public:
-    Staff* staff = new Staff;
-
 
 private:
     Ui::ManagerWindow *ui;

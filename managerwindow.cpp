@@ -22,12 +22,11 @@
 #include "staff.h"
 
 
-ManagerWindow::ManagerWindow(Staff *newStaff,QWidget *parent) :
+ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
 
 {
-    if(newStaff->listTables.size()!= 0) staff = newStaff;
     ui->setupUi(this);
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
@@ -65,8 +64,6 @@ ManagerWindow::ManagerWindow(Staff *newStaff,QWidget *parent) :
 
     QTextEdit *numtable = new QTextEdit(this);
     numtable->setGeometry(5*w/6,h/4,100,31);
-    QLabel *status = new QLabel(this);
-    status->setGeometry(5*w/6+100,h/4,40,31);
     QPushButton *createtablebutton = new QPushButton(this);
     createtablebutton->setGeometry(5*w/6,h/3,171,41);
     createtablebutton->setText("Set Number Of Table");
@@ -75,23 +72,15 @@ ManagerWindow::ManagerWindow(Staff *newStaff,QWidget *parent) :
     std::string line_r;
     if (r_file.is_open()) {
         while (std::getline(r_file, line_r)) {
-            size_t dashPos = line_r.find("-");
-            std::string ordinal_char = line_r.substr(0, dashPos);
-            int ordinal = stoi(ordinal_char);
-
-            std::string status_char = line_r.substr(dashPos + 1);
-            bool status = stoi(status_char);
-            Table *newtable = new Table(ordinal,status);
-            staff->listTables.push_back(newtable);
             number++;
         }
     }
     r_file.close();
     if(number != 0)
     {
-        numtable->setText(QString::number(staff->listTables.size()));
+        numtable->setText(QString::number(number));
     }
-    // Tạo các button
+    // Make connect button
     connect(createtablebutton,&QPushButton::clicked,[=]()
             {
         if (numtable->toPlainText().isEmpty())
@@ -111,7 +100,6 @@ ManagerWindow::ManagerWindow(Staff *newStaff,QWidget *parent) :
                      file.close();
                 }
             });
-
 }
 
 ManagerWindow::~ManagerWindow()
