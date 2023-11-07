@@ -9,6 +9,7 @@
 #include "table.h"
 #include "employeewindow.h"
 #include "mainwindow.h"
+#include "QLabel"
 
 namespace Ui {
 class menuorder;

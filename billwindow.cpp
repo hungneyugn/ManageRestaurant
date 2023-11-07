@@ -79,7 +79,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     newtable->setColumnWidth(4,0.15*w);
 
   newtable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
-  newtable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: white}");
+  newtable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
 
 
     // Du lieu in vao bang

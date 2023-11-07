@@ -34,6 +34,26 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     // Them nut thanh toan
     QPushButton *payment = new QPushButton(this);
     payment->setText("Payment");
+//    payment->setStyleSheet(QString::fromUtf8(
+//                                            "border-radius:10px;\n"
+//                                            "background-color: gray;\n"
+//                                            "box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);\n"
+//                                            "QPushButton:hover {"
+//                                            "background-color: orange;"
+//                                            "}"
+//                                            ));
+    payment->setStyleSheet(
+        "QPushButton {"
+        "border-radius: 10px;" // Bo tròn viền
+        "background-color: gray;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: orange;" // Hiệu ứng nhấn
+        "}"
+        "QPushButton:pressed {"
+        "background-color: green;" // Hiệu ứng nhấn
+        "}"
+        );
     payment->move(0.9*w, 0.87*h);
 
     connect(payment ,&QPushButton::clicked,[=](){
@@ -135,6 +155,9 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     QFont font;
     font.setPointSize(13);
 
+    QList <QPushButton *> listbutton;
+    QList <QPushButton *> listbutton_2;
+
     for(int i = 0;i <listitem.size();i++)
     {
         QLabel *qlabel = new QLabel();
@@ -208,22 +231,23 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         icon1.addFile(QString::fromUtf8(":/image/cong.jpg"), QSize(), QIcon::Normal, QIcon::Off);
         pushButton2->setIcon(icon1);
         pushButton2->setAutoRepeat(false);
+        listbutton.append(pushButton2);
+        listbutton_2.append(pushButton1);
 
-        horizontalLayoutWidget->addWidget(pushButton1);
+        horizontalLayoutWidget->addWidget(listbutton_2[i]);
         horizontalLayoutWidget->addWidget(numberlbl);
-        horizontalLayoutWidget->addWidget(pushButton2);
+        horizontalLayoutWidget->addWidget(listbutton[i]);
         newtable->setCellWidget(i,3,numberLayoutWidget);
-
-    QObject::connect(pushButton2, &QPushButton::clicked, [=]() {
+    QObject::connect(listbutton[i], &QPushButton::clicked, [=]() {
         lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
         numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
-        if(table->listBookedItem.size() == 0)
-            {
-            BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
-            table->listBookedItem.push_back(boughtItem);
-        }
-        else
-            {
+//        if(table->listBookedItem.size() == 0)
+//            {
+//            BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
+//            table->listBookedItem.push_back(boughtItem);
+//        }
+//        else
+//            {
             int temp = 0;
             for (int j = 0; j < table->listBookedItem.size(); j++) {
                 if (listitem[i].getId() == table->listBookedItem[j]->getId())
@@ -239,13 +263,13 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                 BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
                 table->listBookedItem.push_back(boughtItem);
             }
-        }
+//        }
 
     });
 
 
 
-        QObject::connect(pushButton1, &QPushButton::clicked, [=]() {
+        QObject::connect(listbutton_2[i], &QPushButton::clicked, [=]() {
 
             if(numberlbl->text().toInt() > 0) lbl_cost->setText(QString::number(lbl_cost->text().toInt() - listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() == 0 ? 0 :numberlbl->text().toInt() - 1));
@@ -284,6 +308,16 @@ void menuorder::closeEvent(QCloseEvent *event)
                 if(parent_copy->staff->listTables[i]->getOrdinal() == table->getOrdinal())
                 {
                 parent_copy->staff->listTables[i]->setStatus(0);
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0;i < parent_copy->staff->listTables.size();i++)
+            {
+                if(parent_copy->staff->listTables[i]->getOrdinal() == table->getOrdinal())
+                {
+                parent_copy->staff->listTables[i]->setStatus(1);
                 }
             }
         }
