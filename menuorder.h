@@ -10,6 +10,21 @@
 #include "employeewindow.h"
 #include "mainwindow.h"
 #include "QLabel"
+#include "string"
+#include "iostream"
+#include "fstream"
+#include "sstream"
+#include "QScreen"
+#include <QTableWidget>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include "item.h"
+#include <QHeaderView>
+#include <vector>
+#include "staff.h"
+#include "mainwindow.h"
+#include "employeewindow.h"
+#include "QMessageBox"
 
 namespace Ui {
 class menuorder;

@@ -3,17 +3,6 @@
 #include "employeewindow.h"
 #include "ui_employeewindow.h"
 #include "ui_billwindow.h"
-#include "QVBoxLayout"
-#include "QPushButton"
-#include "QTableWidgetItem"
-#include "QHeaderView"
-#include "QLabel"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "string"
-#include "boughtitem.h"
-#include "QScreen"
 billwindow::billwindow(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
     ui(new Ui::billwindow)
@@ -23,7 +12,6 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
-
     ui->setupUi(this);
 
     // Tạo tên của hàng và lời cảm ơn
@@ -53,9 +41,9 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Từ các món ăn đã mua mà tính tổng tiền
     double total_cost = 0;
-    for(int i = 0; i<table->listBookedItem.size();i++)
+    for(int i = 0; i<table->listBoughtItem.size();i++)
     {
-        total_cost += table->listBookedItem[i]->getPrice().toInt()*table->listBookedItem[i]->getQuantity();
+        total_cost += table->listBoughtItem[i]->getPrice().toInt()*table->listBoughtItem[i]->getQuantity();
     }
     lbl_cost_value->setText(QString::number(total_cost));
 
@@ -66,28 +54,28 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     totalLayout->setAlignment(lbl_cost_value, Qt::AlignRight);
 
     // Tạo bảng
-    QTableWidget *newtable = new QTableWidget(ui->centralwidget);
-    newtable->setRowCount(table->listBookedItem.size());
-    newtable->setColumnCount(5);
-    newtable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    newtable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    newtable->verticalHeader()->setVisible(false);
-    newtable->setColumnWidth(0,0.01*w);
-    newtable->setColumnWidth(1,0.15*w);
-    newtable->setColumnWidth(2,0.15*w);
-    newtable->setColumnWidth(3,0.04*w);
-    newtable->setColumnWidth(4,0.15*w);
+    QTableWidget *boughtItemTable = new QTableWidget(ui->centralwidget);
+    boughtItemTable->setRowCount(table->listBoughtItem.size());
+    boughtItemTable->setColumnCount(5);
+    boughtItemTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    boughtItemTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    boughtItemTable->verticalHeader()->setVisible(false);
+    boughtItemTable->setColumnWidth(0,0.01*w);
+    boughtItemTable->setColumnWidth(1,0.15*w);
+    boughtItemTable->setColumnWidth(2,0.15*w);
+    boughtItemTable->setColumnWidth(3,0.04*w);
+    boughtItemTable->setColumnWidth(4,0.15*w);
 
-  newtable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
-  newtable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
+  boughtItemTable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
+  boughtItemTable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
 
 
     // Du lieu in vao bang
-    QList <QString> ordinalarr;
-    QList <QString> namearr;
-    QList <QString> pricearr;
-    QList <QString> quantityarr;
-    QList <QString> costarr;
+    QList <QString> ordinalArr;
+    QList <QString> nameArr;
+    QList <QString> priceArr;
+    QList <QString> quantityArr;
+    QList <QString> costArr;
 
     QList <QTableWidgetItem *> ordinalWidget;
     QList <QTableWidgetItem *> nameWidget;
@@ -96,7 +84,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    newtable->setFixedSize(w/2 + 10, table->listBookedItem.size()*50 + 20);
+    boughtItemTable->setFixedSize(w/2 + 10, table->listBoughtItem.size()*50 + 20);
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
@@ -105,7 +93,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     horizontalLayoutWidget->addWidget(logo,0,Qt::AlignCenter);
 
     // Hàng bảng tính tiền
-    horizontalLayoutWidget->addWidget(newtable,0,Qt::AlignCenter);
+    horizontalLayoutWidget->addWidget(boughtItemTable,0,Qt::AlignCenter);
 
     // Hàng tính tổng cộng tiền
     horizontalLayoutWidget->addWidget(totalLayoutWidget,0,Qt::AlignCenter);
@@ -115,39 +103,39 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     horizontalLayoutWidget->setSpacing(5);
     horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
 
-    for(int i = 0;i<table->listBookedItem.size();i++)
+    for(int i = 0;i<table->listBoughtItem.size();i++)
     {
-        newtable->setRowHeight(i,50);
-        ordinalarr.append(QString::number(i + 1));
-        namearr.append(table->listBookedItem[i]->getName());
-        pricearr.append(table->listBookedItem[i]->getPrice());
-        quantityarr.append(QString::number(table->listBookedItem[i]->getQuantity()));
-        costarr.append(QString::number(table->listBookedItem[i]->getPrice().toInt() * table->listBookedItem[i]->getQuantity()));
+        boughtItemTable->setRowHeight(i,50);
+        ordinalArr.append(QString::number(i + 1));
+        nameArr.append(table->listBoughtItem[i]->getName());
+        priceArr.append(table->listBoughtItem[i]->getPrice());
+        quantityArr.append(QString::number(table->listBoughtItem[i]->getQuantity()));
+        costArr.append(QString::number(table->listBoughtItem[i]->getPrice().toInt() * table->listBoughtItem[i]->getQuantity()));
 
 
-        QTableWidgetItem *ordinalarr_element = new QTableWidgetItem(ordinalarr[i]);
-        QTableWidgetItem *namearr_element = new QTableWidgetItem(namearr[i]);
-        QTableWidgetItem *pricearr_element = new QTableWidgetItem(pricearr[i]);
-        QTableWidgetItem *quantityarr_element = new QTableWidgetItem(quantityarr[i]);
-        QTableWidgetItem *costarr_element = new QTableWidgetItem(costarr[i]);
+        QTableWidgetItem *ordinalArr_element = new QTableWidgetItem(ordinalArr[i]);
+        QTableWidgetItem *nameArr_element = new QTableWidgetItem(nameArr[i]);
+        QTableWidgetItem *priceArr_element = new QTableWidgetItem(priceArr[i]);
+        QTableWidgetItem *quantityArr_element = new QTableWidgetItem(quantityArr[i]);
+        QTableWidgetItem *costArr_element = new QTableWidgetItem(costArr[i]);
 
-        ordinalarr_element->setTextAlignment(Qt::AlignCenter);
-        namearr_element->setTextAlignment(Qt::AlignCenter);
-        pricearr_element->setTextAlignment(Qt::AlignCenter);
-        quantityarr_element->setTextAlignment(Qt::AlignCenter);
-        costarr_element->setTextAlignment(Qt::AlignCenter);
+        ordinalArr_element->setTextAlignment(Qt::AlignCenter);
+        nameArr_element->setTextAlignment(Qt::AlignCenter);
+        priceArr_element->setTextAlignment(Qt::AlignCenter);
+        quantityArr_element->setTextAlignment(Qt::AlignCenter);
+        costArr_element->setTextAlignment(Qt::AlignCenter);
 
-        ordinalWidget.append(ordinalarr_element);
-        nameWidget.append(namearr_element);
-        priceWidget.append(pricearr_element);
-        quantityWidget.append(quantityarr_element);
-        costWidget.append(costarr_element);
+        ordinalWidget.append(ordinalArr_element);
+        nameWidget.append(nameArr_element);
+        priceWidget.append(priceArr_element);
+        quantityWidget.append(quantityArr_element);
+        costWidget.append(costArr_element);
 
-        newtable->setItem(i,0,ordinalWidget[i]);
-        newtable->setItem(i,1,nameWidget[i]);
-        newtable->setItem(i,2,priceWidget[i]);
-        newtable->setItem(i,3,quantityWidget[i]);
-        newtable->setItem(i,4,costWidget[i]);
+        boughtItemTable->setItem(i,0,ordinalWidget[i]);
+        boughtItemTable->setItem(i,1,nameWidget[i]);
+        boughtItemTable->setItem(i,2,priceWidget[i]);
+        boughtItemTable->setItem(i,3,quantityWidget[i]);
+        boughtItemTable->setItem(i,4,costWidget[i]);
     }
 
 }
@@ -165,7 +153,7 @@ void billwindow::closeEvent(QCloseEvent *event){
         if(table->getOrdinal() == staff->listTables[i]->getOrdinal())
         {
             staff->listTables[i]->setStatus(1);
-            staff->listTables[i]->listBookedItem.clear();
+            staff->listTables[i]->listBoughtItem.clear();
             break;
         }
     }

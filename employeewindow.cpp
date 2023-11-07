@@ -1,16 +1,7 @@
 #include "employeewindow.h"
 #include "ui_employeewindow.h"
 #include "mainwindow.h"
-#include "QScreen"
-#include <QCloseEvent>
-#include "staff.h"
-#include "table.h"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "string"
 #include "menuorder.h"
-#include <QPushButton>
 
 employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QMainWindow(parent),
@@ -234,7 +225,6 @@ employeeWindow::~employeeWindow()
 }
 
 void employeeWindow::closeEvent(QCloseEvent *event){
-    event->ignore();
     MainWindow *mainwindow = new MainWindow();
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();

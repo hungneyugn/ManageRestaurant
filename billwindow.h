@@ -5,6 +5,17 @@
 #include "employeewindow.h"
 #include "table.h"
 #include "vector"
+#include "QVBoxLayout"
+#include "QPushButton"
+#include "QTableWidgetItem"
+#include "QHeaderView"
+#include "QLabel"
+#include "iostream"
+#include "fstream"
+#include "sstream"
+#include "string"
+#include "boughtitem.h"
+#include "QScreen"
 
 namespace Ui {
 class billwindow;
