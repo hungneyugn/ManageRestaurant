@@ -20,6 +20,8 @@
 #include "QScreen"
 #include "QMessageBox"
 #include "staff.h"
+#include <QStyleFactory>
+#include "QHeaderView"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -42,9 +44,20 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem->setColumnWidth(2, 7*w/27);
 
     ui->btn_add->move(5*w/6,h/2);
+    ui->btn_add->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_add->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+
     ui->btn_save->move(5*w/6,7*h/12);
+    ui->btn_save->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_save->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+
     ui->btn_delete->move(5*w/6,2*h/3);
+    ui->btn_delete->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_delete->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+
     ui->btn_update->move(5*w/6,3*h/4);
+    ui->btn_update->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_update->setStyleSheet("background-color: #CCFFFF; color: #000000;");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());

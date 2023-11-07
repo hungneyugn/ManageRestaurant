@@ -4,6 +4,7 @@
 #include "QScreen"
 #include "employeewindow.h"
 #include "manager.h"
+#include "QStyleFactory"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,7 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label->setGeometry(0,0,w,h);
     ui->label->move(0,0);
     ui->pushButton->move(5*w/12, 9*h/16);
+    ui->pushButton->setStyle(QStyleFactory::create("Fusion"));
+    ui->pushButton->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+
     ui->employeeButton->move(5*w/12, 11*h/16);
+    ui->employeeButton->setStyle(QStyleFactory::create("Fusion"));
+    ui->employeeButton->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+
 }
 
 MainWindow::~MainWindow()
