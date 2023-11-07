@@ -22,6 +22,8 @@
 #include "staff.h"
 #include <QStyleFactory>
 #include "QHeaderView"
+#include "QFont"
+#include "QHeaderView"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -30,6 +32,10 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
+    
+    QFont font;
+    font.setPointSize(13); //Dat kich thuoc chu la 13
+    
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
@@ -39,6 +45,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     int h = geometry.height();
     tableItem -> setGeometry(0,0,7*w/9,h);
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
+    tableItem->horizontalHeader()->setFont(font);
     tableItem->setColumnWidth(0, 7*w/27);
     tableItem->setColumnWidth(1, 7*w/27);
     tableItem->setColumnWidth(2, 7*w/27);
@@ -64,6 +71,9 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
+
+        nameTableWidget->setFont(font);
+        priceTableWidget->setFont(font);
 
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
