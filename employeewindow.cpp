@@ -1,16 +1,7 @@
 #include "employeewindow.h"
 #include "ui_employeewindow.h"
 #include "mainwindow.h"
-#include "QScreen"
-#include <QCloseEvent>
-#include "staff.h"
-#include "table.h"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "string"
 #include "menuorder.h"
-#include <QPushButton>
 
 employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QMainWindow(parent),
@@ -40,10 +31,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
         }
     }
 
-//    for(int i = 0;i < staff->listTables.size();i++)
-//    {
-//        if(staff->listTables[i]->listBookedItem.size() != 0) qDebug() << staff->listTables[i]->listBookedItem.size() << "alo";
-//    }
     int num = staff->listTables.size();
     if (0<num && num <=10){
         if ((num - num/2*2) == 1){
@@ -60,7 +47,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                         else button->setStyleSheet("QPushButton { background-color: red }");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
-                                    qDebug()<< staff->listTables[i];
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -70,7 +56,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     int h = geometry.height();
                                     Menuorder->setGeometry(0,0,w,h);
                                     Menuorder->move(0,0);
-
+                                    QFont font("Arial", 13);
+                                    Menuorder->setFont(font);
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -87,7 +74,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                         else button->setStyleSheet("QPushButton { background-color: red }");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
-                                    qDebug()<< staff->listTables[i];
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -97,7 +83,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     int h = geometry.height();
                                     Menuorder->setGeometry(0,0,w,h);
                                     Menuorder->move(0,0);
-
+                                    QFont font("Arial", 13);
+                                    Menuorder->setFont(font);
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -121,7 +108,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                         else button->setStyleSheet("QPushButton { background-color: red }");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
-                                    qDebug()<< staff->listTables[i];
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -131,7 +117,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     int h = geometry.height();
                                     Menuorder->setGeometry(0,0,w,h);
                                     Menuorder->move(0,0);
-
+                                    QFont font("Arial", 13);
+                                    Menuorder->setFont(font);
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -149,7 +136,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                         else button->setStyleSheet("QPushButton { background-color: red }");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
-                                    qDebug()<< staff->listTables[i];
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                     Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -159,7 +145,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     int h = geometry.height();
                                     Menuorder->setGeometry(0,0,w,h);
                                     Menuorder->move(0,0);
-
+                                    QFont font("Arial", 13);
+                                    Menuorder->setFont(font);
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -184,7 +171,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                     else button->setStyleSheet("QPushButton { background-color: red }");
                     connect(button,&QPushButton::clicked,[=]()
                             {
-                                qDebug()<< staff->listTables[i];
                                 menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                 Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -194,7 +180,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                 int h = geometry.height();
                                 Menuorder->setGeometry(0,0,w,h);
                                 Menuorder->move(0,0);
-
+                                QFont font("Arial", 13);
+                                Menuorder->setFont(font);
                                 Menuorder->show();
                                 this->hide();
                             });
@@ -211,7 +198,6 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                     else button->setStyleSheet("QPushButton { background-color: red }");
                     connect(button,&QPushButton::clicked,[=]()
                             {
-                                qDebug()<< staff->listTables[i];
                                 menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
                                 Menuorder->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -221,7 +207,8 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                 int h = geometry.height();
                                 Menuorder->setGeometry(0,0,w,h);
                                 Menuorder->move(0,0);
-
+                                QFont font("Arial", 13);
+                                Menuorder->setFont(font);
                                 Menuorder->show();
                                 this->hide();
                             });
@@ -238,7 +225,6 @@ employeeWindow::~employeeWindow()
 }
 
 void employeeWindow::closeEvent(QCloseEvent *event){
-    event->ignore();
     MainWindow *mainwindow = new MainWindow();
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();

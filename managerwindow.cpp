@@ -23,7 +23,6 @@
 #include <QStyleFactory>
 #include "QHeaderView"
 #include "QFont"
-#include "QHeaderView"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
