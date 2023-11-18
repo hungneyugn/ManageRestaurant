@@ -11,7 +11,7 @@ public:
     bool getStatus();
     void setOrdinal(int ordinal);
     int getOrdinal();
-    std::vector <BoughtItem *>listBookedItem;
+    std::vector <BoughtItem *>listBoughtItem;
     std::vector<Table> listTables;
 private:
     bool status = 0;

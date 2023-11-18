@@ -20,6 +20,9 @@
 #include "QScreen"
 #include "QMessageBox"
 #include "staff.h"
+#include <QStyleFactory>
+#include "QHeaderView"
+#include "QFont"
 
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
@@ -28,6 +31,14 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
+    
+    QFont font;
+    QFont fontTitle;
+    QFont fontNoti;
+    font.setPointSize(13); //Dat kich thuoc chu la 13
+    fontTitle.setFamily("vivaldi");
+    fontTitle.setPointSize(30);
+    fontNoti.setPointSize(11);
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     tableItem -> setColumnCount(3);
@@ -36,21 +47,67 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     int w = geometry.width();
     int h = geometry.height();
     tableItem -> setGeometry(0,0,7*w/9,h);
+    tableItem->setStyleSheet("QTableWidget {border: 1px solid black;}"
+                             "QTableWidget::item {border: 1px solid black;}");
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
+    tableItem->horizontalHeader()->setFont(font);
+    tableItem->horizontalHeader()->setStyleSheet("QHeaderView::section {border: 1px solid black; background-color: white;}");
     tableItem->setColumnWidth(0, 7*w/27);
     tableItem->setColumnWidth(1, 7*w/27);
     tableItem->setColumnWidth(2, 7*w/27);
 
     ui->btn_add->move(5*w/6,h/2);
+    ui->btn_add->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_add->setStyleSheet("QPushButton {"
+                               "border-radius: 10px;" // Bo tròn viền
+                               "border: 1px solid #C6C6C6;"
+                               "background-color: #CCFFFF;"
+                               "}"
+                               "QPushButton:hover {"
+                               "background-color: #00CCFF;" // Hiệu ứng nhấn
+                               "}");
+
     ui->btn_save->move(5*w/6,7*h/12);
+    ui->btn_save->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_save->setStyleSheet("QPushButton {"
+                                "border-radius: 10px;" // Bo tròn viền
+                                "border: 1px solid #C6C6C6;"
+                                "background-color: #CCFFFF;"
+                                "}"
+                                "QPushButton:hover {"
+                                "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                "}");
+
     ui->btn_delete->move(5*w/6,2*h/3);
+    ui->btn_delete->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_delete->setStyleSheet("QPushButton {"
+                                  "border-radius: 10px;" // Bo tròn viền
+                                  "border: 1px solid #C6C6C6;"
+                                  "background-color: #CCFFFF;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                  "}");
+
     ui->btn_update->move(5*w/6,3*h/4);
+    ui->btn_update->setStyle(QStyleFactory::create("Fusion"));
+    ui->btn_update->setStyleSheet("QPushButton {"
+                                  "border-radius: 10px;" // Bo tròn viền
+                                  "border: 1px solid #C6C6C6;"
+                                  "background-color: #CCFFFF;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                  "}");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
         QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
+
+        nameTableWidget->setFont(font);
+        priceTableWidget->setFont(font);
 
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
@@ -64,9 +121,30 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
     QTextEdit *numtable = new QTextEdit(this);
     numtable->setGeometry(5*w/6,h/4,100,31);
+
+    QLabel *noti = new QLabel(this);
+    noti->setText("Enter the number of table");
+    noti->setFont(fontNoti);
+    noti->setGeometry(5*w/6,h/5,200,31);
+
+    QLabel *title = new QLabel(this);
+    title->setText("Group 5's Restaurant");
+    title->setFont(fontTitle);
+    title->setGeometry(7*w/9 + 1*w/54, h/12, 400, 50);
+
     QPushButton *createtablebutton = new QPushButton(this);
     createtablebutton->setGeometry(5*w/6,h/3,171,41);
     createtablebutton->setText("Set Number Of Table");
+    createtablebutton->setStyleSheet(
+        "QPushButton {"
+        "border-radius: 10px;" // Bo tròn viền
+        "border: 1px solid #C6C6C6;"
+        "background-color: #CCFFFF;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: #00CCFF;" // Hiệu ứng nhấn
+        "}"
+        );
     int number= 0;
     std::fstream r_file("listTable.txt", std::ios::in);
     std::string line_r;
@@ -139,7 +217,6 @@ void ManagerWindow::uploadImage()
         // Thực hiện sao chép tệp
         if (QFile::copy(imagePath, destinationFilePath)) {
             qDebug() << "Sao chép thành công";
-            qDebug() << destinationFilePath;
         } else {
             qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
         }
