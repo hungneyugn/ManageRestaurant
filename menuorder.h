@@ -43,7 +43,7 @@ private:
     Table *table;
     Ui::menuorder *ui;
     std::vector <Item> listitem;
-    std::vector <BoughtItem> listboughtitem;
+    //std::vector <BoughtItem> listboughtitem;
 protected:
     void closeEvent(QCloseEvent *event);
 };
