@@ -3,6 +3,15 @@
 
 #include <QMainWindow>
 #include "staff.h"
+#include "QScreen"
+#include <QCloseEvent>
+#include "staff.h"
+#include "table.h"
+#include "iostream"
+#include "fstream"
+#include "sstream"
+#include "string"
+#include <QPushButton>
 namespace Ui {
 class employeeWindow;
 }
