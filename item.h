@@ -7,6 +7,7 @@
 class Item
 {
 public:
+    Item(QString name,int id, QString price);
     Item(QString name,QString price, QString image);
     void setName(QString name);
     QString getName();
