@@ -12,6 +12,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
+    int h = geometry.height();
     ui->setupUi(this);
 
     // Tạo tên của hàng và lời cảm ơn
@@ -40,7 +41,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     lbl_cost->setText("Total");
 
     // Từ các món ăn đã mua mà tính tổng tiền
-    double total_cost = 0;
+    long total_cost = 0;
     for(int i = 0; i<table->listBoughtItem.size();i++)
     {
         total_cost += table->listBoughtItem[i]->getPrice().toInt()*table->listBoughtItem[i]->getQuantity();
@@ -84,7 +85,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    boughtItemTable->setFixedSize(w/2 + 10, table->listBoughtItem.size()*50 + 20);
+    boughtItemTable->setFixedSize(w/2 + 10, (table->listBoughtItem.size()*50 + 20) > 0.75*h ? 0.7*h : table->listBoughtItem.size()*50 + 20);
     //QWidget *layoutWidget = new QWidget();
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
     //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
@@ -100,7 +101,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Hàng dòng cảm ơn
     horizontalLayoutWidget->addWidget(thankyou,0,Qt::AlignCenter);
-    horizontalLayoutWidget->setSpacing(5);
+    horizontalLayoutWidget->setSpacing(1);
     horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
 
     for(int i = 0;i<table->listBoughtItem.size();i++)
