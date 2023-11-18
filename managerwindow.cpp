@@ -314,6 +314,7 @@ if (row >= 0 && row < manager->listItems.size()) {
                 }
         }
         file.close();
+        QMessageBox::information(this, "Update", "Update successfully.");
     }
 }
 else {
