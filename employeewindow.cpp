@@ -58,6 +58,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     Menuorder->move(0,0);
                                     QFont font("Arial", 13);
                                     Menuorder->setFont(font);
+                                    Menuorder->setStyleSheet("background-color: #101010");
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -85,6 +86,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     Menuorder->move(0,0);
                                     QFont font("Arial", 13);
                                     Menuorder->setFont(font);
+                                    Menuorder->setStyleSheet("background-color: #101010");
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -119,6 +121,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     Menuorder->move(0,0);
                                     QFont font("Arial", 13);
                                     Menuorder->setFont(font);
+                                    Menuorder->setStyleSheet("background-color: #101010");
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -147,6 +150,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                     Menuorder->move(0,0);
                                     QFont font("Arial", 13);
                                     Menuorder->setFont(font);
+                                    Menuorder->setStyleSheet("background-color: #101010");
                                     Menuorder->show();
                                     this->hide();
                                 });
@@ -182,6 +186,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                 Menuorder->move(0,0);
                                 QFont font("Arial", 13);
                                 Menuorder->setFont(font);
+                                //Menuorder->setStyleSheet("color: white");
                                 Menuorder->show();
                                 this->hide();
                             });
@@ -209,6 +214,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                                 Menuorder->move(0,0);
                                 QFont font("Arial", 13);
                                 Menuorder->setFont(font);
+                                //Menuorder->setStyleSheet("color: white");
                                 Menuorder->show();
                                 this->hide();
                             });
