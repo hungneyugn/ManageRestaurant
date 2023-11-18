@@ -34,71 +34,78 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->setupUi(this);
     
     QFont font;
-    QFont fontTitle;
     QFont fontNoti;
-    font.setPointSize(13); //Dat kich thuoc chu la 13
-    fontTitle.setFamily("vivaldi");
-    fontTitle.setPointSize(30);
-    fontNoti.setPointSize(11);
-    tableItem = new QTableWidget(ui->centralwidget);
-    tableItem -> setRowCount(manager->listItems.size());
-    tableItem -> setColumnCount(3);
+
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
     int h = geometry.height();
-    tableItem -> setGeometry(0,0,7*w/9,h);
-    tableItem->setStyleSheet("QTableWidget {border: 1px solid black;}"
-                             "QTableWidget::item {border: 1px solid black;}");
+
+    ui->backgroundlbl->setGeometry(0,0,w/2 - 20,h);
+    ui->backgroundlbl->move(0,0);
+
+    font.setPointSize(13); //Dat kich thuoc chu la 13
+    fontNoti.setPointSize(11);
+    tableItem = new QTableWidget(ui->centralwidget);
+    tableItem -> setRowCount(manager->listItems.size());
+    ui->centralwidget->setStyleSheet("background-color: #101010;");
+    tableItem -> setColumnCount(3);
+
+    tableItem -> setGeometry(w/2,0,7*w/9,h);
+    tableItem->setStyleSheet("QTableWidget {border: 1px solid #101010;}"
+                             "QTableWidget::item {border: 1px solid #101010; color: white;}"
+                             );
+
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
-    tableItem->horizontalHeader()->setStyleSheet("QHeaderView::section {border: 1px solid black; background-color: white;}");
-    tableItem->setColumnWidth(0, 7*w/27);
-    tableItem->setColumnWidth(1, 7*w/27);
-    tableItem->setColumnWidth(2, 7*w/27);
+    //tableItem->horizontalHeader()->setStyleSheet("QHeaderView::section {border: 1px solid black; background-color: black;}");
 
-    ui->btn_add->move(5*w/6,h/2);
+    tableItem->setColumnWidth(0, w/9);
+    tableItem->setColumnWidth(1, w/6);
+    tableItem->setColumnWidth(2, w/6);
+
+    ui->btn_add->move(w/8,7*h/12);
     ui->btn_add->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_add->setStyleSheet("QPushButton {"
                                "border-radius: 10px;" // Bo tròn viền
-                               "border: 1px solid #C6C6C6;"
-                               "background-color: #CCFFFF;"
+                               "border: 1px solid black;"
+                               "background-color: #C0C0C0;"
                                "}"
                                "QPushButton:hover {"
-                               "background-color: #00CCFF;" // Hiệu ứng nhấn
+                               "background-color: #808080;" // Hiệu ứng nhấn
                                "}");
 
-    ui->btn_save->move(5*w/6,7*h/12);
+    ui->btn_save->move(w/8,8*h/12);
     ui->btn_save->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_save->setStyleSheet("QPushButton {"
                                 "border-radius: 10px;" // Bo tròn viền
-                                "border: 1px solid #C6C6C6;"
-                                "background-color: #CCFFFF;"
+                                "border: 1px solid black;"
+                                "background-color: #C0C0C0;"
                                 "}"
                                 "QPushButton:hover {"
-                                "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                "background-color: #808080;" // Hiệu ứng nhấn
                                 "}");
 
-    ui->btn_delete->move(5*w/6,2*h/3);
+    ui->btn_delete->move(w/4,7*h/12);
     ui->btn_delete->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_delete->setStyleSheet("QPushButton {"
                                   "border-radius: 10px;" // Bo tròn viền
-                                  "border: 1px solid #C6C6C6;"
-                                  "background-color: #CCFFFF;"
+                                  "border: 1px solid black;"
+                                  "background-color: #C0C0C0;"
                                   "}"
                                   "QPushButton:hover {"
-                                  "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                  "background-color: #808080;" // Hiệu ứng nhấn
                                   "}");
 
-    ui->btn_update->move(5*w/6,3*h/4);
+    ui->btn_update->move(w/4,2*h/3);
     ui->btn_update->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_update->setStyleSheet("QPushButton {"
                                   "border-radius: 10px;" // Bo tròn viền
-                                  "border: 1px solid #C6C6C6;"
-                                  "background-color: #CCFFFF;"
+                                  "border: 1px solid black;"
+                                  "background-color: #C0C0C0;"
                                   "}"
                                   "QPushButton:hover {"
-                                  "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                  "background-color: #808080;" // Hiệu ứng nhấn
                                   "}");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
@@ -113,39 +120,52 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
         newLabel->setAlignment(Qt::AlignCenter);
+        newLabel->setScaledContents(true);
+
 
         tableItem->setCellWidget(i, 0 , newLabel);
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
-        tableItem->setRowHeight(i, h/5);
+        tableItem->setRowHeight(i, h/8);
     };
 
+
+    // Ẩn đường viền
+    tableItem->setShowGrid(false);
+
+    // Ẩn tiêu đề dọc (số hàng)
+    tableItem->verticalHeader()->setVisible(false);
+
+    // Ẩn tiêu đề ngang (số cột)
+    tableItem->horizontalHeader()->setVisible(false);
+
     QTextEdit *numtable = new QTextEdit(this);
-    numtable->setGeometry(5*w/6,h/4,100,31);
+    numtable->setGeometry(w/8,h/2,171,41);
+    numtable->setFont(font);
+    numtable->setStyleSheet("background-color: #C0C0C0;" "border-radius: 10px;");
 
     QLabel *noti = new QLabel(this);
     noti->setText("Enter the number of table");
     noti->setFont(fontNoti);
-    noti->setGeometry(5*w/6,h/5,200,31);
+    noti->setStyleSheet("color: white;");
+    noti->setGeometry(w/8,11*h/24,200,31);
 
-    QLabel *title = new QLabel(this);
-    title->setText("Group 5's Restaurant");
-    title->setFont(fontTitle);
-    title->setGeometry(7*w/9 + 1*w/54, h/12, 400, 50);
 
     QPushButton *createtablebutton = new QPushButton(this);
     createtablebutton->setGeometry(5*w/6,h/3,171,41);
     createtablebutton->setText("Set Number Of Table");
-    createtablebutton->setStyleSheet(
-        "QPushButton {"
-        "border-radius: 10px;" // Bo tròn viền
-        "border: 1px solid #C6C6C6;"
-        "background-color: #CCFFFF;"
-        "}"
-        "QPushButton:hover {"
-        "background-color: #00CCFF;" // Hiệu ứng nhấn
-        "}"
-        );
+    createtablebutton->move(w/4,h/3 + h/6);
+    createtablebutton->setStyleSheet("QPushButton {"
+                                    "font-weight: bold;"
+                                    "border-radius: 10px;" // Bo tròn viền
+                                    "border: 1px solid black;"
+                                    "background-color: #C0C0C0;"
+                                    "}"
+                                    "QPushButton:hover {"
+                                    "background-color: #808080;" // Hiệu ứng nhấn
+                                    "}"
+                                    );
+
     int number= 0;
     std::fstream r_file("listTable.txt", std::ios::in);
     std::string line_r;
@@ -158,6 +178,8 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     if(number != 0)
     {
         numtable->setText(QString::number(number));
+        numtable->setAlignment(Qt::AlignCenter);
+
     }
     // Make connect button
     connect(createtablebutton,&QPushButton::clicked,[=]()
@@ -224,11 +246,16 @@ void ManagerWindow::uploadImage()
     } else {
         qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
     }
+    QIcon icon(image_add);
+    newButton->setIcon(icon);
+    newButton->setText("");
+    newButton->setIconSize(newButton->size());
 }
 
 
 void ManagerWindow::on_btn_add_clicked()
-{
+{  
+
     QString str = "";
     QTableWidgetItem *item1 = new QTableWidgetItem(str);
     QTableWidgetItem *item2 = new QTableWidgetItem(str);
@@ -237,14 +264,19 @@ void ManagerWindow::on_btn_add_clicked()
     QRect geometry = screen->geometry();
     int h = geometry.height();
     tableItem->insertRow(tableItem->rowCount());
+
+
+    tableItem->setStyleSheet("QTableWidget::item {border: 1px solid white; color: white;}");
+
+
     int row = tableItem->rowCount();
     tableItem->setItem(row - 1, 1, item1);
     tableItem->setItem(row - 1, 2, item2);
 
     newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
-    newButton->setStyleSheet("background: rgba(0, 0, 0, 0); border: none;");
-    tableItem->setRowHeight(row-1,h/5);
+    newButton->setStyleSheet("background-color: #101010; border: none; color: white;");
+    tableItem->setRowHeight(row-1,h/8);
     image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
 }
@@ -283,10 +315,7 @@ void ManagerWindow::on_btn_save_clicked()
             }
             file.close();
 
-            QIcon icon(image_add);
-            newButton->setIcon(icon);
-            newButton->setText("");
-            newButton->setIconSize(newButton->size());
+
         }
         else if (manager->listItems.size() == 0)
         {
@@ -304,10 +333,7 @@ void ManagerWindow::on_btn_save_clicked()
             file << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
             file.close();
 
-            QIcon icon(image_add);
-            newButton->setIcon(icon);
-            newButton->setText("");
-            newButton->setIconSize(newButton->size());
+
         }
         else if(manager->checkExistNameItem(name) == 1)
         {

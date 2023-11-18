@@ -5,11 +5,13 @@
 #include "employeewindow.h"
 #include "manager.h"
 #include "QStyleFactory"
+#include "QFont"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
@@ -17,13 +19,29 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->label->setGeometry(0,0,w,h);
     ui->label->move(0,0);
-    ui->pushButton->move(5*w/12, 9*h/16);
-    ui->pushButton->setStyle(QStyleFactory::create("Fusion"));
-    ui->pushButton->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+    ui->pushButton->move(7*w/12, 9*h/16);
 
-    ui->employeeButton->move(5*w/12, 11*h/16);
+    ui->pushButton->setStyle(QStyleFactory::create("Fusion"));
+    ui->pushButton->setStyleSheet("background-color: #B8860B; color: #000000; font-weight: bold;"
+                                  "QPushButton {"
+                                  "border-radius: 15px;" // Bo tròn viền
+                                  "border: 1px solid #C6C6C6;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                  "}");
+
+
+    ui->employeeButton->move(9*w/12 + w/54, 9*h/16);
     ui->employeeButton->setStyle(QStyleFactory::create("Fusion"));
-    ui->employeeButton->setStyleSheet("background-color: #CCFFFF; color: #000000;");
+    ui->employeeButton->setStyleSheet("background-color: #B8860B; color: #000000; font-weight: bold;"
+                                      "QPushButton {"
+                                      "border-radius: 15px;" // Bo tròn viền
+                                      "border: 1px solid #C6C6C6;"
+                                      "}"
+                                      "QPushButton:hover {"
+                                      "background-color: #00CCFF;" // Hiệu ứng nhấn
+                                      "}");
 
 }
 

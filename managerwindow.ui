@@ -23,6 +23,11 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Add</string>
     </property>
@@ -35,6 +40,11 @@
       <width>171</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Save</string>
@@ -49,6 +59,11 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Delete</string>
     </property>
@@ -62,12 +77,43 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
      <string>Update</string>
     </property>
    </widget>
+   <widget class="QLabel" name="backgroundlbl">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>80</y>
+      <width>141</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="Image.qrc">:/C:/Users/ADMIN/Downloads/backgroundlabel.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>backgroundlbl</zorder>
+   <zorder>btn_add</zorder>
+   <zorder>btn_save</zorder>
+   <zorder>btn_delete</zorder>
+   <zorder>btn_update</zorder>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="Image.qrc"/>
+ </resources>
  <connections/>
 </ui>
