@@ -45,7 +45,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Image.qrc">:/C:/Users/ADMIN/Downloads/mainwindow1.jpg</pixmap>
+     <pixmap resource="Image.qrc">:/background/mainwindown.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

@@ -99,7 +99,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Image.qrc">:/C:/Users/ADMIN/Downloads/backgroundlabel.jpg</pixmap>
+     <pixmap resource="Image.qrc">:/background/managerwindown.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

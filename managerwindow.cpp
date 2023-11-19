@@ -50,9 +50,10 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->centralwidget->setStyleSheet("background-color: #101010;");
     tableItem -> setColumnCount(3);
 
-    tableItem -> setGeometry(w/2,0,7*w/9,h);
-    tableItem->setStyleSheet("QTableWidget {border: 1px solid #101010;}"
-                             "QTableWidget::item {border: 1px solid #101010; color: white;}"
+    tableItem -> setGeometry(w/2,h/10,7*w/9,7*h/10);
+    tableItem->setStyleSheet(
+                             "border:10px solid #101010;"
+                             "color: white;"
                              );
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
@@ -113,8 +114,8 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
 
-        nameTableWidget->setFont(font);
-        priceTableWidget->setFont(font);
+//        nameTableWidget->setFont(font);
+//        priceTableWidget->setFont(font);
 
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
@@ -126,11 +127,12 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem -> setItem(i,1,nameTableWidget);
         tableItem -> setItem(i,2,priceTableWidget);
         tableItem->setRowHeight(i, h/8);
+        tableItem->setFont(font);
     };
 
 
     // Ẩn đường viền
-    tableItem->setShowGrid(false);
+//    tableItem->setShowGrid(false);
 
     // Ẩn tiêu đề dọc (số hàng)
     tableItem->verticalHeader()->setVisible(false);
@@ -235,16 +237,18 @@ void ManagerWindow::uploadImage()
     QString destinationPath = currentPath + "/" + destinationFolderName;
     QString destinationFilePath = destinationPath + "/" + fileName; // Đường dẫn đầy đủ đến tệp mới
     this->image_add = destinationFilePath;
-    if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath)) {
-        // Thực hiện sao chép tệp
-        if (QFile::copy(imagePath, destinationFilePath)) {
-            qDebug() << "Sao chép thành công";
+    if(fileName != ""){
+        if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath)) {
+            // Thực hiện sao chép tệp
+            if (QFile::copy(imagePath, destinationFilePath)) {
+                qDebug() << "Sao chép thành công";
+            } else {
+                qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
+            }
         } else {
-            qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
+            qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
         }
-    } else {
-        qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
-    }
+    }else this->image_add = "";
     QIcon icon(image_add);
     newButton->setIcon(icon);
     newButton->setText("");
@@ -253,7 +257,9 @@ void ManagerWindow::uploadImage()
 
 
 void ManagerWindow::on_btn_add_clicked()
-{  
+{
+    QFont font;
+    font.setPointSize(13);
 
     QString str = "";
     QTableWidgetItem *item1 = new QTableWidgetItem(str);
@@ -264,20 +270,23 @@ void ManagerWindow::on_btn_add_clicked()
     int h = geometry.height();
     tableItem->insertRow(tableItem->rowCount());
 
-
-    tableItem->setStyleSheet("QTableWidget::item {border: 1px solid white; color: white;}");
-
-
     int row = tableItem->rowCount();
     tableItem->setItem(row - 1, 1, item1);
     tableItem->setItem(row - 1, 2, item2);
 
+    tableItem->setStyleSheet(
+        "QTableWidget::item {border:1px solid white; color: white;}"
+        "color:white;"
+        );
+
+    tableItem->setFont(font);
     newButton = new QPushButton("upload...");
     tableItem->setCellWidget(row-1, 0, newButton);
     newButton->setStyleSheet("background-color: #101010; border: none; color: white;");
     tableItem->setRowHeight(row-1,h/8);
     image_add = "";
     connect(newButton, &QPushButton::clicked, this, &ManagerWindow::uploadImage);
+
 }
 
 void ManagerWindow::on_btn_save_clicked()
@@ -425,4 +434,6 @@ else {
 
     }
 }
+
+
 

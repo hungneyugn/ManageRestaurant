@@ -9,8 +9,7 @@
         <file>image/rice.jpg</file>
         <file>image/tru.jpg</file>
         <file>mainImage.jpeg</file>
-        <file>C:/Users/ADMIN/Downloads/mainwindow.jpg</file>
-        <file>C:/Users/ADMIN/Downloads/mainwindow1.jpg</file>
-        <file>C:/Users/ADMIN/Downloads/backgroundlabel.jpg</file>
+        <file>background/mainwindown.jpg</file>
+        <file>background/managerwindown.jpg</file>
     </qresource>
 </RCC>
