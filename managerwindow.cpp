@@ -25,6 +25,7 @@
 #include "QFont"
 
 
+
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
@@ -47,14 +48,13 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     fontNoti.setPointSize(11);
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
-    ui->centralwidget->setStyleSheet("background-color: #101010;");
+    ui->centralwidget->setStyleSheet("background-color: #101010;"
+                                     "color: white;"
+                                     "border: #101010;");
     tableItem -> setColumnCount(3);
 
-    tableItem -> setGeometry(w/2,h/10,7*w/9,7*h/10);
-    tableItem->setStyleSheet(
-                             "border:10px solid #101010;"
-                             "color: white;"
-                             );
+    tableItem -> setGeometry(w/2,h/10,7*w/9,3*h/4);
+    tableItem->setStyleSheet("QTableWidget::item {border:1px solid white; color: white;}");
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
@@ -67,6 +67,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->btn_add->move(w/8,7*h/12);
     ui->btn_add->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_add->setStyleSheet("QPushButton {"
+                               "color: black;"
                                "border-radius: 10px;" // Bo tròn viền
                                "border: 1px solid black;"
                                "background-color: #C0C0C0;"
@@ -78,6 +79,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->btn_save->move(w/8,8*h/12);
     ui->btn_save->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_save->setStyleSheet("QPushButton {"
+                                "color: black;"
                                 "border-radius: 10px;" // Bo tròn viền
                                 "border: 1px solid black;"
                                 "background-color: #C0C0C0;"
@@ -89,6 +91,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->btn_delete->move(w/4,7*h/12);
     ui->btn_delete->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_delete->setStyleSheet("QPushButton {"
+                                  "color: black;"
                                   "border-radius: 10px;" // Bo tròn viền
                                   "border: 1px solid black;"
                                   "background-color: #C0C0C0;"
@@ -100,6 +103,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     ui->btn_update->move(w/4,2*h/3);
     ui->btn_update->setStyle(QStyleFactory::create("Fusion"));
     ui->btn_update->setStyleSheet("QPushButton {"
+                                  "color: black;"
                                   "border-radius: 10px;" // Bo tròn viền
                                   "border: 1px solid black;"
                                   "background-color: #C0C0C0;"
@@ -141,8 +145,11 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem->horizontalHeader()->setVisible(false);
 
     QTextEdit *numtable = new QTextEdit(this);
+    QTextCursor cursor = numtable->textCursor();
     numtable->setGeometry(w/8,h/2,171,41);
     numtable->setFont(font);
+    numtable->setAlignment(Qt::AlignCenter);
+
     numtable->setStyleSheet("background-color: #C0C0C0;" "border-radius: 10px;");
 
     QLabel *noti = new QLabel(this);
@@ -274,10 +281,6 @@ void ManagerWindow::on_btn_add_clicked()
     tableItem->setItem(row - 1, 1, item1);
     tableItem->setItem(row - 1, 2, item2);
 
-    tableItem->setStyleSheet(
-        "QTableWidget::item {border:1px solid white; color: white;}"
-        "color:white;"
-        );
 
     tableItem->setFont(font);
     newButton = new QPushButton("upload...");
