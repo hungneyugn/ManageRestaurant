@@ -20,11 +20,10 @@
 #include "QScreen"
 #include "QMessageBox"
 #include "staff.h"
-#include <QStyleFactory>
+#include "QStyleFactory"
 #include "QHeaderView"
 #include "QFont"
-
-
+#include "QSpinBox"
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +34,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     
     QFont font;
     QFont fontNoti;
+    QFont fontNumber;
 
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
@@ -46,6 +46,10 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
     font.setPointSize(13); //Dat kich thuoc chu la 13
     fontNoti.setPointSize(11);
+    fontNumber.setPointSize(11);
+
+    fontNumber.setWordSpacing(5);
+
     tableItem = new QTableWidget(ui->centralwidget);
     tableItem -> setRowCount(manager->listItems.size());
     ui->centralwidget->setStyleSheet("background-color: #101010;"
@@ -58,7 +62,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
-    //tableItem->horizontalHeader()->setStyleSheet("QHeaderView::section {border: 1px solid black; background-color: black;}");
 
     tableItem->setColumnWidth(0, w/9);
     tableItem->setColumnWidth(1, w/6);
@@ -134,10 +137,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         tableItem->setFont(font);
     };
 
-
-    // Ẩn đường viền
-//    tableItem->setShowGrid(false);
-
     // Ẩn tiêu đề dọc (số hàng)
     tableItem->verticalHeader()->setVisible(false);
 
@@ -145,10 +144,12 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     tableItem->horizontalHeader()->setVisible(false);
 
     QTextEdit *numtable = new QTextEdit(this);
-    QTextCursor cursor = numtable->textCursor();
     numtable->setGeometry(w/8,h/2,171,41);
-    numtable->setFont(font);
-    numtable->setAlignment(Qt::AlignCenter);
+    numtable->setFont(fontNumber);
+    numtable->setAlignment(Qt::AlignHCenter);
+
+//    QSpinBox *numbox = new QSpinBox(this);
+//    numbox->setAlignment(Qt::Ali);
 
     numtable->setStyleSheet("background-color: #C0C0C0;" "border-radius: 10px;");
 
@@ -186,29 +187,29 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     if(number != 0)
     {
         numtable->setText(QString::number(number));
-        numtable->setAlignment(Qt::AlignCenter);
+        numtable->setAlignment(Qt::AlignHCenter);
 
     }
     // Make connect button
     connect(createtablebutton,&QPushButton::clicked,[=]()
-            {
+    {
         if (numtable->toPlainText().isEmpty())
             {
-            QMessageBox::warning(this,"Lỗi","Vui lòng nhập số bàn");
+            QMessageBox::critical(this,"Error","Please enter the number of table!");
             }
         else
-                {
-               QMessageBox::information(this,"","Cập nhập số bàn thành công ");
+            {
+                QMessageBox::information(this, "Information", "Setting successfully!");
 
-                int num = numtable->toPlainText().toInt() ;
+                int num = numtable->toPlainText().toInt();
                 std::ofstream file("listTable.txt", std::ios::trunc);
-                for (int i = 0; i<num;i++)
+                for (int i = 0; i<num; i++)
                     {
                         file <<i+1<<"-"<<"1"<<std::endl;
                     }
-                     file.close();
-                }
-            });
+                file.close();
+            }
+    });
 }
 
 ManagerWindow::~ManagerWindow()
@@ -232,7 +233,7 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
 void ManagerWindow::uploadImage()
 {
     QString destinationFolderName = "image"; // Tên thư mục đích
-    QString imagePath = QFileDialog::getOpenFileName(this, "Chọn hình ảnh", QDir::homePath(), "Ảnh (*.png *.jpg *.jpeg)");
+    QString imagePath = QFileDialog::getOpenFileName(this, "Choose an image", QDir::homePath(), "Ảnh (*.png *.jpg *.jpeg)");
 
     QFile sourceImage(imagePath);
     QString fileName = QFileInfo(imagePath).fileName(); // Lấy tên tệp của hình ảnh
@@ -244,24 +245,32 @@ void ManagerWindow::uploadImage()
     QString destinationPath = currentPath + "/" + destinationFolderName;
     QString destinationFilePath = destinationPath + "/" + fileName; // Đường dẫn đầy đủ đến tệp mới
     this->image_add = destinationFilePath;
-    if(fileName != ""){
-        if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath)) {
+    if (fileName != "")
+    {
+        if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath))
+        {
             // Thực hiện sao chép tệp
-            if (QFile::copy(imagePath, destinationFilePath)) {
+            if (QFile::copy(imagePath, destinationFilePath))
+            {
                 qDebug() << "Sao chép thành công";
-            } else {
+            }
+            else
+            {
                 qDebug() << "Sao chép không thành công. Lỗi: " << sourceImage.errorString();
             }
-        } else {
+        }
+        else
+        {
             qDebug() << "Không thể tạo thư mục đích hoặc thư mục đích không tồn tại.";
         }
-    }else this->image_add = "";
+    }
+    else
+        this->image_add = "";
     QIcon icon(image_add);
     newButton->setIcon(icon);
     newButton->setText("");
     newButton->setIconSize(newButton->size());
 }
-
 
 void ManagerWindow::on_btn_add_clicked()
 {
@@ -297,7 +306,7 @@ void ManagerWindow::on_btn_save_clicked()
     int rowCount = tableItem->rowCount() -1;
     if (tableItem->rowCount() == 0)
     {
-        QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
+        QMessageBox::critical(this, "Error", "Please enter the data!");
     }
     else
     {
@@ -305,7 +314,7 @@ void ManagerWindow::on_btn_save_clicked()
         QString price = tableItem->item(rowCount, 2)->text();
         QString image = image_add;
 
-        if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Lỗi", "Vui lòng nhập thông tin.");
+        if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Error", "Please enter the data!");
         else if ((manager->listItems.size() != 0) && (manager->checkExistNameItem(name) == 0))
         {
             Item newItem(name, price, image);
@@ -343,12 +352,10 @@ void ManagerWindow::on_btn_save_clicked()
             file.open("listItem.txt", std::ios::app);
             file << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
             file.close();
-
-
         }
         else if(manager->checkExistNameItem(name) == 1)
         {
-             QMessageBox::critical(this, "Lỗi", "Tên món ăn đã tồn tại");
+             QMessageBox::critical(this, "Error", "The food has existed!");
         }
     }
 }
@@ -361,7 +368,7 @@ void ManagerWindow::on_btn_delete_clicked()
     QItemSelectionModel *selectionModel = tableItem->selectionModel();
     QModelIndexList selectedRows = selectionModel->selectedRows();
     if (selectedRows.size() > 1) {
-        QMessageBox::information(this, "Thông báo lỗi", "Bạn đã chọn nhiều hơn một hàng, vui lòng chọn lại bạn nhé !!!");
+        QMessageBox::critical(this, "Error", "Please choose one row!");
     }
     else if (row >= 0 && isItemSelected == true) {
         this->tableItem->removeRow(row);
@@ -374,7 +381,6 @@ void ManagerWindow::on_btn_delete_clicked()
                 if (file.tellp() == 0) {
                     // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
                     file << manager->listItems[i].getId() << "," <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
-
                 } else {
                     // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
                     file << std::endl << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
@@ -386,7 +392,7 @@ void ManagerWindow::on_btn_delete_clicked()
     else
     {
         if (!isItemSelected) {
-        QMessageBox::information(this, "Thông báo lỗi", "Bạn phải chọn hàng trước khi xóa!");
+        QMessageBox::critical(this, "Error", "Please choose one row before deleting!");
     }
 }
 }
@@ -404,7 +410,7 @@ if (row >= 0 && row < manager->listItems.size()) {
     QString priceOld = manager->listItems[row].getPrice();
 
     if (nameOld == name && priceOld == price) {
-        QMessageBox::information(this, "There's nothing to update", "You have not edited the data. Please correct data before updating.");
+        QMessageBox::critical(this, "Error", "You have not edited the data. Please correct data before updating!");
         return;
     }
     else{
@@ -429,11 +435,11 @@ if (row >= 0 && row < manager->listItems.size()) {
                 }
         }
         file.close();
-        QMessageBox::information(this, "Update", "Update successfully.");
+        QMessageBox::information(this, "Update", "Update successfully!");
     }
 }
 else {
-    QMessageBox::information(this, "Update error", "Please enter and save data before updating.");
+    QMessageBox::critical(this, "Error", "Please enter and save data before updating!");
 
     }
 }
