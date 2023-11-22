@@ -23,7 +23,6 @@
 #include "QStyleFactory"
 #include "QHeaderView"
 #include "QFont"
-#include "QSpinBox"
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -121,9 +120,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
 
-//        nameTableWidget->setFont(font);
-//        priceTableWidget->setFont(font);
-
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
         newLabel->setAlignment(Qt::AlignCenter);
@@ -147,9 +143,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     numtable->setGeometry(w/8,h/2,171,41);
     numtable->setFont(fontNumber);
     numtable->setAlignment(Qt::AlignHCenter);
-
-//    QSpinBox *numbox = new QSpinBox(this);
-//    numbox->setAlignment(Qt::Ali);
 
     numtable->setStyleSheet("background-color: #C0C0C0;" "border-radius: 10px;");
 
@@ -209,6 +202,16 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
                     }
                 file.close();
             }
+    });
+
+    //Prevent enter character to price
+    connect(tableItem, &QTableWidget::itemChanged, [=](QTableWidgetItem *item) {
+        if (item && item->column() == 2) { // Thay YOUR_COLUMN_INDEX bằng chỉ số cột cần kiểm tra
+            if (!item->text().isEmpty() && !item->text().at(0).isDigit()) {
+                // Nếu ký tự đầu tiên là số, hủy thay đổi
+                QMessageBox::critical(this, "Error", "Please enter price in number!");
+            }
+        }
     });
 }
 
