@@ -62,8 +62,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     boughtItemTable->setShowGrid(false);
     boughtItemTable->setStyleSheet("background-color: #101010;"
                                    "color: white;"
-                                   "color: white;"
-                                   "font-size: 13px;"
+                                   "font-size: 17px;"
                                    "border: 8px solid #101010;"
                                    );
     boughtItemTable->setRowCount(listitem.size());
@@ -90,7 +89,13 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     lbl_cost->setAlignment(Qt::AlignCenter);
     lbl_total->setAlignment(Qt::AlignCenter);
 
-    double temp_cost = 0;
+    lbl_cost->setStyleSheet("color: white;"
+                            "font-size: 17px;");
+    lbl_total->setText("Total");
+    lbl_total->setStyleSheet("color: white;"
+                             "font-size: 17px;");
+
+    long temp_cost = 0;
     if(table->listBoughtItem.size() != 0)
     {
         for(int i = 0; i < table->listBoughtItem.size();i++)
@@ -102,12 +107,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     else
     {
         lbl_cost->setText("0");
-        lbl_cost->setStyleSheet("color: white;"
-                                "font-size: 13px;");
     }
-    lbl_total->setText("Total");
-    lbl_total->setStyleSheet("color: white;"
-                            "font-size: 13px;");
 
     QList <QLabel *> imageArr;
     QList <QString> nameArr;
@@ -246,31 +246,30 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     mainLayout->addWidget(boughtItemTable);
     mainLayout->setAlignment(boughtItemTable, Qt::AlignTop);
 
-
-
-
-
     // Them nut thanh toan
     QPushButton *payment = new QPushButton(this);
     payment->setText("Payment");
     payment->setStyleSheet(
         "QPushButton {"
+        "font-weight: bold;"
         "color: black;"
-        "font-size: 13px;"
-        "border-radius: 10px;"
-        "border: 1px solid #C6C6C6;"
-        "background-color: #CCFFFF;"
+        "border-radius: 10px;" // Bo tròn viền
+        "border: 1px solid black;"
+        "background-color: #C0C0C0;"
         "}"
         "QPushButton:hover {"
-        "background-color: #00CCFF;"
+        "background-color: #808080;"
         "}"
         );
-    payment->move(0.9*w, 0.87*h);
+    payment->move(0.9*w, 0.85*h);
 
     connect(payment ,&QPushButton::clicked,[=](){
         if(table->listBoughtItem.size() == 0)
             {
-                QMessageBox::warning(this, "Warning", "You don't buy anything");
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "You don't buy anything",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;");
+            // Hiển thị QMessageBox
+            msgBox->open();
             }
         else
             {
@@ -285,6 +284,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
             billwindow1->move(0,0);
             QFont font("Arial", 13);
             billwindow1->setFont(font);
+            billwindow1->setStyleSheet("background-color: transparent;");
             billwindow1->show();
             this->hide();
         }
