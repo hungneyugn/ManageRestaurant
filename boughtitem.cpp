@@ -3,9 +3,6 @@
 
 BoughtItem::BoughtItem(QString name,int id,QString price,int quantity): Item(name,id,price)
 {
-    //this->name = name;
-    //this->id = id;
-    //this->price = price;
     this->quantity = quantity;
 }
 
