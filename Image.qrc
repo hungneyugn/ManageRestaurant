@@ -4,5 +4,6 @@
         <file>menuOrderImage.jpg</file>
         <file>cong.png</file>
         <file>tru.png</file>
+        <file>BillBackground.png</file>
     </qresource>
 </RCC>
