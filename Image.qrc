@@ -10,5 +10,7 @@
         <file>image/tru.jpg</file>
         <file>mainImage.jpeg</file>
         <file>background/table_background.png</file>
+        <file>background/mainwindown.jpg</file>
+        <file>background/managerwindown.jpg</file>
     </qresource>
 </RCC>
