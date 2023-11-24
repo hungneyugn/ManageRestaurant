@@ -25,6 +25,8 @@
 #include "mainwindow.h"
 #include "employeewindow.h"
 #include "QMessageBox"
+#include "QLineEdit"
+#include "QLocale"
 
 namespace Ui {
 class menuorder;
@@ -43,7 +45,7 @@ private:
     Table *table;
     Ui::menuorder *ui;
     std::vector <Item> listitem;
-    std::vector <BoughtItem> listboughtitem;
+    //std::vector <BoughtItem> listboughtitem;
 protected:
     void closeEvent(QCloseEvent *event);
 };

@@ -49,6 +49,7 @@ for (int j = 0; j < column; j++) {\
                         Menuorder->move(0, 0); \
                         QFont font("Arial", 13); \
                         Menuorder->setFont(font); \
+                        Menuorder->setStyleSheet("background-color: #101010;");\
                         Menuorder->show(); \
                         this->hide(); \
                 }); \
@@ -87,6 +88,7 @@ for (int j = 0; j < column; j++) {\
                         Menuorder->move(0, 0); \
                         QFont font("Arial", 13); \
                         Menuorder->setFont(font); \
+                        Menuorder->setStyleSheet("background-color: #101010;");\
                         Menuorder->show(); \
                         this->hide(); \
                 }); \

@@ -15,44 +15,6 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     this->table = table;
     ui->setupUi(this);
 
-    // Them nut thanh toan
-    QPushButton *payment = new QPushButton(this);
-    payment->setText("Payment");
-    payment->setStyleSheet(
-        "QPushButton {"
-        "border-radius: 10px;"
-        "border: 1px solid #C6C6C6;"
-        "background-color: #CCFFFF;"
-        "}"
-        "QPushButton:hover {"
-        "background-color: #00CCFF;"
-        "}"
-        );
-    payment->move(0.9*w, 0.87*h);
-
-    connect(payment ,&QPushButton::clicked,[=](){
-        if(table->listBoughtItem.size() == 0)
-            {
-                QMessageBox::warning(this, "Warning", "You don't buy anything");
-            }
-        else
-            {
-            billwindow *billwindow1 = new billwindow(parent, this->table);
-            billwindow1->setAttribute(Qt::WA_DeleteOnClose);
-
-            QScreen *screen = QGuiApplication::primaryScreen();
-            QRect geometry = screen->geometry();
-            int w = geometry.width();
-            int h = geometry.height();
-            billwindow1->setGeometry(0,0,w,h);
-            billwindow1->move(0,0);
-            QFont font("Arial", 13);
-            billwindow1->setFont(font);
-            billwindow1->show();
-            this->hide();
-        }
-    });
-
     std::fstream file("listItem.txt", std::ios::in);
     if (file.is_open()) {
         std::string line;
@@ -83,41 +45,82 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         file.close();
     }
 
-    QTableWidget *boughtItemTable = new QTableWidget(ui->centralwidget);
+    // Biến toàn cục đổi QString sang giá
+    QLocale locale(QLocale::Vietnamese);
+
+    // Tạo layout chính
+    QWidget *mainLayoutWidget = new QWidget(ui->centralwidget);
+    mainLayoutWidget->setGeometry(0,0,w,h);
+    QHBoxLayout *mainLayout = new QHBoxLayout(mainLayoutWidget);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+
+    // Ảnh background bên trái
+    QLabel *menuorderPicture = new QLabel(mainLayoutWidget);
+    menuorderPicture->setPixmap(QPixmap(":/background/menuOrderImage.jpg").scaled(QSize(w/3, h)));
+
+    // Bảng hiển thị menu bên phải
+    QTableWidget *boughtItemTable = new QTableWidget(mainLayoutWidget);
+
+    boughtItemTable->setShowGrid(false);
+    boughtItemTable->setStyleSheet("background-color: #101010;"
+                                   "color: white;"
+                                   "font-size: 17px;"
+                                   "border: 8px solid #101010;"
+                                   );
     boughtItemTable->setRowCount(listitem.size());
     boughtItemTable->setColumnCount(4);
     boughtItemTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    boughtItemTable->verticalHeader()->setFixedWidth(0.025*w);
-    boughtItemTable->setColumnWidth(0,0.29*w);
-    boughtItemTable->setColumnWidth(1,0.28*w);
-    boughtItemTable->setColumnWidth(2,0.28*w);
-    boughtItemTable->setColumnWidth(3,0.125*w);
-    boughtItemTable->setGeometry(0,0,w,0.8*h);
+
+    boughtItemTable->verticalHeader()->setFixedWidth(0);
+    boughtItemTable->horizontalHeader()->hide();
+    boughtItemTable->setColumnWidth(0,2*0.2*w/3);
+    boughtItemTable->setColumnWidth(1,2*0.3*w/3);
+    boughtItemTable->setColumnWidth(2,2*0.3*w/3);
+    boughtItemTable->setColumnWidth(3,2*0.175*w/3);
+    boughtItemTable->setFixedSize(2*w/3,0.8*h);
+    boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
 
     boughtItemTable->setHorizontalHeaderLabels(QStringList()<<"Image"<< "Name"<<"Price"<<"Quantity");
+    boughtItemTable->horizontalHeader()->setStyleSheet("background-color: #101010;");
 
-    QLabel *lbl_cost = new QLabel(ui->centralwidget);
-    QLabel *lbl_total = new QLabel(ui->centralwidget);
+    // Layout giá
+    QWidget *costWidget = new QWidget(ui->centralwidget);
+    QHBoxLayout *costLayout = new QHBoxLayout(costWidget);
+    QLabel *lblCostValue = new QLabel(costWidget);
+    QLabel *lblCostUnit = new QLabel(costWidget);
+    lblCostUnit->setText("VND");
+    costLayout->addWidget(lblCostValue);
+    costLayout->addWidget(lblCostUnit);
+    costWidget->setLayout(costLayout);
 
-    lbl_cost->setGeometry(0.875*w, 0.8*h, 0.125*w, 0.1*h);
-    lbl_total->setGeometry(0.595*w, 0.8*h, 0.28*w, 0.1*h);
-    lbl_cost->setAlignment(Qt::AlignCenter);
+    // Nhãn total
+    QLabel *lbl_total = new QLabel(mainLayoutWidget);
+
+    costWidget->setGeometry(0.9*w, 0.8*h, 0.125*w, 0.1*h*0.5);
+    lbl_total->setGeometry(0.73*w, 0.8*h, 0.28*w*0.5, 0.1*h*0.5);
     lbl_total->setAlignment(Qt::AlignCenter);
 
-    double temp_cost = 0;
+    costWidget->setStyleSheet("color: white;"
+                            "font-size: 17px;");
+    lbl_total->setText("Total");
+    lbl_total->setStyleSheet("color: white;"
+                             "font-size: 17px;");
+
+    long temp_cost = 0;
     if(table->listBoughtItem.size() != 0)
     {
         for(int i = 0; i < table->listBoughtItem.size();i++)
         {
             temp_cost += table->listBoughtItem[i]->getPrice().toInt()*table->listBoughtItem[i]->getQuantity();
         }
-        lbl_cost->setText(QString::number(temp_cost));
+        lblCostValue->setText(QString::number(temp_cost));
     }
     else
     {
-        lbl_cost->setText("0");
+        lblCostValue->setText("0");
     }
-    lbl_total->setText("Total");
 
     QList <QLabel *> imageArr;
     QList <QString> nameArr;
@@ -136,15 +139,17 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         ImageLabel->setScaledContents(true);
         imageArr.append(ImageLabel);
         nameArr.append(listitem[i].getName());
-        priceArr.append(listitem[i].getPrice());
+        priceArr.append(locale.toCurrencyString(listitem[i].getPrice().toDouble(), "VND"));
 
         QTableWidgetItem *nameArr_element = new QTableWidgetItem(nameArr[i]);
+        nameArr_element->setForeground(Qt::white);
         QTableWidgetItem *priceArr_element = new QTableWidgetItem(priceArr[i]);
+        priceArr_element->setForeground(Qt::white);
         nameArr_element->setTextAlignment(Qt::AlignCenter);
         priceArr_element->setTextAlignment(Qt::AlignCenter);
         nameWidget.append(nameArr_element);
         priceWidget.append(priceArr_element);
-        boughtItemTable->setRowHeight(i,150);
+        boughtItemTable->setRowHeight(i,80);
 
         boughtItemTable->setItem(i,1,nameWidget[i]);
         boughtItemTable->setCellWidget(i,0,imageArr[i]);
@@ -154,17 +159,17 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         QHBoxLayout *horizontalLayoutWidget = new QHBoxLayout(numberLayoutWidget);
         QPushButton *subButton = new QPushButton(numberLayoutWidget);
         subButton->setStyleSheet(QString::fromUtf8("QPushButton{\n"
-                                                     "border-radius:50%;\n"
-                                                     "height:100%;\n"
-                                                     "width: 100%;\n"
-                                                     "background-color: white;\n"
-                                                     "border: black solid 2px;\n"
-                                                     "color : Black;\n"
-                                                     "font-weight: bolder;\n"
-                                                     "}\n"
-                                                     ""));
+                                                   "border-radius:50%;\n"
+                                                   "height:100%;\n"
+                                                   "width: 100%;\n"
+                                                   "background-color: #101010;\n"
+                                                   "border: black solid 2px;\n"
+                                                   "color : Black;\n"
+                                                   "font-weight: bolder;\n"
+                                                   "}\n"
+                                                   ""));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/image/tru.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icon/sub.png"), QSize(), QIcon::Normal, QIcon::Off);
         subButton->setIcon(icon);
         subButton->setAutoRepeat(false);
         QLabel *numberlbl = new QLabel(numberLayoutWidget);
@@ -187,19 +192,18 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
             numberlbl->setText("0");
         }
         QPushButton *addButton = new QPushButton(numberLayoutWidget);
-
         addButton->setStyleSheet(QString::fromUtf8("QPushButton{\n"
-                                                     "border-radius:50%;\n"
-                                                     "height:100%;\n"
-                                                     "width: 100%;\n"
-                                                     "background-color: white;\n"
-                                                     "border: black solid 2px;\n"
-                                                     "color : Black;\n"
-                                                     "font-weight: bolder;\n"
-                                                     "}\n"
-                                                     ""));
+                                                   "border-radius:50%;\n"
+                                                   "height:100%;\n"
+                                                   "width: 100%;\n"
+                                                   "background-color: #101010;\n"
+                                                   "border: black solid 2px;\n"
+                                                   "color : Black;\n"
+                                                   "font-weight: bolder;\n"
+                                                   "}\n"
+                                                   ""));
         QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/image/cong.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icon/add.png"), QSize(), QIcon::Normal, QIcon::Off);
         addButton->setIcon(icon1);
         addButton->setAutoRepeat(false);
 
@@ -207,9 +211,10 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         horizontalLayoutWidget->addWidget(numberlbl);
         horizontalLayoutWidget->addWidget(addButton);
         boughtItemTable->setCellWidget(i,3,numberLayoutWidget);
-    QObject::connect(addButton, &QPushButton::clicked, [=]() {
-        lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
-        numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+        QObject::connect(addButton, &QPushButton::clicked, [=]() {
+            lblCostValue->setText(QString::number(lblCostValue->text().toLong() + listitem[i].getPrice().toInt()));
+            numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+
             int temp = 0;
             for (int j = 0; j < table->listBoughtItem.size(); j++) {
                 if (listitem[i].getId() == table->listBoughtItem[j]->getId())
@@ -226,15 +231,14 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                 table->listBoughtItem.push_back(boughtItem);
             }
 
-    });
+        });
 
 
 
         QObject::connect(subButton, &QPushButton::clicked, [=]() {
 
-            if(numberlbl->text().toInt() > 0) lbl_cost->setText(QString::number(lbl_cost->text().toInt() - listitem[i].getPrice().toInt()));
+            if(numberlbl->text().toInt() > 0) lblCostValue->setText(QString::number(lblCostValue->text().toLong() - listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() == 0 ? 0 :numberlbl->text().toInt() - 1));
-
             for(int j = 0; j < table->listBoughtItem.size();j++)
             {
                 if(listitem[i].getId() == table->listBoughtItem[j]->getId())
@@ -249,6 +253,105 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
             }
         });
     }
+
+    // Thêm 2 phần tử trên vào mainLayout
+    mainLayout->addWidget(menuorderPicture);
+    mainLayout->addWidget(boughtItemTable);
+    mainLayout->setAlignment(boughtItemTable, Qt::AlignTop);
+
+    // Ô nhập tìm kiếm món ăn
+    QWidget *searchWidget = new QWidget(this);
+    searchWidget->resize(300,60);
+    searchWidget->move(w/3 + 5, 0.85*h - 5);
+    QHBoxLayout *layoutSearch = new QHBoxLayout(searchWidget);
+    QLabel *searchLabel = new QLabel(searchWidget);
+    searchLabel->setText("Search");
+    searchLabel->setStyleSheet("color: white;"
+                               "font-size: 17px;");
+    QLineEdit *filter = new QLineEdit();
+    filter->addAction(QIcon(":/icon/search.png"), QLineEdit::LeadingPosition);
+    filter->setStyleSheet("border-radius: 5px;"
+                          "border: 2px solid white;"
+                          "color: white;"
+                          "font-size: 17px;");
+    layoutSearch->addWidget(searchLabel);
+    layoutSearch->addWidget(filter);
+    searchWidget->setLayout(layoutSearch);
+
+
+    // Chức năng tìm món ăn
+    QObject::connect(filter, &QLineEdit::textChanged, [=] (const QString &text){
+        if(text.compare("") != 0)
+        {
+            for(int i = 0; i < listitem.size();i++)
+            {
+                if(!boughtItemTable->item(i,1)->text().contains(text, Qt::CaseInsensitive))
+                {
+                    boughtItemTable->setRowHidden(i, true);
+                }
+                else
+                {
+                    boughtItemTable->setRowHidden(i, false);
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < listitem.size();i++)
+            {
+                boughtItemTable->setRowHidden(i, false);
+            }
+        }
+    });
+
+    // Them nut thanh toan
+    QPushButton *payment = new QPushButton(this);
+    payment->setText("Payment");
+    payment->setIcon(QIcon(":/icon/paymentIcon.png"));
+    payment->resize(100,40);
+    payment->setStyleSheet(
+        "QPushButton {"
+        "font-weight: bold;"
+        "color: black;"
+        "border-radius: 10px;" // Bo tròn viền
+        "border: 1px solid black;"
+        "background-color: #C0C0C0;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: #808080;"
+        "}"
+        );
+    payment->move(0.9*w, 0.85*h);
+
+    connect(payment ,&QPushButton::clicked,[=](){
+        if(table->listBoughtItem.size() == 0)
+        {
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "You don't buy anything",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            // Hiển thị QMessageBox
+            msgBox->open();
+        }
+        else
+            {
+            billwindow *billwindow1 = new billwindow(parent, this->table);
+            billwindow1->setAttribute(Qt::WA_DeleteOnClose);
+
+            QScreen *screen = QGuiApplication::primaryScreen();
+            QRect geometry = screen->geometry();
+            int w = geometry.width();
+            int h = geometry.height();
+            billwindow1->setGeometry(0,0,w,h);
+            billwindow1->move(0,0);
+            QFont font("Arial", 13);
+            billwindow1->setFont(font);
+            billwindow1->setStyleSheet("background-color: transparent;");
+            billwindow1->show();
+            this->hide();
+        }
+    });
 }
 
 menuorder::~menuorder()
@@ -314,6 +417,7 @@ void menuorder::closeEvent(QCloseEvent *event)
     int h = geometry.height();
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
+    employeeWindow1->setStyleSheet("background-color: white;");
     employeeWindow1->show();
     list_table.close();
     this->hide();

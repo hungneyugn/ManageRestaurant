@@ -12,16 +12,19 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
+    int h = geometry.height();
     ui->setupUi(this);
 
     // Tạo tên của hàng và lời cảm ơn
     QLabel *logo = new QLabel();
     QLabel *thankyou = new QLabel();
     logo->setText("Group 5 's Restaurant");
+    logo->setStyleSheet("color: white;");
     thankyou->setText("Thank you so much!!!");
+    thankyou->setStyleSheet("color: white;");
     QFont font;
     font.setFamily("vivaldi");
-    font.setPointSize(20);
+    font.setPointSize(25);
     thankyou->setFont(font);
     logo->setFont(font);
     thankyou->setAlignment(Qt::AlignCenter);
@@ -30,22 +33,27 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     // Tạo hàng tính tổng số tiền
 
     // Tạo layout chứa hàng tổng tiền
+    QLabel *background = new QLabel(ui->centralwidget);
+    background->setPixmap(QPixmap(":/background/BillBackground.png").scaled(QSize(w,h), Qt::KeepAspectRatio));
+    background->setGeometry(0,0,w,h);
     QWidget *totalLayoutWidget = new QWidget();
-    totalLayoutWidget->setFixedSize(w/2, 50);
+    totalLayoutWidget->setFixedSize(w*0.45, 50);
     QHBoxLayout *totalLayout = new QHBoxLayout(totalLayoutWidget);
 
     // Tạo label chữ total và label tổng tiền
     QLabel *lbl_cost = new QLabel(totalLayoutWidget);
+    lbl_cost->setStyleSheet("color: white;font-size: 16px;");
     QLabel *lbl_cost_value = new QLabel(totalLayoutWidget);
+    lbl_cost_value->setStyleSheet("color: white;font-size: 16px;");
     lbl_cost->setText("Total");
 
     // Từ các món ăn đã mua mà tính tổng tiền
-    double total_cost = 0;
+    long total_cost = 0;
     for(int i = 0; i<table->listBoughtItem.size();i++)
     {
         total_cost += table->listBoughtItem[i]->getPrice().toInt()*table->listBoughtItem[i]->getQuantity();
     }
-    lbl_cost_value->setText(QString::number(total_cost));
+    lbl_cost_value->setText(QString::number(total_cost) + " VND");
 
     // Gán 2 label vào QHBoxLayout
     totalLayout->addWidget(lbl_cost);
@@ -55,19 +63,22 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Tạo bảng
     QTableWidget *boughtItemTable = new QTableWidget(ui->centralwidget);
+    //boughtItemTable->setStyleSheet("color: white;");
     boughtItemTable->setRowCount(table->listBoughtItem.size());
     boughtItemTable->setColumnCount(5);
     boughtItemTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     boughtItemTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     boughtItemTable->verticalHeader()->setVisible(false);
+    boughtItemTable->horizontalHeader()->setStretchLastSection(true);
+    boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
     boughtItemTable->setColumnWidth(0,0.01*w);
-    boughtItemTable->setColumnWidth(1,0.15*w);
-    boughtItemTable->setColumnWidth(2,0.15*w);
-    boughtItemTable->setColumnWidth(3,0.04*w);
-    boughtItemTable->setColumnWidth(4,0.15*w);
+    boughtItemTable->setColumnWidth(1,0.2*w);
+    boughtItemTable->setColumnWidth(2,0.08*w);
+    boughtItemTable->setColumnWidth(3,0.06*w);
 
-  boughtItemTable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
-  boughtItemTable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
+    boughtItemTable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
+    boughtItemTable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
 
 
     // Du lieu in vao bang
@@ -84,10 +95,14 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QList <QTableWidgetItem *> costWidget;
 
     // Tao layout va gan bang vao layout
-    boughtItemTable->setFixedSize(w/2 + 10, table->listBoughtItem.size()*50 + 20);
-    //QWidget *layoutWidget = new QWidget();
-    QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(ui->centralwidget);
-    //horizontalLayoutWidget->setSizeConstraint(QLayout::SetFixedSize);
+    boughtItemTable->setFixedSize(w*0.45 + 10, (table->listBoughtItem.size()*50 + 20) > 0.75*h ? 0.7*h : table->listBoughtItem.size()*50 + 20);
+    boughtItemTable->setStyleSheet("background-color:transparent;"
+                                   "color: white;"
+                                   "font-weight: bolder;"
+                                   "font-size: 17px");
+    QWidget *a = new QWidget(ui->centralwidget);
+    a->setGeometry(w/2,0,w/2 + 10,h);
+    QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(a);
 
     // Hàng logo
     horizontalLayoutWidget->addWidget(logo,0,Qt::AlignCenter);
@@ -190,6 +205,7 @@ void billwindow::closeEvent(QCloseEvent *event){
     int h = geometry.height();
     employeeWindow1->setGeometry(0,0,w,h);
     employeeWindow1->move(0,0);
+    employeeWindow1->setStyleSheet("background-color: white;");
     employeeWindow1->show();
     this->hide();
 }

@@ -75,7 +75,8 @@ employeeWindow::~employeeWindow()
 }
 
 void employeeWindow::closeEvent(QCloseEvent *event){
-    MainWindow *mainwindow = new MainWindow();
+    event->ignore();
+    MainWindow *mainwindow = new MainWindow(this);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
