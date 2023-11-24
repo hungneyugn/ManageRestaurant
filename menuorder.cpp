@@ -45,6 +45,9 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         file.close();
     }
 
+    // Biến toàn cục đổi QString sang giá
+    QLocale locale(QLocale::Vietnamese);
+
     // Tạo layout chính
     QWidget *mainLayoutWidget = new QWidget(ui->centralwidget);
     mainLayoutWidget->setGeometry(0,0,w,h);
@@ -76,20 +79,30 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     boughtItemTable->setColumnWidth(2,2*0.3*w/3);
     boughtItemTable->setColumnWidth(3,2*0.175*w/3);
     boughtItemTable->setFixedSize(2*w/3,0.8*h);
+    boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
 
     boughtItemTable->setHorizontalHeaderLabels(QStringList()<<"Image"<< "Name"<<"Price"<<"Quantity");
     boughtItemTable->horizontalHeader()->setStyleSheet("background-color: #101010;");
 
-    // label nhãn và label giá
-    QLabel *lbl_cost = new QLabel(mainLayoutWidget);
+    // Layout giá
+    QWidget *costWidget = new QWidget(ui->centralwidget);
+    QHBoxLayout *costLayout = new QHBoxLayout(costWidget);
+    QLabel *lblCostValue = new QLabel(costWidget);
+    QLabel *lblCostUnit = new QLabel(costWidget);
+    lblCostUnit->setText("VND");
+    costLayout->addWidget(lblCostValue);
+    costLayout->addWidget(lblCostUnit);
+    costWidget->setLayout(costLayout);
+
+    // Nhãn total
     QLabel *lbl_total = new QLabel(mainLayoutWidget);
 
-    lbl_cost->setGeometry(0.925*w, 0.8*h, 0.125*w*0.5, 0.1*h*0.5);
+    costWidget->setGeometry(0.9*w, 0.8*h, 0.125*w, 0.1*h*0.5);
     lbl_total->setGeometry(0.73*w, 0.8*h, 0.28*w*0.5, 0.1*h*0.5);
-    lbl_cost->setAlignment(Qt::AlignCenter);
     lbl_total->setAlignment(Qt::AlignCenter);
 
-    lbl_cost->setStyleSheet("color: white;"
+    costWidget->setStyleSheet("color: white;"
                             "font-size: 17px;");
     lbl_total->setText("Total");
     lbl_total->setStyleSheet("color: white;"
@@ -102,11 +115,11 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         {
             temp_cost += table->listBoughtItem[i]->getPrice().toInt()*table->listBoughtItem[i]->getQuantity();
         }
-        lbl_cost->setText(QString::number(temp_cost));
+        lblCostValue->setText(QString::number(temp_cost));
     }
     else
     {
-        lbl_cost->setText("0");
+        lblCostValue->setText("0");
     }
 
     QList <QLabel *> imageArr;
@@ -126,7 +139,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         ImageLabel->setScaledContents(true);
         imageArr.append(ImageLabel);
         nameArr.append(listitem[i].getName());
-        priceArr.append(listitem[i].getPrice());
+        priceArr.append(locale.toCurrencyString(listitem[i].getPrice().toDouble(), "VND"));
 
         QTableWidgetItem *nameArr_element = new QTableWidgetItem(nameArr[i]);
         nameArr_element->setForeground(Qt::white);
@@ -199,8 +212,9 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         horizontalLayoutWidget->addWidget(addButton);
         boughtItemTable->setCellWidget(i,3,numberLayoutWidget);
         QObject::connect(addButton, &QPushButton::clicked, [=]() {
-            lbl_cost->setText(QString::number(lbl_cost->text().toInt() + listitem[i].getPrice().toInt()));
+            lblCostValue->setText(QString::number(lblCostValue->text().toLong() + listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+
             int temp = 0;
             for (int j = 0; j < table->listBoughtItem.size(); j++) {
                 if (listitem[i].getId() == table->listBoughtItem[j]->getId())
@@ -223,9 +237,8 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
 
         QObject::connect(subButton, &QPushButton::clicked, [=]() {
 
-            if(numberlbl->text().toInt() > 0) lbl_cost->setText(QString::number(lbl_cost->text().toInt() - listitem[i].getPrice().toInt()));
+            if(numberlbl->text().toInt() > 0) lblCostValue->setText(QString::number(lblCostValue->text().toLong() - listitem[i].getPrice().toInt()));
             numberlbl->setText(QString::number(numberlbl->text().toInt() == 0 ? 0 :numberlbl->text().toInt() - 1));
-
             for(int j = 0; j < table->listBoughtItem.size();j++)
             {
                 if(listitem[i].getId() == table->listBoughtItem[j]->getId())
@@ -246,9 +259,56 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     mainLayout->addWidget(boughtItemTable);
     mainLayout->setAlignment(boughtItemTable, Qt::AlignTop);
 
+    // Ô nhập tìm kiếm món ăn
+    QWidget *searchWidget = new QWidget(this);
+    searchWidget->resize(300,60);
+    searchWidget->move(w/3 + 5, 0.85*h - 5);
+    QHBoxLayout *layoutSearch = new QHBoxLayout(searchWidget);
+    QLabel *searchLabel = new QLabel(searchWidget);
+    searchLabel->setText("Search");
+    searchLabel->setStyleSheet("color: white;"
+                               "font-size: 17px;");
+    QLineEdit *filter = new QLineEdit();
+    filter->addAction(QIcon(":/search.png"), QLineEdit::LeadingPosition);
+    filter->setStyleSheet("border-radius: 5px;"
+                          "border: 2px solid white;"
+                          "color: white;"
+                          "font-size: 17px;");
+    layoutSearch->addWidget(searchLabel);
+    layoutSearch->addWidget(filter);
+    searchWidget->setLayout(layoutSearch);
+
+
+    // Chức năng tìm món ăn
+    QObject::connect(filter, &QLineEdit::textChanged, [=] (const QString &text){
+        if(text.compare("") != 0)
+        {
+            for(int i = 0; i < listitem.size();i++)
+            {
+                if(!boughtItemTable->item(i,1)->text().contains(text, Qt::CaseInsensitive))
+                {
+                    boughtItemTable->setRowHidden(i, true);
+                }
+                else
+                {
+                    boughtItemTable->setRowHidden(i, false);
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < listitem.size();i++)
+            {
+                boughtItemTable->setRowHidden(i, false);
+            }
+        }
+    });
+
     // Them nut thanh toan
     QPushButton *payment = new QPushButton(this);
     payment->setText("Payment");
+    payment->setIcon(QIcon(":/paymentIcon.png"));
+    payment->resize(100,40);
     payment->setStyleSheet(
         "QPushButton {"
         "font-weight: bold;"
@@ -265,12 +325,15 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
 
     connect(payment ,&QPushButton::clicked,[=](){
         if(table->listBoughtItem.size() == 0)
-            {
+        {
             QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "You don't buy anything",QMessageBox::Ok, this);
-            msgBox->setStyleSheet("background-color: white;");
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
             // Hiển thị QMessageBox
             msgBox->open();
-            }
+        }
         else
             {
             billwindow *billwindow1 = new billwindow(parent, this->table);

@@ -25,6 +25,8 @@
 #include "mainwindow.h"
 #include "employeewindow.h"
 #include "QMessageBox"
+#include "QLineEdit"
+#include "QLocale"
 
 namespace Ui {
 class menuorder;
