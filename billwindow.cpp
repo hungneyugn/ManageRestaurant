@@ -69,11 +69,13 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     boughtItemTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     boughtItemTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     boughtItemTable->verticalHeader()->setVisible(false);
+    boughtItemTable->horizontalHeader()->setStretchLastSection(true);
+    boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
     boughtItemTable->setColumnWidth(0,0.01*w);
     boughtItemTable->setColumnWidth(1,0.2*w);
     boughtItemTable->setColumnWidth(2,0.08*w);
     boughtItemTable->setColumnWidth(3,0.06*w);
-    boughtItemTable->setColumnWidth(4,0.1*w);
 
     boughtItemTable->setHorizontalHeaderLabels(QStringList()<< "STT" << "Name"<<"Price"<<"Number" << "Cost");
     boughtItemTable->horizontalHeader()->setStyleSheet("QHeaderView::section { border: 1px solid black; background-color: rgba(201, 201, 201, 0.5);}");
@@ -94,7 +96,10 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Tao layout va gan bang vao layout
     boughtItemTable->setFixedSize(w*0.45 + 10, (table->listBoughtItem.size()*50 + 20) > 0.75*h ? 0.7*h : table->listBoughtItem.size()*50 + 20);
-    boughtItemTable->setStyleSheet("background-color: transparent; color: white;font-weight: bolder;font-size: 17px");
+    boughtItemTable->setStyleSheet("background-color:transparent;"
+                                   "color: white;"
+                                   "font-weight: bolder;"
+                                   "font-size: 17px");
     QWidget *a = new QWidget(ui->centralwidget);
     a->setGeometry(w/2,0,w/2 + 10,h);
     QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(a);
