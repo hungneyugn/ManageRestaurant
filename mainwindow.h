@@ -13,7 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(employeeWindow *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -21,5 +21,6 @@ private slots:
     void on_employeeButton_clicked();
 private:
     Ui::MainWindow *ui;
+    employeeWindow* employeeWindow1 = nullptr;
 };
 #endif // MAINWINDOW_H

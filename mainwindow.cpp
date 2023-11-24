@@ -6,10 +6,11 @@
 #include "manager.h"
 #include "QStyleFactory"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(employeeWindow *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    this->employeeWindow1 = parent;
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
@@ -24,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->employeeButton->move(5*w/12, 11*h/16);
     ui->employeeButton->setStyle(QStyleFactory::create("Fusion"));
     ui->employeeButton->setStyleSheet("background-color: #CCFFFF; color: #000000;");
-
 }
 
 MainWindow::~MainWindow()
@@ -35,7 +35,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ManagerWindow* managerWindow = new ManagerWindow(this);
+    ManagerWindow* managerWindow = new ManagerWindow(this, this->employeeWindow1);
     managerWindow->setAttribute(Qt::WA_DeleteOnClose);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
@@ -51,15 +51,19 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_employeeButton_clicked()
 {
-    employeeWindow* employeeWindow1 = new employeeWindow(new Staff, this);
-    employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QRect geometry = screen->geometry();
-    int w = geometry.width();
-    int h = geometry.height();
-    employeeWindow1->setGeometry(0,0,w,h);
-    employeeWindow1->move(0,0);
-    employeeWindow1->show();
+    if(this->employeeWindow1 != nullptr) this->employeeWindow1->show();
+    else
+    {
+        employeeWindow1 = new employeeWindow(new Staff, this);
+        employeeWindow1->setAttribute(Qt::WA_DeleteOnClose);
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect geometry = screen->geometry();
+        int w = geometry.width();
+        int h = geometry.height();
+        employeeWindow1->setGeometry(0,0,w,h);
+        employeeWindow1->move(0,0);
+        employeeWindow1->show();
+    }
     this->hide();
 }
 
