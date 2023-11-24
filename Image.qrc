@@ -11,5 +11,6 @@
         <file>mainImage.jpeg</file>
         <file>background/mainwindown.jpg</file>
         <file>background/managerwindown.jpg</file>
+        <file>background/table_background.png</file>
     </qresource>
 </RCC>

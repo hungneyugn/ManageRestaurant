@@ -175,34 +175,43 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
                                     );
 
     int number= 0;
+
     std::fstream r_file("listTable.txt", std::ios::in);
     std::string line_r;
     if (r_file.is_open()) {
         while (std::getline(r_file, line_r)) {
-            number++;
+               number++;
+            }
         }
-    }
     r_file.close();
+
     if(number != 0)
     {
         numtable->setText(QString::number(number));
         numtable->setAlignment(Qt::AlignHCenter);
-
     }
     // Make connect button
     connect(createtablebutton,&QPushButton::clicked,[=]()
-    {
-        if (numtable->toPlainText().isEmpty())
             {
-            QMessageBox::critical(this,"Error","Please enter the number of table!");
+        QRegularExpression regex("[a-zA-Z!@#$%^&*<>?+=-_`~.,* ]+");
+        if (numtable->toPlainText().isEmpty()|| regex.match(numtable->toPlainText()).hasMatch()|| numtable->toPlainText().toInt()<=0)
+            {
+            QMessageBox::warning(this,"ERROR","Please enter number of table");
+            numtable->setText(QString::number(number));
+            numtable->setAlignment(Qt::AlignHCenter);
             }
+        else if (numtable->toPlainText().toInt()>154)
+        {
+            QMessageBox::warning(this,"","Maximum number of table : 154 ");
+            numtable->setText(QString::number(number));
+            numtable->setAlignment(Qt::AlignHCenter);
+        }
         else
             {
-                QMessageBox::information(this, "Information", "Setting successfully!");
-
-                int num = numtable->toPlainText().toInt();
+               QMessageBox::information(this,"","Updated number of table successfully ");
+                int num = numtable->toPlainText().toInt() ;
                 std::ofstream file("listTable.txt", std::ios::trunc);
-                for (int i = 0; i<num; i++)
+                for (int i = 0; i<num;i++)
                     {
                         file <<i+1<<"-"<<"1"<<std::endl;
                     }
