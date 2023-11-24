@@ -5,5 +5,7 @@
         <file>cong.png</file>
         <file>tru.png</file>
         <file>BillBackground.png</file>
+        <file>paymentIcon.png</file>
+        <file>search.png</file>
     </qresource>
 </RCC>
