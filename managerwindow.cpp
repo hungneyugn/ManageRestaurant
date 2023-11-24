@@ -25,13 +25,13 @@
 #include "QFont"
 
 
-ManagerWindow::ManagerWindow(QWidget *parent) :
+ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
     QMainWindow(parent),
     ui(new Ui::ManagerWindow)
 
 {
     ui->setupUi(this);
-    
+    this->employee = employee;
     QFont font;
     QFont fontTitle;
     QFont fontNoti;
@@ -186,7 +186,7 @@ ManagerWindow::~ManagerWindow()
 }
 
 void ManagerWindow::closeEvent(QCloseEvent *event){
-    MainWindow *mainwindow = new MainWindow();
+    MainWindow *mainwindow = new MainWindow(this->employee);
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
