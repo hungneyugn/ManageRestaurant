@@ -365,12 +365,18 @@ void ManagerWindow::on_btn_delete_clicked()
 {
     bool isItemSelected = tableItem->selectionModel()->hasSelection();
     int row = this->tableItem->currentRow();
-    QItemSelectionModel *selectionModel = tableItem->selectionModel();
-    QModelIndexList selectedRows = selectionModel->selectedRows();
-    if (selectedRows.size() > 1) {
-        QMessageBox::critical(this, "Error", "Please choose one row!");
+    QModelIndexList selectedIndexes = tableItem->selectionModel()->selectedIndexes();
+    for (int i = 0; i < selectedIndexes.size() - 1; i++) {
+        QModelIndex index1 = selectedIndexes.at(i);
+        QModelIndex index2 = selectedIndexes.at(i + 1);
+        int value1 = index1.row();
+        int value2 = index2.row();
+        if (value1 != value2) {
+             QMessageBox::critical(this, "Error", "Please choose one row!");
+             break;
+        }
     }
-    else if (row >= 0 && isItemSelected == true) {
+    if (row >= 0 && isItemSelected == true) {
         this->tableItem->removeRow(row);
         manager->listItems.erase(manager->listItems.begin() + row);
         std::fstream file;
