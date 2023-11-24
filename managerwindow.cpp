@@ -23,7 +23,8 @@
 #include <QStyleFactory>
 #include "QHeaderView"
 #include "QFont"
-
+#include <QLineEdit>
+#include "QRegularExpression"
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,7 +32,7 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
-    
+
     QFont font;
     QFont fontTitle;
     QFont fontNoti;
@@ -146,14 +147,29 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
         "}"
         );
     int number= 0;
+    int diner = 0;
+    int lasttable = 0;
+    std::vector<Diner> diners;
     std::fstream r_file("listTable.txt", std::ios::in);
     std::string line_r;
     if (r_file.is_open()) {
         while (std::getline(r_file, line_r)) {
-            number++;
+            std::istringstream iss(line_r);
+            std::string id, status;
+            getline(iss, id, '-');
+            getline(iss, status);
+            if (status == "0") {
+                diners.push_back(Diner(std::stoi(id)));
+                diner++;
+                lasttable = std::stoi(id);
+                }
+               number++;
+            }
+
         }
-    }
+
     r_file.close();
+
     if(number != 0)
     {
         numtable->setText(QString::number(number));
@@ -161,14 +177,16 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     // Make connect button
     connect(createtablebutton,&QPushButton::clicked,[=]()
             {
-        if (numtable->toPlainText().isEmpty())
+        QRegularExpression regex("[a-zA-Z!@#$%^&*<>?+=-_`~.,*]+");
+        if (numtable->toPlainText().isEmpty() || regex.match(numtable->toPlainText()).hasMatch()|| numtable->toPlainText().toInt()<0)
             {
             QMessageBox::warning(this,"Lỗi","Vui lòng nhập số bàn");
+            numtable->setText(QString::number(number));
             }
         else
-                {
+            {
+            if (diner == 0){
                QMessageBox::information(this,"","Cập nhập số bàn thành công ");
-
                 int num = numtable->toPlainText().toInt() ;
                 std::ofstream file("listTable.txt", std::ios::trunc);
                 for (int i = 0; i<num;i++)
@@ -177,6 +195,73 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
                     }
                      file.close();
                 }
+            else
+                {
+                     if (lasttable > numtable->toPlainText().toInt())
+                        {
+                        QString message;
+                        message = "Ban so: ";
+                        for (const Diner& diner : diners) {
+                            message += QString::number(diner.getTableNumber()) + ",";
+                        }
+                        message.chop(1);
+                            QMessageBox::warning(this,"","Còn có khách đang dùng bữa hoặc chưa thanh toán \n" + message);
+                            numtable->setText(QString::number(number));
+                        }
+                     else if (numtable->toPlainText().toInt()>number)
+                        {
+                            int num = numtable->toPlainText().toInt() ;
+                            std::ofstream file("listTable.txt", std::ios::app);
+                            for (int i = number; i<num;i++)
+                            {
+                                file <<i+1<<"-"<<"1"<<std::endl;
+                            }
+                            file.close();
+                            QMessageBox::information(this,"","Cập nhập số bàn thành công ");
+                         }
+                        else
+                        {
+                            int num = numtable->toPlainText().toInt();
+                            std::ifstream readFile("listTable.txt");
+
+                            if (readFile.is_open()) {
+                                std::string line;
+                                int lineNumber = 0;
+                                std::stringstream updatedContent;
+
+                                while (std::getline(readFile, line)) {
+                                    if (lineNumber < lasttable) {
+                                        // Giữ lại dữ liệu trước vị trí lasttable
+                                        updatedContent << line << std::endl;
+                                    }
+                                    lineNumber++;
+                                }
+
+                                readFile.close();
+
+                                std::ofstream writeFile("listTable.txt");
+                                if (writeFile.is_open()) {
+                                    // Ghi dữ liệu cũ
+                                    writeFile << updatedContent.str();
+
+                                    // Ghi thêm dữ liệu mới từ vị trí lasttable
+                                    for (int i = lasttable; i < num; i++) {
+                                        writeFile << i + 1 << "-" << "1" << std::endl;
+                                    }
+
+                                    writeFile.close();
+
+                                    QMessageBox::information(this, "", "Cập nhập số bàn thành công ");
+                                } else {
+                                    QMessageBox::critical(this, "", "Không thể ghi file");
+                                }
+                            } else {
+                                QMessageBox::critical(this, "", "Không thể đọc file");
+                            }
+                        }
+                }
+            }
+
             });
 }
 
@@ -397,4 +482,5 @@ void ManagerWindow::on_btn_update_clicked()
     }
     }
 }
+
 

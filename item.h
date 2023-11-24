@@ -24,4 +24,18 @@ protected:
     QString image;
 };
 
+class Diner
+{
+public:
+    Diner(int table) : tableNumber(table) {
+        // Constructor implementation (if needed)
+    }
+
+    int getTableNumber() const {
+        return tableNumber;
+    }
+protected:
+    int  tableNumber ;
+};
+
 #endif // ITEM_H

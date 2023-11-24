@@ -34,3 +34,4 @@ void Item::setImage(QString image){
 QString Item::getImage(){
     return this->image;
 }
+

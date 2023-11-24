@@ -2,6 +2,8 @@
 #include "ui_employeewindow.h"
 #include "mainwindow.h"
 #include "menuorder.h"
+#include <QStyleFactory>
+
 
 employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QMainWindow(parent),
@@ -12,7 +14,10 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
-
+    int h = geometry.height();
+    QLabel* img_background = new QLabel(ui->centralwidget);
+    img_background->setGeometry(0,0,w,h);
+    img_background->setStyleSheet("background-image: url(:/background/table_background.png);");
     std::fstream r_file("listTable.txt", std::ios::in);
     if(staff->listTables.size() == 0)
     {
@@ -32,6 +37,7 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     }
 
     int num = staff->listTables.size();
+    int size = 15;
     if (0<num && num <=10){
         if ((num - num/2*2) == 1){
             int row = num/2+1;
@@ -41,10 +47,25 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                 if (j < column/2){
                     for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
                         QPushButton* button = new QPushButton(ui->centralwidget);
-                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                         button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        QFont font = button->font();
+                        font.setBold(true);
+                        font.setPointSize(size);
+                        button->setFont(font);
+                        button->setStyle(QStyleFactory::create("Fusion"));
+                        button->setStyleSheet("QPushButton {"
+                                              "font-weight: bold;"
+                                              "border-radius: 10px ;" // Bo tròn viền
+                                              "border: 1px solid black;"
+                                              "background-color: #C0C0C0;"
+                                              "}"
+                                              "QPushButton:hover {"
+                                              "background-color: #808080;" // Hiệu ứng nhấn
+                                              "}"
+                                              );
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                        else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
@@ -68,10 +89,25 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                     for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
 
                         QPushButton* button = new QPushButton(ui->centralwidget);
-                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                         button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        QFont font = button->font();
+                        font.setBold(true);
+                        font.setPointSize(size);
+                        button->setFont(font);
+                        button->setStyle(QStyleFactory::create("Fusion"));
+                        button->setStyleSheet("QPushButton {"
+                                              "font-weight: bold;"
+                                              "border-radius: 10px ;" // Bo tròn viền
+                                              "border: 1px solid black;"
+                                              "background-color: #C0C0C0;"
+                                              "}"
+                                              "QPushButton:hover {"
+                                              "background-color: #808080;" // Hiệu ứng nhấn
+                                              "}"
+                                              );
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                        else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
@@ -102,10 +138,25 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                 if (j < column/2){
                     for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
                         QPushButton* button = new QPushButton(ui->centralwidget);
-                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                         button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        QFont font = button->font();
+                        font.setBold(true);
+                        font.setPointSize(size);
+                        button->setFont(font);
+                        button->setStyle(QStyleFactory::create("Fusion"));
+                        button->setStyleSheet("QPushButton {"
+                                              "font-weight: bold;"
+                                              "border-radius: 10px ;" // Bo tròn viền
+                                              "border: 1px solid black;"
+                                              "background-color: #C0C0C0;"
+                                              "}"
+                                              "QPushButton:hover {"
+                                              "background-color: #808080;" // Hiệu ứng nhấn
+                                              "}"
+                                              );
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                        else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
@@ -130,10 +181,25 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                     for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
 
                         QPushButton* button = new QPushButton(ui->centralwidget);
-                        button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                        button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                         button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                        else button->setStyleSheet("QPushButton { background-color: red }");
+                        QFont font = button->font();
+                        font.setBold(true);
+                        font.setPointSize(size);
+                        button->setFont(font);
+                        button->setStyle(QStyleFactory::create("Fusion"));
+                        button->setStyleSheet("QPushButton {"
+                                              "font-weight: bold;"
+                                              "border-radius: 10px ;" // Bo tròn viền
+                                              "border: 1px solid black;"
+                                              "background-color: #C0C0C0;"
+                                              "}"
+                                              "QPushButton:hover {"
+                                              "background-color: #808080;" // Hiệu ứng nhấn
+                                              "}"
+                                              );
+                        if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                        else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                         connect(button,&QPushButton::clicked,[=]()
                                 {
                                     menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
@@ -165,10 +231,25 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
             if (j < column/2){
                 for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
                     QPushButton* button = new QPushButton(ui->centralwidget);
-                    button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                    button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                     button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                    else button->setStyleSheet("QPushButton { background-color: red }");
+                    QFont font = button->font();
+                    font.setBold(true);
+                    font.setPointSize(size);
+                    button->setFont(font);
+                    button->setStyle(QStyleFactory::create("Fusion"));
+                    button->setStyleSheet("QPushButton {"
+                                          "font-weight: bold;"
+                                          "border-radius: 10px ;" // Bo tròn viền
+                                          "border: 1px solid black;"
+                                          "background-color: #C0C0C0;"
+                                          "}"
+                                          "QPushButton:hover {"
+                                          "background-color: #808080;" // Hiệu ứng nhấn
+                                          "}"
+                                          );
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                    else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                     connect(button,&QPushButton::clicked,[=]()
                             {
                                 menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
@@ -192,10 +273,116 @@ employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
                 for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
 
                     QPushButton* button = new QPushButton(ui->centralwidget);
-                    button->setGeometry(w/2+((j-column/2)*205),100+ i * 100 - 100*(row*j),200,100);
+                    button->setGeometry(w/2+((j-column/2)*180),200+ i * 110 - 110*(row*j),170,100);
                     button->setText(QString("Table %1").arg(QString::number(i + 1)));
-                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton { background-color: green }");
-                    else button->setStyleSheet("QPushButton { background-color: red }");
+                    QFont font = button->font();
+                    font.setBold(true);
+                    font.setPointSize(size);
+                    button->setFont(font);
+                    button->setStyle(QStyleFactory::create("Fusion"));
+                    button->setStyleSheet("QPushButton {"
+                                          "font-weight: bold;"
+                                          "border-radius: 10px ;" // Bo tròn viền
+                                          "border: 1px solid black;"
+                                          "background-color: #C0C0C0;"
+                                          "}"
+                                          "QPushButton:hover {"
+                                          "background-color: #808080;" // Hiệu ứng nhấn
+                                          "}"
+                                          );
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                    else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
+                    connect(button,&QPushButton::clicked,[=]()
+                            {
+                                menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                QScreen *screen = QGuiApplication::primaryScreen();
+                                QRect geometry = screen->geometry();
+                                int w = geometry.width();
+                                int h = geometry.height();
+                                Menuorder->setGeometry(0,0,w,h);
+                                Menuorder->move(0,0);
+                                QFont font("Arial", 13);
+                                Menuorder->setFont(font);
+                                Menuorder->show();
+                                this->hide();
+                            });
+                }
+            }
+        }
+    }
+    else
+    {
+        int row = num/10 ;
+        if (row >11){ row = 11;}
+        int column = num/row +1 ;
+        for (int j = 0; j < column;j++)
+        {
+            if (j < column/2){
+                for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+                    QPushButton* button = new QPushButton(ui->centralwidget);
+                    button->setGeometry(w/2+((j-column/2)*110),100+ i * 60 - 60*(row*j),100,50);
+                    button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                    QFont font = button->font();
+                    font.setBold(true);
+                    font.setPointSize(size);
+                    button->setFont(font);
+                    button->setStyle(QStyleFactory::create("Fusion"));
+                    button->setStyleSheet("QPushButton {"
+                                          "font-weight: bold;"
+                                          "border-radius: 10px ;" // Bo tròn viền
+                                          "border: 1px solid black;"
+                                          "background-color: #C0C0C0;"
+                                          "}"
+                                          "QPushButton:hover {"
+                                          "background-color: #808080;" // Hiệu ứng nhấn
+                                          "}"
+                                          );
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                    else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
+                    connect(button,&QPushButton::clicked,[=]()
+                            {
+                                menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
+                                Menuorder->setAttribute(Qt::WA_DeleteOnClose);
+
+                                QScreen *screen = QGuiApplication::primaryScreen();
+                                QRect geometry = screen->geometry();
+                                int w = geometry.width();
+                                int h = geometry.height();
+                                Menuorder->setGeometry(0,0,w,h);
+                                Menuorder->move(0,0);
+                                QFont font("Arial", 13);
+                                Menuorder->setFont(font);
+                                Menuorder->show();
+                                this->hide();
+                            });
+                }
+            }
+            else
+            {
+                for (int i = 0+row*j; i < row*(j+1) && i<num; i++) {
+
+                    QPushButton* button = new QPushButton(ui->centralwidget);
+                    button->setGeometry(w/2+((j-column/2)*110),100+ i * 60 - 60*(row*j),100,50);
+                    button->setText(QString("Table %1").arg(QString::number(i + 1)));
+                    QFont font = button->font();
+                    font.setBold(true);
+                    font.setPointSize(size);
+                    button->setFont(font);
+                    button->setStyle(QStyleFactory::create("Fusion"));
+                    button->setStyleSheet("QPushButton {"
+                                          "font-weight: bold;"
+                                          "border-radius: 10px ;" // Bo tròn viền
+                                          "border: 1px solid black;"
+                                          "background-color: #C0C0C0;"
+                                          "}"
+                                          "QPushButton:hover {"
+                                          "background-color: #808080;" // Hiệu ứng nhấn
+                                          "}"
+                                          );
+                    if(staff->listTables[i]->getStatus() == true) button->setStyleSheet("QPushButton {background-color: #C0C0C0;color:white;}");
+                    else button->setStyleSheet("QPushButton {background-color: #B8860B ; color:white;}");
                     connect(button,&QPushButton::clicked,[=]()
                             {
                                 menuorder *Menuorder = new menuorder(this, staff->listTables[i]);
