@@ -57,7 +57,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
 
     // Ảnh background bên trái
     QLabel *menuorderPicture = new QLabel(mainLayoutWidget);
-    menuorderPicture->setPixmap(QPixmap(":/menuOrderImage.jpg").scaled(QSize(w/3, h)));
+    menuorderPicture->setPixmap(QPixmap(":/background/menuOrderImage.jpg").scaled(QSize(w/3, h)));
 
     // Bảng hiển thị menu bên phải
     QTableWidget *boughtItemTable = new QTableWidget(mainLayoutWidget);
@@ -169,7 +169,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                                                    "}\n"
                                                    ""));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/tru.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/icon/sub.png"), QSize(), QIcon::Normal, QIcon::Off);
         subButton->setIcon(icon);
         subButton->setAutoRepeat(false);
         QLabel *numberlbl = new QLabel(numberLayoutWidget);
@@ -203,7 +203,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                                                    "}\n"
                                                    ""));
         QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/cong.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/icon/add.png"), QSize(), QIcon::Normal, QIcon::Off);
         addButton->setIcon(icon1);
         addButton->setAutoRepeat(false);
 
@@ -269,7 +269,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     searchLabel->setStyleSheet("color: white;"
                                "font-size: 17px;");
     QLineEdit *filter = new QLineEdit();
-    filter->addAction(QIcon(":/search.png"), QLineEdit::LeadingPosition);
+    filter->addAction(QIcon(":/icon/search.png"), QLineEdit::LeadingPosition);
     filter->setStyleSheet("border-radius: 5px;"
                           "border: 2px solid white;"
                           "color: white;"
@@ -307,7 +307,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     // Them nut thanh toan
     QPushButton *payment = new QPushButton(this);
     payment->setText("Payment");
-    payment->setIcon(QIcon(":/paymentIcon.png"));
+    payment->setIcon(QIcon(":/icon/paymentIcon.png"));
     payment->resize(100,40);
     payment->setStyleSheet(
         "QPushButton {"

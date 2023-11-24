@@ -34,7 +34,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Tạo layout chứa hàng tổng tiền
     QLabel *background = new QLabel(ui->centralwidget);
-    background->setPixmap(QPixmap(":/BillBackground.png").scaled(QSize(w,h), Qt::KeepAspectRatio));
+    background->setPixmap(QPixmap(":/background/BillBackground.png").scaled(QSize(w,h), Qt::KeepAspectRatio));
     background->setGeometry(0,0,w,h);
     QWidget *totalLayoutWidget = new QWidget();
     totalLayoutWidget->setFixedSize(w*0.45, 50);
