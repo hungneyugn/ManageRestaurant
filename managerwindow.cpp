@@ -23,7 +23,7 @@
 #include "QStyleFactory"
 #include "QHeaderView"
 #include "QFont"
-#include "QSpinBox"
+#include "QLocale"
 
 ManagerWindow::ManagerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -43,6 +43,8 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
 
     ui->backgroundlbl->setGeometry(0,0,w/2 - 20,h);
     ui->backgroundlbl->move(0,0);
+
+    QLocale locale(QLocale::Vietnamese, QLocale::Vietnam);
 
     font.setPointSize(13); //Dat kich thuoc chu la 13
     fontNoti.setPointSize(11);
@@ -116,13 +118,13 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
                                   "}");
     for (int i = 0; i < manager->listItems.size() ; i++)
     {
+
+        QString formatPrice = locale.toCurrencyString(manager->listItems[i].getPrice().toDouble(), "VND");
         QTableWidgetItem *nameTableWidget = new QTableWidgetItem(manager->listItems[i].getName());
-        QTableWidgetItem *priceTableWidget = new QTableWidgetItem(manager->listItems[i].getPrice());
+        QTableWidgetItem *priceTableWidget = new QTableWidgetItem(formatPrice);
+
         nameTableWidget -> setTextAlignment(Qt::AlignCenter);
         priceTableWidget -> setTextAlignment(Qt::AlignCenter);
-
-//        nameTableWidget->setFont(font);
-//        priceTableWidget->setFont(font);
 
         QLabel *newLabel = new QLabel();
         newLabel->setPixmap(QPixmap(manager->listItems[i].getImage()));
@@ -147,9 +149,6 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
     numtable->setGeometry(w/8,h/2,171,41);
     numtable->setFont(fontNumber);
     numtable->setAlignment(Qt::AlignHCenter);
-
-//    QSpinBox *numbox = new QSpinBox(this);
-//    numbox->setAlignment(Qt::Ali);
 
     numtable->setStyleSheet("background-color: #C0C0C0;" "border-radius: 10px;");
 
@@ -216,7 +215,45 @@ ManagerWindow::ManagerWindow(QWidget *parent) :
                     {
                         file <<i+1<<"-"<<"1"<<std::endl;
                     }
-                     file.close();
+                file.close();
+            }
+    });
+    //Prevent enter character to price
+    connect(tableItem, &QTableWidget::itemChanged, [=](QTableWidgetItem *item)
+            {
+                uint8_t num = 0;
+
+                if (item && item->column() == 2) { // Thay YOUR_COLUMN_INDEX bằng chỉ số cột cần kiểm tra
+                    if (!item->text().isEmpty())
+                    {
+                        for (int i = 0; i < item->text().size(); i++){
+                            if (item->text().at(i).isDigit() == 0 )
+                                num++;
+                        }
+
+                        if (num == 0)
+                            item->setText(locale.toCurrencyString(item->text().toDouble(), "VND"));
+                        else if (item->text().size() > 0 || item->text().contains("VND"))
+                        {
+                            uint8_t num1 = 0;
+                            QString temp = item->text().replace("VND", "").replace(".", "");
+                            if (temp.size() > 1)
+                            {
+                                for (int i = 0; i < temp.size() - 1; i++)
+                                {
+
+                                    if (temp.at(i).isDigit() == 0)
+                                        num1++;
+                                }
+                                if (num1 != 0)
+                                    QMessageBox::critical(this, "Error", "Please enter price in number!");
+                                else
+                                    item->setText(locale.toCurrencyString(temp.toDouble(), "VND"));
+                            }
+                            else
+                                QMessageBox::critical(this, "Error", "Please enter price in number!");
+                        }
+                    }
                 }
             });
 }
@@ -323,10 +360,12 @@ void ManagerWindow::on_btn_save_clicked()
         QString price = tableItem->item(rowCount, 2)->text();
         QString image = image_add;
 
-        if (name.isEmpty() || price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Error", "Please enter the data!");
+        QString new_price = price.replace("VND", "").replace(".", "");
+
+        if (name.isEmpty() || new_price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Error", "Please enter the data!");
         else if ((manager->listItems.size() != 0) && (manager->checkExistNameItem(name) == 0))
         {
-            Item newItem(name, price, image);
+            Item newItem(name, new_price, image);
             int Id = this->manager->listItems[manager->listItems.size() - 1].getId();
 
             newItem.setId(Id, 1);
@@ -340,7 +379,7 @@ void ManagerWindow::on_btn_save_clicked()
             std::fstream file;
             file.open("listItem.txt", std::ios::app);
             if(file.is_open()){
-                file << std::endl << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << ","<< price.toStdString();
+                file << std::endl << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << ","<< new_price.toStdString();
             }
             file.close();
 
@@ -348,7 +387,7 @@ void ManagerWindow::on_btn_save_clicked()
         }
         else if (manager->listItems.size() == 0)
         {
-            Item newItem(name, price, image);
+            Item newItem(name, new_price, image);
             newItem.setId(99,1);
             QString id = QString::number(newItem.getId());
             QTableWidgetItem *itemName = tableItem->item(rowCount, 1);
@@ -359,7 +398,7 @@ void ManagerWindow::on_btn_save_clicked()
 
             std::fstream file;
             file.open("listItem.txt", std::ios::app);
-            file << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << "," << price.toStdString();
+            file << id.toStdString() << "," << image.toStdString() << "," << name.toStdString() << "," << new_price.toStdString();
             file.close();
         }
         else if(manager->checkExistNameItem(name) == 1)
@@ -409,48 +448,54 @@ void ManagerWindow::on_btn_delete_clicked()
 
 void ManagerWindow::on_btn_update_clicked()
 {
-int row = this->tableItem->currentRow();
-if (row >= 0 && row < manager->listItems.size()) {
-    QString name = tableItem->item(row, 1)->text();
-    QString price = tableItem->item(row, 2)->text();
-    QString image = image_add;
+    int row = this->tableItem->currentRow();
+    if (row >= 0 && row < manager->listItems.size()) {
+        QString name = tableItem->item(row, 1)->text();
+        QString price = tableItem->item(row, 2)->text();
+        QString image = image_add;
 
-    QString nameOld = manager->listItems[row].getName();
-    QString priceOld = manager->listItems[row].getPrice();
+        QString new_price = price.replace("VND", "").replace(".","");
 
-    if (nameOld == name && priceOld == price) {
-        QMessageBox::critical(this, "Error", "You have not edited the data. Please correct data before updating!");
-        return;
-    }
-    else{
+        QString nameOld = manager->listItems[row].getName();
+        QString priceOld = manager->listItems[row].getPrice();
 
-        manager->listItems[row].setName(name);
-        manager->listItems[row].setPrice(price);
-        manager->listItems[row].setImage(image);
+        QString new_priceOld = priceOld.replace("VND", "").replace(".","");
 
-        std::fstream file;
-        file.open("listItem.txt", std::ios::trunc |std::ios::out);
-        if(file.is_open()){
-                file.seekp(0, std::ios::end);
-                for(int i = 0;i < manager->listItems.size(); i++){
-                    if (file.tellp() == 0) {
-                        // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
-                        file << manager->listItems[i].getId() << "," <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
-
-                    } else {
-                        // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
-                        file << std::endl << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
-                    }
-                }
+        if (nameOld == name && new_priceOld == new_price) {
+            QMessageBox::critical(this, "Error", "You have not edited the data. Please correct data before updating!");
+            return;
         }
-        file.close();
-        QMessageBox::information(this, "Update", "Update successfully!");
-    }
-}
-else {
-    QMessageBox::critical(this, "Error", "Please enter and save data before updating!");
+        else{
 
+            manager->listItems[row].setName(name);
+            manager->listItems[row].setPrice(new_price);
+            manager->listItems[row].setImage(image);
+
+            std::fstream file;
+            file.open("listItem.txt", std::ios::trunc |std::ios::out);
+            if(file.is_open()){
+                    file.seekp(0, std::ios::end);
+                    for(int i = 0;i < manager->listItems.size(); i++){
+                        if (file.tellp() == 0) {
+                            // Nếu tệp trống, ghi dữ liệu mà không có dòng trống ở đầu
+                            file << manager->listItems[i].getId() << "," <<  manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << "," << manager->listItems[i].getPrice().toStdString();
+
+                        } else {
+                            // Nếu không trống, di chuyển con trỏ ghi đến đầu và ghi dữ liệu
+                            file << std::endl << manager->listItems[i].getId() << "," << manager->listItems[i].getImage().toStdString() << "," << manager->listItems[i].getName().toStdString() << ","<< manager->listItems[i].getPrice().toStdString();
+                        }
+                    }
+            }
+            file.close();
+
+
+            QMessageBox::information(this, "Update", "Update successfully!");
+        }
     }
+    else {
+        QMessageBox::critical(this, "Error", "Please enter and save data before updating!");
+
+        }
 }
 
 
