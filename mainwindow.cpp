@@ -40,12 +40,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-<<<<<<< HEAD
-void MainWindow::on_pushButton_clicked()
-=======
 
 void MainWindow::on_managerButton_clicked()
->>>>>>> origin/develop
 {
     ManagerWindow* managerWindow = new ManagerWindow(this, this->employeeWindow1);
     managerWindow->setAttribute(Qt::WA_DeleteOnClose);
