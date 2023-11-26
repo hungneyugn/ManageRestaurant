@@ -2,8 +2,6 @@
 #include "ui_employeewindow.h"
 #include "mainwindow.h"
 #include "menuorder.h"
-#include <QStyleFactory>
-
 
 employeeWindow::employeeWindow(Staff *newStaff, QWidget *parent) :
     QMainWindow(parent),
