@@ -197,7 +197,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
         QRegularExpression regex("[a-zA-Z!@#$%^&*<>?+=-_`~.,* ]+");
         if (numtable->toPlainText().isEmpty()|| regex.match(numtable->toPlainText()).hasMatch()|| numtable->toPlainText().toInt()<=0)
             {
-                QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter number of table",QMessageBox::Ok, this);
+                QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "Please enter number of table",QMessageBox::Ok, this);
                 msgBox->setStyleSheet("background-color: white;"
                                       "font-size: 17px;");
 
@@ -209,7 +209,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
             }
         else if (numtable->toPlainText().toInt()>154)
         {
-            QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "ERROR", "Maximum number of table : 154 ",QMessageBox::Ok, this);
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "Maximum number of table : 154 ",QMessageBox::Ok, this);
             msgBox->setStyleSheet("background-color: white;"
                                   "font-size: 17px;");
 
@@ -266,7 +266,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
                                 }
                                 if (num1 != 0)
                                 {
-                                    QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter price in number!",QMessageBox::Ok, this);
+                                    QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter price in number!",QMessageBox::Ok, this);
                                     msgBox->setStyleSheet("background-color: white;"
                                                           "font-size: 17px;");
 
@@ -279,7 +279,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
                             }
                             else
                             {
-                                QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter price in number!",QMessageBox::Ok, this);
+                                QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter price in number!",QMessageBox::Ok, this);
                                 msgBox->setStyleSheet("background-color: white;"
                                                       "font-size: 17px;");
 
@@ -399,7 +399,7 @@ void ManagerWindow::on_btn_save_clicked()
     int rowCount = tableItem->rowCount() -1;
     if (tableItem->rowCount() == 0)
     {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter the data!",QMessageBox::Ok, this);
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter the data!",QMessageBox::Ok, this);
         msgBox->setStyleSheet("background-color: white;"
                               "font-size: 17px;");
 
@@ -415,7 +415,7 @@ void ManagerWindow::on_btn_save_clicked()
 
         if (name.isEmpty() || new_price.isEmpty() || image.isEmpty())
         {
-            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter the data!",QMessageBox::Ok, this);
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter the data!",QMessageBox::Ok, this);
             msgBox->setStyleSheet("background-color: white;"
                                   "font-size: 17px;");
 
@@ -462,7 +462,7 @@ void ManagerWindow::on_btn_save_clicked()
         }
         else if(manager->checkExistNameItem(name) == 1)
         {
-            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "The food has existed!",QMessageBox::Ok, this);
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "The food has existed!",QMessageBox::Ok, this);
             msgBox->setStyleSheet("background-color: white;"
                                   "font-size: 17px;");
 
@@ -480,7 +480,7 @@ void ManagerWindow::on_btn_delete_clicked()
     QItemSelectionModel *selectionModel = tableItem->selectionModel();
     QModelIndexList selectedRows = selectionModel->selectedRows();
     if (selectedRows.size() > 1) {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please choose one row!",QMessageBox::Ok, this);
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row!",QMessageBox::Ok, this);
         msgBox->setStyleSheet("background-color: white;"
                               "font-size: 17px;");
 
@@ -509,7 +509,7 @@ void ManagerWindow::on_btn_delete_clicked()
     else
     {
         if (!isItemSelected) {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please choose one row before deleting!",QMessageBox::Ok, this);
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row before deleting!",QMessageBox::Ok, this);
         msgBox->setStyleSheet("background-color: white;"
                               "font-size: 17px;");
 
@@ -536,7 +536,7 @@ void ManagerWindow::on_btn_update_clicked()
         QString new_priceOld = priceOld.replace("VND", "").replace(".","");
 
         if (nameOld == name && new_priceOld == new_price) {
-            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "You have not edited the data. Please correct data before updating!",QMessageBox::Ok, this);
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "You have not edited the data. Please correct data before updating!",QMessageBox::Ok, this);
             msgBox->setStyleSheet("background-color: white;"
                                   "font-size: 17px;");
 
@@ -575,7 +575,7 @@ void ManagerWindow::on_btn_update_clicked()
         }
     }
     else {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "ERROR", "Please enter and save data before updating!",QMessageBox::Ok, this);
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter and save data before updating!",QMessageBox::Ok, this);
         msgBox->setStyleSheet("background-color: white;"
                               "font-size: 17px;");
 
