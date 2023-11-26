@@ -1,7 +1,5 @@
 #include "menuorder.h"
 #include "ui_menuorder.h"
-#include "billwindow.h"
-#include "ui_billwindow.h"
 
 menuorder::menuorder(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
@@ -35,7 +33,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                 id = QString::fromStdString(line.substr(0, pos1));
                 image = QString::fromStdString(line.substr(pos1 + 1, pos2 - pos1 - 1));
                 name = QString::fromStdString(line.substr(pos2 + 1, pos3 - pos2 - 1));
-                price = QString::fromStdString(line.substr(pos3 + 1));
+                price = QString::fromStdString(line.substr(pos3 + 1)).removeLast();
 
                 Item newItem(name, price, image);
                 newItem.setId(id.toInt());
@@ -68,7 +66,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
                                    "font-size: 17px;"
                                    "border: 8px solid #101010;"
                                    );
-    boughtItemTable->setRowCount(listitem.size());
+    //boughtItemTable->setRowCount(listitem.size());
     boughtItemTable->setColumnCount(4);
     boughtItemTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -132,10 +130,39 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
     QFont font;
     font.setPointSize(13);
 
+    // Lấy kích thước ListItem tạm thời trước khi xem xét ListBoughtItem
+    int oldsize = listitem.size();
+
+    // Rào trường hợp manager xóa món ăn đã đặt ra khỏi menu
+    if(table->listBoughtItem.size() != 0)
+    {
+        for(BoughtItem *boughtItem : table->listBoughtItem)
+        {
+            int temp = 0;
+            for(Item item: listitem)
+            {
+                if(item.getId() == boughtItem->getId())
+                {
+                    temp = 1;
+                    break;
+                }
+            }
+            if(!temp)
+            {
+                Item newItem(boughtItem->getName(), boughtItem->getPrice(), boughtItem->getImage());
+                newItem.setId(boughtItem->getId());
+                listitem.push_back(newItem);
+            }
+        }
+    }
+
+    boughtItemTable->setRowCount(listitem.size());
+
     for(int i = 0;i <listitem.size();i++)
     {
         QLabel *ImageLabel = new QLabel();
         ImageLabel->setPixmap(QPixmap(listitem[i].getImage()));
+        ImageLabel->setAlignment(Qt::AlignCenter);
         ImageLabel->setScaledContents(true);
         imageArr.append(ImageLabel);
         nameArr.append(listitem[i].getName());
@@ -149,7 +176,7 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         priceArr_element->setTextAlignment(Qt::AlignCenter);
         nameWidget.append(nameArr_element);
         priceWidget.append(priceArr_element);
-        boughtItemTable->setRowHeight(i,80);
+        boughtItemTable->setRowHeight(i,h/8);
 
         boughtItemTable->setItem(i,1,nameWidget[i]);
         boughtItemTable->setCellWidget(i,0,imageArr[i]);
@@ -212,25 +239,36 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
         horizontalLayoutWidget->addWidget(addButton);
         boughtItemTable->setCellWidget(i,3,numberLayoutWidget);
         QObject::connect(addButton, &QPushButton::clicked, [=]() {
-            lblCostValue->setText(QString::number(lblCostValue->text().toLong() + listitem[i].getPrice().toInt()));
-            numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
+            if(i >= oldsize)
+            {
+                QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "This item is sold out!!",QMessageBox::Ok, this);
+                msgBox->setStyleSheet("background-color: white;"
+                                      "font-size: 17px;");
+                msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+                // Hiển thị QMessageBox
+                msgBox->open();
+            }
+            else
+            {
+                lblCostValue->setText(QString::number(lblCostValue->text().toLong() + listitem[i].getPrice().toInt()));
+                numberlbl->setText(QString::number(numberlbl->text().toInt() + 1));
 
-            int temp = 0;
-            for (int j = 0; j < table->listBoughtItem.size(); j++) {
-                if (listitem[i].getId() == table->listBoughtItem[j]->getId())
+                int temp = 0;
+                for (int j = 0; j < table->listBoughtItem.size(); j++) {
+                    if (listitem[i].getId() == table->listBoughtItem[j]->getId())
+                    {
+                        temp = 1;
+                        table->listBoughtItem[j]->setQuantity(numberlbl->text().toInt());
+                        break;
+                    }
+                }
+
+                if(temp != 1)
                 {
-                    temp = 1;
-                    table->listBoughtItem[j]->setQuantity(numberlbl->text().toInt());
-                    break;
+                    BoughtItem *boughtItem = new BoughtItem(listitem[i].getImage(), listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
+                    table->listBoughtItem.push_back(boughtItem);
                 }
             }
-
-            if(temp != 1)
-            {
-                BoughtItem *boughtItem = new BoughtItem(listitem[i].getName(), listitem[i].getId(), listitem[i].getPrice(), numberlbl->text().toInt());
-                table->listBoughtItem.push_back(boughtItem);
-            }
-
         });
 
 
@@ -281,23 +319,13 @@ menuorder::menuorder(employeeWindow *parent, Table *table) :
 
     // Chức năng tìm món ăn
     QObject::connect(filter, &QLineEdit::textChanged, [=] (const QString &text){
-        if(text.compare("") != 0)
+        for(int i = 0; i < listitem.size();i++)
         {
-            for(int i = 0; i < listitem.size();i++)
+            if(!boughtItemTable->item(i,1)->text().contains(text, Qt::CaseInsensitive))
             {
-                if(!boughtItemTable->item(i,1)->text().contains(text, Qt::CaseInsensitive))
-                {
-                    boughtItemTable->setRowHidden(i, true);
-                }
-                else
-                {
-                    boughtItemTable->setRowHidden(i, false);
-                }
+                boughtItemTable->setRowHidden(i, true);
             }
-        }
-        else
-        {
-            for(int i = 0; i < listitem.size();i++)
+            else
             {
                 boughtItemTable->setRowHidden(i, false);
             }

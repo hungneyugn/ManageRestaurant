@@ -1,6 +1,7 @@
 #include "item.h"
-Item::Item(QString name,int id, QString price)
+Item::Item(QString image, QString name,int id, QString price)
 {
+    this->image = image;
     this->name = name;
     this->price = price;
     this->id = id;

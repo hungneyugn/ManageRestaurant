@@ -1,53 +1,49 @@
 #include "billwindow.h"
 #include "ui_billwindow.h"
-#include "employeewindow.h"
-#include "ui_employeewindow.h"
-#include "ui_billwindow.h"
+
 billwindow::billwindow(employeeWindow *parent, Table *table) :
     QMainWindow(parent),
     ui(new Ui::billwindow)
 {
+    ui->setupUi(this);
     this->staff = parent->staff;
     this->table = table;
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geometry = screen->geometry();
     int w = geometry.width();
     int h = geometry.height();
-    ui->setupUi(this);
 
-    // Tạo tên của hàng và lời cảm ơn
-    QLabel *logo = new QLabel();
-    QLabel *thankyou = new QLabel();
-    logo->setText("Group 5 's Restaurant");
-    logo->setStyleSheet("color: white;");
-    thankyou->setText("Thank you so much!!!");
-    thankyou->setStyleSheet("color: white;");
-    QFont font;
-    font.setFamily("vivaldi");
-    font.setPointSize(25);
-    thankyou->setFont(font);
-    logo->setFont(font);
-    thankyou->setAlignment(Qt::AlignCenter);
-    logo->setAlignment(Qt::AlignCenter);
-
-    // Tạo hàng tính tổng số tiền
-
-    // Tạo layout chứa hàng tổng tiền
     QLabel *background = new QLabel(ui->centralwidget);
     background->setPixmap(QPixmap(":/background/BillBackground.png").scaled(QSize(w,h), Qt::KeepAspectRatio));
     background->setGeometry(0,0,w,h);
+
+    QLabel *logo = new QLabel();
+    QLabel *thankyou = new QLabel();
+    QFont font;
+    font.setFamily("vivaldi");
+    font.setPointSize(25);
+    logo->setAlignment(Qt::AlignCenter);
+
+    logo->setText("Group 5 's Restaurant");
+    logo->setStyleSheet("color: white;");
+    logo->setFont(font);
+
+    thankyou->setText("Thank you so much!!!");
+    thankyou->setStyleSheet("color: white;");
+    thankyou->setFont(font);
+    thankyou->setAlignment(Qt::AlignCenter);
+
     QWidget *totalLayoutWidget = new QWidget();
     totalLayoutWidget->setFixedSize(w*0.45, 50);
     QHBoxLayout *totalLayout = new QHBoxLayout(totalLayoutWidget);
 
-    // Tạo label chữ total và label tổng tiền
     QLabel *lbl_cost = new QLabel(totalLayoutWidget);
     lbl_cost->setStyleSheet("color: white;font-size: 16px;");
-    QLabel *lbl_cost_value = new QLabel(totalLayoutWidget);
-    lbl_cost_value->setStyleSheet("color: white;font-size: 16px;");
     lbl_cost->setText("Total");
 
-    // Từ các món ăn đã mua mà tính tổng tiền
+    QLabel *lbl_cost_value = new QLabel(totalLayoutWidget);
+    lbl_cost_value->setStyleSheet("color: white;font-size: 16px;");
+
     long total_cost = 0;
     for(int i = 0; i<table->listBoughtItem.size();i++)
     {
@@ -63,7 +59,6 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
 
     // Tạo bảng
     QTableWidget *boughtItemTable = new QTableWidget(ui->centralwidget);
-    //boughtItemTable->setStyleSheet("color: white;");
     boughtItemTable->setRowCount(table->listBoughtItem.size());
     boughtItemTable->setColumnCount(5);
     boughtItemTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -72,6 +67,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     boughtItemTable->horizontalHeader()->setStretchLastSection(true);
     boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
+
     boughtItemTable->setColumnWidth(0,0.01*w);
     boughtItemTable->setColumnWidth(1,0.2*w);
     boughtItemTable->setColumnWidth(2,0.08*w);
@@ -94,29 +90,11 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
     QList <QTableWidgetItem *> quantityWidget;
     QList <QTableWidgetItem *> costWidget;
 
-    // Tao layout va gan bang vao layout
     boughtItemTable->setFixedSize(w*0.45 + 10, (table->listBoughtItem.size()*50 + 20) > 0.75*h ? 0.7*h : table->listBoughtItem.size()*50 + 20);
     boughtItemTable->setStyleSheet("background-color:transparent;"
                                    "color: white;"
                                    "font-weight: bolder;"
                                    "font-size: 17px");
-    QWidget *a = new QWidget(ui->centralwidget);
-    a->setGeometry(w/2,0,w/2 + 10,h);
-    QVBoxLayout *horizontalLayoutWidget = new QVBoxLayout(a);
-
-    // Hàng logo
-    horizontalLayoutWidget->addWidget(logo,0,Qt::AlignCenter);
-
-    // Hàng bảng tính tiền
-    horizontalLayoutWidget->addWidget(boughtItemTable,0,Qt::AlignCenter);
-
-    // Hàng tính tổng cộng tiền
-    horizontalLayoutWidget->addWidget(totalLayoutWidget,0,Qt::AlignCenter);
-
-    // Hàng dòng cảm ơn
-    horizontalLayoutWidget->addWidget(thankyou,0,Qt::AlignCenter);
-    horizontalLayoutWidget->setSpacing(5);
-    horizontalLayoutWidget->setAlignment(Qt::AlignCenter | Qt::AlignTop);
 
     for(int i = 0;i<table->listBoughtItem.size();i++)
     {
@@ -153,6 +131,24 @@ billwindow::billwindow(employeeWindow *parent, Table *table) :
         boughtItemTable->setItem(i,4,costWidget[i]);
     }
 
+    QWidget *billWidget = new QWidget(ui->centralwidget);
+    billWidget->setGeometry(w/2,0,w/2 + 10,h);
+    QVBoxLayout *billLayout = new QVBoxLayout(billWidget);
+
+    // Hàng logo
+    billLayout->addWidget(logo,0,Qt::AlignCenter);
+
+    // Hàng bảng tính tiền
+    billLayout->addWidget(boughtItemTable,0,Qt::AlignCenter);
+
+    // Hàng tính tổng cộng tiền
+    billLayout->addWidget(totalLayoutWidget,0,Qt::AlignCenter);
+
+    // Hàng dòng cảm ơn
+    billLayout->addWidget(thankyou,0,Qt::AlignCenter);
+    billLayout->setSpacing(5);
+    billLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+
 }
 
 billwindow::~billwindow()
@@ -161,8 +157,6 @@ billwindow::~billwindow()
 }
 
 void billwindow::closeEvent(QCloseEvent *event){
-    event->ignore();
-
     // Trả lại tình trạng bàn trống cho bàn hiện tại cho vector
     for(int i = 0;i < staff->listTables.size();i++){
         if(table->getOrdinal() == staff->listTables[i]->getOrdinal())
@@ -207,5 +201,6 @@ void billwindow::closeEvent(QCloseEvent *event){
     employeeWindow1->move(0,0);
     employeeWindow1->setStyleSheet("background-color: white;");
     employeeWindow1->show();
-    this->hide();
+    this->close();
+    event->ignore();
 }
