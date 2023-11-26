@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QtWidgets>
 #include <QApplication>
-#include "mainmenu.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -10,9 +10,8 @@ int main(int argc, char *argv[])
     int w = geometry.width();
     int h = geometry.height();
     MainWindow mainWindow;
-    MainMenu mainMenu;
-    mainWindow.setGeometry(0,0,w,h);
-    mainWindow.move(0,0);
+    mainWindow.setGeometry(0, 0, w, h);
+    mainWindow.move(0, 0);
     mainWindow.show();
     return a.exec();
 }

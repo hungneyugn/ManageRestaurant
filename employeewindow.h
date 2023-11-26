@@ -4,13 +4,11 @@
 #include <QMainWindow>
 #include "QScreen"
 #include "QCloseEvent"
-
 #include "iostream"
 #include "fstream"
 #include "sstream"
 #include "string"
 #include "QPushButton"
-
 #include "staff.h"
 #include "QStyleFactory"
 
@@ -97,8 +95,9 @@ for (int j = 0; j < column; j++) {\
     } \
 }
 
-namespace Ui {
-class employeeWindow;
+namespace Ui
+{
+    class employeeWindow;
 }
 
 class employeeWindow : public QMainWindow
@@ -107,10 +106,13 @@ class employeeWindow : public QMainWindow
 public:
     explicit employeeWindow(Staff *newStaff, QWidget *parent = nullptr);
     ~employeeWindow();
+
 private:
     Ui::employeeWindow *ui;
+
 public:
-    Staff* staff = new Staff;
+    Staff *staff = new Staff;
+
 protected:
     void closeEvent(QCloseEvent *event);
 };
