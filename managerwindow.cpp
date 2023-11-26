@@ -64,6 +64,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
+    tableItem->setSelectionMode(QAbstractItemView::NoSelection);
 
     tableItem->setColumnWidth(0, w/9);
     tableItem->setColumnWidth(1, w/6);
@@ -196,19 +197,37 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
         QRegularExpression regex("[a-zA-Z!@#$%^&*<>?+=-_`~.,* ]+");
         if (numtable->toPlainText().isEmpty()|| regex.match(numtable->toPlainText()).hasMatch()|| numtable->toPlainText().toInt()<=0)
             {
-            QMessageBox::warning(this,"ERROR","Please enter number of table");
-            numtable->setText(QString::number(number));
-            numtable->setAlignment(Qt::AlignHCenter);
+                QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "Please enter number of table",QMessageBox::Ok, this);
+                msgBox->setStyleSheet("background-color: white;"
+                                      "font-size: 17px;");
+
+                msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+                // Hiển thị QMessageBox
+                msgBox->open();
+                numtable->setText(QString::number(number));
+                numtable->setAlignment(Qt::AlignHCenter);
             }
         else if (numtable->toPlainText().toInt()>154)
         {
-            QMessageBox::warning(this,"","Maximum number of table : 154 ");
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, "Warning", "Maximum number of table : 154 ",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            // Hiển thị QMessageBox
+            msgBox->open();
             numtable->setText(QString::number(number));
             numtable->setAlignment(Qt::AlignHCenter);
         }
         else
             {
-               QMessageBox::information(this,"","Updated number of table successfully ");
+                QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "", "Updated number of table successfully ",QMessageBox::Ok, this);
+                msgBox->setStyleSheet("background-color: white;"
+                                      "font-size: 17px;");
+
+                msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+                // Hiển thị QMessageBox
+                msgBox->open();
                 int num = numtable->toPlainText().toInt() ;
                 std::ofstream file("listTable.txt", std::ios::trunc);
                 for (int i = 0; i<num;i++)
@@ -246,12 +265,27 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
                                         num1++;
                                 }
                                 if (num1 != 0)
-                                    QMessageBox::critical(this, "Error", "Please enter price in number!");
+                                {
+                                    QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter price in number!",QMessageBox::Ok, this);
+                                    msgBox->setStyleSheet("background-color: white;"
+                                                          "font-size: 17px;");
+
+                                    msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+                                    // Hiển thị QMessageBox
+                                    msgBox->open();
+                                }
                                 else
                                     item->setText(locale.toCurrencyString(temp.toDouble(), "VND"));
                             }
                             else
-                                QMessageBox::critical(this, "Error", "Please enter price in number!");
+                            {
+                                QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter price in number!",QMessageBox::Ok, this);
+                                msgBox->setStyleSheet("background-color: white;"
+                                                      "font-size: 17px;");
+
+                                msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+                                msgBox->open();
+                            }
                         }
                     }
                 }
@@ -269,6 +303,19 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
     QRect geometry = screen->geometry();
     int w = geometry.width();
     int h = geometry.height();
+    if (tableItem->rowCount() > manager->listItems.size())
+    {
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Question, "Information", "Do you want to save changes?", QMessageBox::Yes | QMessageBox::No, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
+
+        if (msgBox->exec() == QMessageBox::Yes) {
+               ManagerWindow::on_btn_save_clicked();
+        }
+    }
     mainwindow->setGeometry(0,0,w,h);
     mainwindow->move(0,0);
     mainwindow->show();
@@ -352,17 +399,29 @@ void ManagerWindow::on_btn_save_clicked()
     int rowCount = tableItem->rowCount() -1;
     if (tableItem->rowCount() == 0)
     {
-        QMessageBox::critical(this, "Error", "Please enter the data!");
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter the data!",QMessageBox::Ok, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
     }
     else
     {
         QString name = tableItem->item(rowCount, 1)->text();
         QString price = tableItem->item(rowCount, 2)->text();
         QString image = image_add;
-
         QString new_price = price.replace("VND", "").replace(".", "");
 
-        if (name.isEmpty() || new_price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Error", "Please enter the data!");
+        if (name.isEmpty() || new_price.isEmpty() || image.isEmpty())
+        {
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter the data!",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            msgBox->open();
+        }
         else if ((manager->listItems.size() != 0) && (manager->checkExistNameItem(name) == 0))
         {
             Item newItem(name, new_price, image);
@@ -403,7 +462,12 @@ void ManagerWindow::on_btn_save_clicked()
         }
         else if(manager->checkExistNameItem(name) == 1)
         {
-             QMessageBox::critical(this, "Error", "The food has existed!");
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "The food has existed!",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            msgBox->open();
         }
     }
 }
@@ -416,7 +480,12 @@ void ManagerWindow::on_btn_delete_clicked()
     QItemSelectionModel *selectionModel = tableItem->selectionModel();
     QModelIndexList selectedRows = selectionModel->selectedRows();
     if (selectedRows.size() > 1) {
-        QMessageBox::critical(this, "Error", "Please choose one row!");
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row!",QMessageBox::Ok, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
     }
     else if (row >= 0 && isItemSelected == true) {
         this->tableItem->removeRow(row);
@@ -440,7 +509,12 @@ void ManagerWindow::on_btn_delete_clicked()
     else
     {
         if (!isItemSelected) {
-        QMessageBox::critical(this, "Error", "Please choose one row before deleting!");
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row before deleting!",QMessageBox::Ok, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
     }
 }
 }
@@ -452,7 +526,7 @@ void ManagerWindow::on_btn_update_clicked()
     if (row >= 0 && row < manager->listItems.size()) {
         QString name = tableItem->item(row, 1)->text();
         QString price = tableItem->item(row, 2)->text();
-        QString image = image_add;
+        QString image = manager->listItems[row].getImage();
 
         QString new_price = price.replace("VND", "").replace(".","");
 
@@ -462,7 +536,12 @@ void ManagerWindow::on_btn_update_clicked()
         QString new_priceOld = priceOld.replace("VND", "").replace(".","");
 
         if (nameOld == name && new_priceOld == new_price) {
-            QMessageBox::critical(this, "Error", "You have not edited the data. Please correct data before updating!");
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "You have not edited the data. Please correct data before updating!",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
+
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            msgBox->open();
             return;
         }
         else{
@@ -487,13 +566,21 @@ void ManagerWindow::on_btn_update_clicked()
                     }
             }
             file.close();
+            QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Update", "Update successfully!",QMessageBox::Ok, this);
+            msgBox->setStyleSheet("background-color: white;"
+                                  "font-size: 17px;");
 
-
-            QMessageBox::information(this, "Update", "Update successfully!");
+            msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+            msgBox->open();
         }
     }
     else {
-        QMessageBox::critical(this, "Error", "Please enter and save data before updating!");
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please enter and save data before updating!",QMessageBox::Ok, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
 
         }
 }
