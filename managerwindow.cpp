@@ -449,7 +449,13 @@ void ManagerWindow::on_btn_delete_clicked()
         }
     }
     if (foundDifferentValue){
-        QMessageBox::critical(this, "Error", "Please choose one row!");
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row!",
+                                              QMessageBox::Ok, this);
+        msgBox->setStyleSheet("background-color: white;"
+                              "font-size: 17px;");
+
+        msgBox->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+        msgBox->open();
     }
     else if (row >= 0 && isItemSelected == true)
     {
