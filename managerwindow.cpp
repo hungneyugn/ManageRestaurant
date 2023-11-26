@@ -368,7 +368,6 @@ void ManagerWindow::on_btn_save_clicked()
         QString name = tableItem->item(rowCount, 1)->text();
         QString price = tableItem->item(rowCount, 2)->text();
         QString image = image_add;
-
         QString new_price = price.replace("VND", "").replace(".", "");
 
         if (name.isEmpty() || new_price.isEmpty() || image.isEmpty()) QMessageBox::critical(this, "Error", "Please enter the data!");
@@ -461,7 +460,7 @@ void ManagerWindow::on_btn_update_clicked()
     if (row >= 0 && row < manager->listItems.size()) {
         QString name = tableItem->item(row, 1)->text();
         QString price = tableItem->item(row, 2)->text();
-        QString image = image_add;
+        QString image = manager->listItems[row].getImage();
 
         QString new_price = price.replace("VND", "").replace(".","");
 
