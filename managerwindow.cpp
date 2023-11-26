@@ -1,29 +1,6 @@
 #include "managerwindow.h"
 #include "ui_managerwindow.h"
-#include "QScreen"
-#include <QCloseEvent>
-#include "mainwindow.h"
-#include "manager.h"
-#include "QString"
-#include "string"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include "QTextEdit"
-#include <string>
-#include <QFileDialog>
-#include <QDir>
-#include "QIcon"
-#include "QLabel"
-#include "QPixmap"
-#include <cmath>
-#include "QScreen"
-#include "QMessageBox"
-#include "staff.h"
-#include "QStyleFactory"
-#include "QHeaderView"
-#include "QFont"
-#include "QLocale"
+
 
 ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
     QMainWindow(parent),

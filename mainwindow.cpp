@@ -19,10 +19,10 @@ MainWindow::MainWindow(employeeWindow *parent)
     ui->setupUi(this);
     ui->label->setGeometry(0,0,w,h);
     ui->label->move(0,0);
-    ui->pushButton->move(7*w/12, 9*h/16);
+    ui->managerButton->move(7*w/12, 9*h/16);
 
-    ui->pushButton->setStyle(QStyleFactory::create("Fusion"));
-    ui->pushButton->setStyleSheet("background-color: #B8860B; color: #000000; font-weight: bold;"
+    ui->managerButton->setStyle(QStyleFactory::create("Fusion"));
+    ui->managerButton->setStyleSheet("background-color: #B8860B; color: #000000; font-weight: bold;"
                                   "QPushButton {"
                                   "border-radius: 15px;" // Bo tròn viền
                                   "border: 1px solid #C6C6C6;"
@@ -51,7 +51,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_managerButton_clicked()
 {
     ManagerWindow* managerWindow = new ManagerWindow(this, this->employeeWindow1);
     managerWindow->setAttribute(Qt::WA_DeleteOnClose);
