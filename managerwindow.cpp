@@ -436,9 +436,19 @@ void ManagerWindow::on_btn_delete_clicked()
 {
     bool isItemSelected = tableItem->selectionModel()->hasSelection();
     int row = this->tableItem->currentRow();
-    QItemSelectionModel *selectionModel = tableItem->selectionModel();
-    QModelIndexList selectedRows = selectionModel->selectedRows();
-    if (selectedRows.size() > 1) {
+    QModelIndexList selectedIndexes = tableItem->selectionModel()->selectedIndexes();
+    bool foundDifferentValue = false;
+    for (int i = 0; i < selectedIndexes.size() - 1; i++) {
+        QModelIndex index1 = selectedIndexes.at(i);
+        QModelIndex index2 = selectedIndexes.at(i + 1);
+        int value1 = index1.row();
+        int value2 = index2.row();
+        if (value1 != value2) {
+             foundDifferentValue = true;
+             break;
+        }
+    }
+    if (foundDifferentValue){
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Critical, "Error", "Please choose one row!",
                                               QMessageBox::Ok, this);
         msgBox->setStyleSheet("background-color: white;"
