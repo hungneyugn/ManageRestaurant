@@ -63,7 +63,6 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
-    tableItem->setSelectionMode(QAbstractItemView::NoSelection);
 
     tableItem->setColumnWidth(0, w/9);
     tableItem->setColumnWidth(1, w/6);
@@ -333,7 +332,7 @@ void ManagerWindow::uploadImage()
     {
         if (QDir(destinationPath).exists() || QDir().mkpath(destinationPath))
         {
-            if (QFile::copy(imagePath, destinationFilePath)){}
+            QFile::copy(imagePath, destinationFilePath);
         }
     }
     else
@@ -485,7 +484,7 @@ void ManagerWindow::on_btn_delete_clicked()
                 if (file.tellp() == 0)
                 {
                     file << manager->listItems[i].getId() << ","
-                         <<  manager->listItems[i].getImage().toStdString() << ","
+                         << manager->listItems[i].getImage().toStdString() << ","
                          << manager->listItems[i].getName().toStdString() << ","
                          << manager->listItems[i].getPrice().toStdString();
                 }
@@ -558,10 +557,9 @@ void ManagerWindow::on_btn_update_clicked()
                 {
                     if (file.tellp() == 0) {
                         file << manager->listItems[i].getId() << ","
-                             <<  manager->listItems[i].getImage().toStdString() << ","
+                             << manager->listItems[i].getImage().toStdString() << ","
                              << manager->listItems[i].getName().toStdString() << ","
                              << manager->listItems[i].getPrice().toStdString();
-
                     }
                     else
                     {
