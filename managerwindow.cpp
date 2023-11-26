@@ -64,6 +64,7 @@ ManagerWindow::ManagerWindow(QWidget *parent, employeeWindow *employee) :
 
     tableItem -> setHorizontalHeaderLabels(QStringList() <<"Image" << "Name" << "Price");
     tableItem->horizontalHeader()->setFont(font);
+    tableItem->setSelectionMode(QAbstractItemView::NoSelection);
 
     tableItem->setColumnWidth(0, w/9);
     tableItem->setColumnWidth(1, w/6);
