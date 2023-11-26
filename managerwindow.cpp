@@ -270,6 +270,14 @@ void ManagerWindow::closeEvent(QCloseEvent *event){
     QRect geometry = screen->geometry();
     int w = geometry.width();
     int h = geometry.height();
+    if (tableItem->rowCount() > manager->listItems.size())
+    {
+        int ret = QMessageBox::question(this, "Information", "Do you want to save changes?", QMessageBox::Yes | QMessageBox::No);
+
+        if (ret == QMessageBox::Yes) {
+               ManagerWindow::on_btn_save_clicked();
+        }
+    }
     mainwindow->setGeometry(0,0,w,h);
     mainwindow->move(0,0);
     mainwindow->show();
