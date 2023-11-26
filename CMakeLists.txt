@@ -29,7 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         item.h item.cpp
         table.h table.cpp
         boughtitem.h boughtitem.cpp
-        mainmenu.h mainmenu.cpp
+
         manager.h manager.cpp
         staff.h staff.cpp
         menuorder.h menuorder.cpp menuorder.ui

@@ -1,11 +1,5 @@
 #include "manager.h"
-#include "string"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "QTextEdit"
-#include "QString"
-#include "item.h"
+
 
 Manager::Manager()
 {
