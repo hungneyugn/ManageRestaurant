@@ -1,21 +1,14 @@
 #ifndef BILLWINDOW_H
 #define BILLWINDOW_H
 
-#include <QMainWindow>
-#include "employeewindow.h"
-#include "table.h"
-#include "vector"
+#include "QMainWindow"
 #include "QVBoxLayout"
-#include "QPushButton"
 #include "QTableWidgetItem"
 #include "QHeaderView"
 #include "QLabel"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "string"
-#include "boughtitem.h"
-#include "QScreen"
+
+#include "table.h"
+#include "employeewindow.h"
 
 namespace Ui {
 class billwindow;

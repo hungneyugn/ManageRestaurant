@@ -1,30 +1,18 @@
 #ifndef MENUORDER_H
 #define MENUORDER_H
 
-#include <QMainWindow>
-#include "boughtitem.h"
-#include "item.h"
-#include <vector>
-#include <QCloseEvent>
-#include "table.h"
-#include "employeewindow.h"
-#include "mainwindow.h"
-#include "QLabel"
-#include "string"
-#include "iostream"
-#include "fstream"
-#include "sstream"
-#include "QScreen"
 #include <QTableWidget>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include "item.h"
-#include <QHeaderView>
-#include <vector>
-#include "staff.h"
-#include "mainwindow.h"
-#include "employeewindow.h"
+
 #include "QMessageBox"
+#include "QLineEdit"
+#include "QLocale"
+
+#include "item.h"
+#include "table.h"
+#include "employeewindow.h"
+
+#include "billwindow.h"
 
 namespace Ui {
 class menuorder;
@@ -43,7 +31,6 @@ private:
     Table *table;
     Ui::menuorder *ui;
     std::vector <Item> listitem;
-    std::vector <BoughtItem> listboughtitem;
 protected:
     void closeEvent(QCloseEvent *event);
 };

@@ -1,19 +1,16 @@
 #include "boughtitem.h"
-#include "QString"
 
-BoughtItem::BoughtItem(QString name,int id,QString price,int quantity): Item(name,price,image)
+BoughtItem::BoughtItem(QString image, QString name, int id, QString price, int quantity) : Item(image, name, id, price)
 {
-    this->name = name;
-    this->id = id;
-    this->price = price;
     this->quantity = quantity;
 }
 
-void BoughtItem::setQuantity(int quantity){
+void BoughtItem::setQuantity(int quantity)
+{
     this->quantity = quantity;
 }
 
-int BoughtItem::getQuantity(){
+int BoughtItem::getQuantity()
+{
     return this->quantity;
 }
-

@@ -1,6 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
-#include"vector"
+#include "vector"
 #include "boughtitem.h"
 class Table
 {
@@ -11,8 +11,9 @@ public:
     bool getStatus();
     void setOrdinal(int ordinal);
     int getOrdinal();
-    std::vector <BoughtItem *>listBoughtItem;
+    std::vector<BoughtItem *> listBoughtItem;
     std::vector<Table> listTables;
+
 private:
     bool status = 0;
     int ordinal;
