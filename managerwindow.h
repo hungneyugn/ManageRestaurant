@@ -6,6 +6,30 @@
 #include <QTableWidget>
 #include "QPushButton"
 #include "employeewindow.h"
+#include "QScreen"
+#include <QCloseEvent>
+#include "mainwindow.h"
+#include "manager.h"
+#include "QString"
+#include "string"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "QTextEdit"
+#include <string>
+#include <QFileDialog>
+#include <QDir>
+#include "QIcon"
+#include "QLabel"
+#include "QPixmap"
+#include <cmath>
+#include "QScreen"
+#include "QMessageBox"
+#include "staff.h"
+#include "QStyleFactory"
+#include "QHeaderView"
+#include "QFont"
+#include "QLocale"
 
 namespace Ui {
 class ManagerWindow;
@@ -31,8 +55,7 @@ private:
 protected:
     void closeEvent(QCloseEvent *event);
     void uploadImage();
-//    void on_btn_save_clicked();
-//    void on_btn_add_clicked();
+
 private slots:
     void on_btn_add_clicked();
     void on_btn_save_clicked();

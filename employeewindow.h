@@ -2,16 +2,15 @@
 #define EMPLOYEEWINDOW_H
 
 #include <QMainWindow>
-#include "staff.h"
 #include "QScreen"
-#include <QCloseEvent>
-#include "staff.h"
-#include "table.h"
+#include "QCloseEvent"
 #include "iostream"
 #include "fstream"
 #include "sstream"
 #include "string"
-#include <QPushButton>
+#include "QPushButton"
+#include "staff.h"
+#include <QStyleFactory>
 
 #define MAKE_TABLE(w, h, num, row, column, size, w_table, h_table)\
 for (int j = 0; j < column; j++) {\
@@ -96,8 +95,9 @@ for (int j = 0; j < column; j++) {\
     } \
 }
 
-namespace Ui {
-class employeeWindow;
+namespace Ui
+{
+    class employeeWindow;
 }
 
 class employeeWindow : public QMainWindow
@@ -106,10 +106,13 @@ class employeeWindow : public QMainWindow
 public:
     explicit employeeWindow(Staff *newStaff, QWidget *parent = nullptr);
     ~employeeWindow();
+
 private:
     Ui::employeeWindow *ui;
+
 public:
-    Staff* staff = new Staff;
+    Staff *staff = new Staff;
+
 protected:
     void closeEvent(QCloseEvent *event);
 };
