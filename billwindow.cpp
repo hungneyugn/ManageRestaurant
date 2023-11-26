@@ -57,8 +57,8 @@ billwindow::billwindow(employeeWindow *parent, Table *table) : QMainWindow(paren
     boughtItemTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     boughtItemTable->setSelectionMode(QAbstractItemView::NoSelection);
 
-    boughtItemTable->setColumnWidth(0, 0.01 * w);
-    boughtItemTable->setColumnWidth(1, 0.2 * w);
+    boughtItemTable->setColumnWidth(0, 0.05 * w);
+    boughtItemTable->setColumnWidth(1, 0.16 * w);
     boughtItemTable->setColumnWidth(2, 0.08 * w);
     boughtItemTable->setColumnWidth(3, 0.06 * w);
 
