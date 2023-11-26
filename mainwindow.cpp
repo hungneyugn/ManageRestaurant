@@ -61,6 +61,7 @@ void MainWindow::on_pushButton_clicked()
     int h = geometry.height();
     managerWindow->setGeometry(0,0,w,h);
     managerWindow->move(0,0);
+    managerWindow->setStyleSheet("background-color: transparent;");
     managerWindow->show();
     this->hide();
 }
