@@ -1,17 +1,11 @@
 #ifndef MENUORDER_H
 #define MENUORDER_H
 
-#include <QTableWidget>
 #include <QHBoxLayout>
-
 #include "QMessageBox"
 #include "QLineEdit"
-#include "QLocale"
 
-#include "item.h"
-#include "table.h"
 #include "employeewindow.h"
-
 #include "billwindow.h"
 
 namespace Ui {

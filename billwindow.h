@@ -1,13 +1,11 @@
 #ifndef BILLWINDOW_H
 #define BILLWINDOW_H
 
-#include "QMainWindow"
 #include "QVBoxLayout"
 #include "QTableWidgetItem"
 #include "QHeaderView"
 #include "QLabel"
 
-#include "table.h"
 #include "employeewindow.h"
 
 namespace Ui {

@@ -10,7 +10,7 @@
 #include "string"
 #include "QPushButton"
 #include "staff.h"
-#include <QStyleFactory>
+#include "QStyleFactory"
 
 #define MAKE_TABLE(w, h, num, row, column, size, w_table, h_table)\
 for (int j = 0; j < column; j++) {\
