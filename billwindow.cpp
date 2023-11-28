@@ -90,15 +90,16 @@ billwindow::billwindow(employeeWindow *parent, Table *table) : QMainWindow(paren
 
     long total_cost = 0;
 
+    QLocale locale(QLocale::Vietnamese);
     for (int i = 0; i < table->listBoughtItem.size(); i++)
     {
         boughtItemTable->setRowHeight(i, 50);
         ordinalArr.append(QString::number(i + 1));
         nameArr.append(table->listBoughtItem[i]->getName());
-        priceArr.append(table->listBoughtItem[i]->getPrice());
+        priceArr.append(locale.toCurrencyString(table->listBoughtItem[i]->getPrice().toDouble(), "VND"));
         quantityArr.append(QString::number(table->listBoughtItem[i]->getQuantity()));
-        costArr.append(QString::number(table->listBoughtItem[i]->getPrice().toInt() * table->listBoughtItem[i]->getQuantity()));
-        total_cost += costArr.at(i).toInt();
+        costArr.append(locale.toCurrencyString(table->listBoughtItem[i]->getPrice().toDouble() * table->listBoughtItem[i]->getQuantity(), "VND"));
+        total_cost += table->listBoughtItem[i]->getPrice().toDouble() * table->listBoughtItem[i]->getQuantity();
 
         QTableWidgetItem *ordinalArr_element = new QTableWidgetItem(ordinalArr[i]);
         QTableWidgetItem *nameArr_element = new QTableWidgetItem(nameArr[i]);
@@ -125,7 +126,7 @@ billwindow::billwindow(employeeWindow *parent, Table *table) : QMainWindow(paren
         boughtItemTable->setItem(i, 4, costWidget[i]);
     }
 
-    lbl_cost_value->setText(QString::number(total_cost) + " VND");
+    lbl_cost_value->setText(locale.toCurrencyString(double(total_cost), "VND"));
 
     QWidget *billWidget = new QWidget(ui->centralwidget);
     billWidget->setGeometry(w / 2, 0, w / 2 + 10, h);
