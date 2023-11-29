@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mainImage.jpeg</file>
+        <file>background/mainwindown.jpg</file>
+        <file>background/managerwindown.jpg</file>
+        <file>background/table_background.png</file>
+        <file>icon/add.png</file>
+        <file>icon/paymentIcon.png</file>
+        <file>icon/search.png</file>
+        <file>icon/sub.png</file>
+        <file>background/BillBackground.png</file>
+        <file>background/menuOrderImage.jpg</file>
+    </qresource>
+</RCC>

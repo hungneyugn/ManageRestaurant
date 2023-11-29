@@ -45,24 +45,25 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../../../Download/649d462b7bcfb13155156325_4 2.jpeg</pixmap>
+     <pixmap resource="Image.qrc">:/background/mainwindown.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="managerButton">
     <property name="geometry">
      <rect>
       <x>420</x>
       <y>360</y>
-      <width>301</width>
-      <height>81</height>
+      <width>141</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>12</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -73,9 +74,9 @@
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>470</y>
-      <width>301</width>
-      <height>81</height>
+      <y>430</y>
+      <width>141</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -89,6 +90,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="Image.qrc"/>
+ </resources>
  <connections/>
 </ui>

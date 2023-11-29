@@ -25,6 +25,17 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         managerwindow.h managerwindow.cpp managerwindow.ui
         employeewindow.h employeewindow.cpp employeewindow.ui
+        Image.qrc
+        item.h item.cpp
+        table.h table.cpp
+        boughtitem.h boughtitem.cpp
+
+        manager.h manager.cpp
+        staff.h staff.cpp
+        menuorder.h menuorder.cpp menuorder.ui
+        billwindow.h billwindow.cpp billwindow.ui
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ManangeStore APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
